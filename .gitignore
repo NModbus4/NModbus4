@@ -1,0 +1,7 @@
+*.suo
+*.user
+*.nuspec
+/Modbus/*.nupkg
+/*.sln.ide
+*/bin
+*/obj

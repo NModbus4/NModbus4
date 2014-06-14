@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus", "Modbus\Modbus.csproj", "{FF96B252-2B24-44A1-A09C-6401B5D7ED23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus.UnitTests", "Modbus.UnitTests\Modbus.UnitTests.csproj", "{A3A86846-316D-4A49-AEF8-C5348826A499}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySample", "MySample\MySample.csproj", "{72FA8AB6-CE77-4578-8202-0DD32264783E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B14D514B-058C-4949-BB39-9ED1C487F492}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF96B252-2B24-44A1-A09C-6401B5D7ED23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF96B252-2B24-44A1-A09C-6401B5D7ED23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF96B252-2B24-44A1-A09C-6401B5D7ED23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF96B252-2B24-44A1-A09C-6401B5D7ED23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3A86846-316D-4A49-AEF8-C5348826A499}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3A86846-316D-4A49-AEF8-C5348826A499}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3A86846-316D-4A49-AEF8-C5348826A499}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3A86846-316D-4A49-AEF8-C5348826A499}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72FA8AB6-CE77-4578-8202-0DD32264783E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FA8AB6-CE77-4578-8202-0DD32264783E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FA8AB6-CE77-4578-8202-0DD32264783E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FA8AB6-CE77-4578-8202-0DD32264783E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = ..
+	EndGlobalSection
+EndGlobal

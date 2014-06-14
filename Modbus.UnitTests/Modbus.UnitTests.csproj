@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3A86846-316D-4A49-AEF8-C5348826A499}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Modbus.UnitTests</RootNamespace>
+    <AssemblyName>Modbus.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Test|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;/out:Modbus.UnitTests</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SignedRelease|AnyCPU' ">
+    <OutputPath>bin\SignedRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\DataStoreEventArgsFixture.cs" />
+    <Compile Include="Data\DataStoreFixture.cs" />
+    <Compile Include="Data\DiscreteCollectionFixture.cs" />
+    <Compile Include="Data\ModbusDataCollectionFixture.cs" />
+    <Compile Include="Data\RegisterCollectionFixture.cs" />
+    <Compile Include="Device\ModbusMasterFixture.cs" />
+    <Compile Include="Device\ModbusSlaveFixture.cs" />
+    <Compile Include="Device\TcpConnectionEventArgsFixture.cs" />
+    <Compile Include="IO\CompactUdpClientFixture.cs" />
+    <Compile Include="IO\CrossPlatformUdpClientFixture.cs" />
+    <Compile Include="IO\ModbusAsciiTransportFixture.cs" />
+    <Compile Include="IO\ModbusRtuTransportFixture.cs" />
+    <Compile Include="IO\ModbusSerialTransportFixture.cs" />
+    <Compile Include="IO\ModbusTcpTransportFixture.cs" />
+    <Compile Include="IO\ModbusTransportFixture.cs" />
+    <Compile Include="IO\UdpClientAdapterFixture.cs" />
+    <Compile Include="Message\DiagnosticsRequestResponseFixture.cs" />
+    <Compile Include="Message\MessageUtility.cs" />
+    <Compile Include="Message\ModbusMessageFactoryFixture.cs" />
+    <Compile Include="Message\ModbusMessageFixture.cs" />
+    <Compile Include="Message\ModbusMessageImplFixture.cs" />
+    <Compile Include="Message\ModbusMessageWithDataFixture.cs" />
+    <Compile Include="Message\ReadCoilsInputsRequestFixture.cs" />
+    <Compile Include="Message\ReadCoilsInputsResponseFixture.cs" />
+    <Compile Include="Message\ReadHoldingInputRegistersRequestFixture.cs" />
+    <Compile Include="Message\ReadHoldingInputRegistersResponseFixture.cs" />
+    <Compile Include="Message\ReadWriteMultipleRegistersRequestFixture.cs" />
+    <Compile Include="Message\ReturnQueryDataRequestResponseFixture.cs" />
+    <Compile Include="Message\SlaveExceptionResponseFixture.cs" />
+    <Compile Include="Message\WriteMultipleCoilsRequestFixture.cs" />
+    <Compile Include="Message\WriteMultipleCoilsResponseFixture.cs" />
+    <Compile Include="Message\WriteMultipleRegistersRequestFixture.cs" />
+    <Compile Include="Message\WriteMultipleRegistersResponseFixture.cs" />
+    <Compile Include="Message\WriteSingleCoilRequestResponseFixture.cs" />
+    <Compile Include="Message\WriteSingleRegisterRequestResponseFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlaveExceptionFixture.cs" />
+    <Compile Include="Utility\CollectionUtilityFixture.cs" />
+    <Compile Include="Utility\DiscriminatedUnionFixture.cs" />
+    <Compile Include="Utility\ModbusUtilityFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Modbus\Modbus.csproj">
+      <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
+      <Name>Modbus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
