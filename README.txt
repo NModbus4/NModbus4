@@ -9,7 +9,7 @@ Differs from this one (https://code.google.com/p/nmodbus) in following:
 1) removed USB support(FtdAdapter.dll)
 2) removed log4net dependency
 3) removed Unme.Common.dll dependency
-4) assembly renamed to NModbus.dll
+4) assembly renamed to NModbus4.dll
 5) target framework changed to .NET 4
  
 Source code available here: https://github.com/Maxwe11/NModbus
