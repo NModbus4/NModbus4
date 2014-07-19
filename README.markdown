@@ -1,26 +1,25 @@
-NModbus
-
-What is it? 
------------
+NModbus. What is it? 
+=======
 NModbus is a C# implementation of the Modbus protocol.
 Provides connectivity to Modbus slave compatible devices and applications.
 Supports serial ASCII, serial RTU, TCP, and UDP protocols.
 Differs from this one (https://code.google.com/p/nmodbus) in following:
-1) removed USB support(FtdAdapter.dll)
-2) removed log4net dependency
-3) removed Unme.Common.dll dependency
-4) assembly renamed to NModbus4.dll
-5) target framework changed to .NET 4
+
+    1) removed USB support(FtdAdapter.dll)
+    2) removed log4net dependency
+    3) removed Unme.Common.dll dependency
+    4) assembly renamed to NModbus4.dll
+    5) target framework changed to .NET 4
  
 Source code available here: https://github.com/Maxwe11/NModbus
 
 Documentation
--------------
+=======
 Documentation is available in chm format (NModbus.chm)
 
 
 The MIT License (MIT)
----------------------
+=======
 Copyright (c) 2014 Maxwe11
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
