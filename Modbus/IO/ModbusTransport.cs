@@ -10,8 +10,8 @@ namespace Modbus.IO
     using Unme.Common;
 
     /// <summary>
-    ///     Modbus transport.
-    ///     Abstraction - http://en.wikipedia.org/wiki/Bridge_Pattern
+    /// Modbus transport.
+    /// Abstraction - http://en.wikipedia.org/wiki/Bridge_Pattern
     /// </summary>
     public abstract class ModbusTransport : IDisposable
     {
@@ -43,6 +43,11 @@ namespace Modbus.IO
             get { return _retries; }
             set { _retries = value; }
         }
+
+        /// <summary>
+        /// If set, Slave Busy exception causes retry count to be used.  If false, Slave Busy will cause infinite retries
+        /// </summary>
+        public bool SlaveBusyUsesRetryCount { get; set; }
 
         /// <summary>
         ///     Gets or sets the number of milliseconds the tranport will wait before retrying a message after receiving
@@ -142,6 +147,9 @@ namespace Modbus.IO
                     if (se.SlaveExceptionCode != Modbus.SlaveDeviceBusy)
                         throw;
 
+                    if (SlaveBusyUsesRetryCount && attempt++ > _retries)
+                        throw;
+
                     Debug.WriteLine(
                         "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
                         _waitToRetryMilliseconds);
@@ -166,7 +174,7 @@ namespace Modbus.IO
                 }
             } while (!success);
 
-            return (T) response;
+            return (T)response;
         }
 
         internal virtual IModbusMessage CreateResponse<T>(byte[] frame) where T : IModbusMessage, new()
