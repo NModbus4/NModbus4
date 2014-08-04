@@ -149,6 +149,15 @@ namespace Modbus.UnitTests.Utility
         }
 
         [Test]
+        public void GetDouble()
+        {
+            Assert.AreEqual(0.0, ModbusUtility.GetDouble(0, 0, 0, 0));
+            Assert.AreEqual(1.0, ModbusUtility.GetDouble(16368, 0, 0, 0));
+            Assert.AreEqual(Math.PI, ModbusUtility.GetDouble(16393, 8699, 21572, 11544));
+            Assert.AreEqual(500.625, ModbusUtility.GetDouble(16511, 18944, 0, 0));
+        }
+
+        [Test]
         public void GetSingle()
         {
             Assert.AreEqual(0F, ModbusUtility.GetSingle(0, 0));

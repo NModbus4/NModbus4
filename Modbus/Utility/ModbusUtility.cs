@@ -47,6 +47,24 @@ namespace Modbus.Utility
         };
 
         /// <summary>
+ 		/// Converts four UInt16 values into a IEEE 64 floating point format.
+ 		/// </summary>
+ 		/// <param name="b3">Highest-order ushort value.</param>
+ 		/// <param name="b2">Second-to-highest-order ushort value.</param>
+ 		/// <param name="b1">Second-to-lowest-order ushort value.</param>
+ 		/// <param name="b0">Lowest-order ushort value.</param>
+ 		/// <returns>IEEE 64 floating point value.</returns>
+ 		public static double GetDouble(ushort b3, ushort b2, ushort b1, ushort b0)
+ 		{
+ 			byte[] value = BitConverter.GetBytes(b0)
+ 				.Concat(BitConverter.GetBytes(b1))
+ 				.Concat(BitConverter.GetBytes(b2))
+ 				.Concat(BitConverter.GetBytes(b3))
+ 				.ToArray();
+ 			return BitConverter.ToDouble(value, 0);
+ 		}
+
+        /// <summary>
         ///     Converts two UInt16 values into a IEEE 32 floating point format
         /// </summary>
         /// <param name="highOrderValue">High order ushort value</param>
