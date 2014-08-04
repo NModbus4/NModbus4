@@ -5,17 +5,17 @@ namespace Modbus.Device
     using Unme.Common;
 
     internal class TcpConnectionEventArgs : EventArgs
-	{
-		public TcpConnectionEventArgs(string endPoint)
-		{
-			if (endPoint == null)
-				throw new ArgumentNullException("endPoint");
-			if (endPoint.IsNullOrEmpty())
-				throw new ArgumentException(Resources.EmptyEndPoint);
+    {
+        public TcpConnectionEventArgs(string endPoint)
+        {
+            if (endPoint == null)
+                throw new ArgumentNullException("endPoint");
+            if (endPoint.IsNullOrEmpty())
+                throw new ArgumentException(Resources.EmptyEndPoint);
 
-			EndPoint = endPoint;
-		}
+            EndPoint = endPoint;
+        }
 
-		public string EndPoint { get; set; }
-	}
+        public string EndPoint { get; set; }
+    }
 }

@@ -11,41 +11,44 @@ namespace Modbus.Message
     using Unme.Common;
 
     internal class DiagnosticsRequestResponse : ModbusMessageWithData<RegisterCollection>, IModbusMessage
-	{		
-		public DiagnosticsRequestResponse()
-		{
-		}
+    {
+        public DiagnosticsRequestResponse()
+        {
+        }
 
-		public DiagnosticsRequestResponse(ushort subFunctionCode, byte slaveAddress, RegisterCollection data)
-			: base(slaveAddress, Modbus.Diagnostics)
-		{
-			SubFunctionCode = subFunctionCode;
-			Data = data;
-		}
-		
-		public override int MinimumFrameSize
-		{
-			get { return 6; }
-		}
+        public DiagnosticsRequestResponse(ushort subFunctionCode, byte slaveAddress, RegisterCollection data)
+            : base(slaveAddress, Modbus.Diagnostics)
+        {
+            SubFunctionCode = subFunctionCode;
+            Data = data;
+        }
 
-		[SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "May implement addtional sub function codes in the future.")]
-		public ushort SubFunctionCode
-		{
-			get { return MessageImpl.SubFunctionCode.Value; }
-			set { MessageImpl.SubFunctionCode = value; }
-		}
+        public override int MinimumFrameSize
+        {
+            get { return 6; }
+        }
 
-		public override string ToString()
-		{
-			Debug.Assert(SubFunctionCode == Modbus.DiagnosticsReturnQueryData, "Need to add support for additional sub-function.");
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "May implement addtional sub function codes in the future.")]
+        public ushort SubFunctionCode
+        {
+            get { return MessageImpl.SubFunctionCode.Value; }
+            set { MessageImpl.SubFunctionCode = value; }
+        }
 
-			return String.Format(CultureInfo.InvariantCulture, "Diagnostics message, sub-function return query data - {0}.", Data);
-		}
+        public override string ToString()
+        {
+            Debug.Assert(SubFunctionCode == Modbus.DiagnosticsReturnQueryData,
+                "Need to add support for additional sub-function.");
 
-		protected override void InitializeUnique(byte[] frame)
-		{
-			SubFunctionCode = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-			Data = new RegisterCollection(frame.Slice(4, 2).ToArray());
-		}
-	}
+            return String.Format(CultureInfo.InvariantCulture,
+                "Diagnostics message, sub-function return query data - {0}.", Data);
+        }
+
+        protected override void InitializeUnique(byte[] frame)
+        {
+            SubFunctionCode = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            Data = new RegisterCollection(frame.Slice(4, 2).ToArray());
+        }
+    }
 }

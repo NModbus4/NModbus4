@@ -12,15 +12,18 @@ using System.Runtime.InteropServices;
                                "target framework changed to .NET 4")]
 
 // required for VBA applications
+
 [assembly: ComVisible(true)]
 [assembly: CLSCompliant(false)]
 [assembly: Guid("95B2AE1E-E0DC-4306-8431-D81ED10A2D5D")]
 [assembly: AssemblyVersion("1.11.0.0")]
 #if !WindowsCE
+
 [assembly: AssemblyFileVersion("1.11.0.0")]
 #endif
 
 #if !SIGNED
+
 [assembly: InternalsVisibleTo(@"Modbus.UnitTests")]
 [assembly: InternalsVisibleTo(@"DynamicProxyGenAssembly2")]
 #endif

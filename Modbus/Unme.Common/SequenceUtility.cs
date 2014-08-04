@@ -5,9 +5,10 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    static class SequenceUtility
+    internal static class SequenceUtility
     {
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> first, IEnumerable<T> second, params IEnumerable<T>[] additionalItems)
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> first, IEnumerable<T> second,
+            params IEnumerable<T>[] additionalItems)
         {
             if (first == null)
                 throw new ArgumentNullException("first");
@@ -66,10 +67,10 @@
 
         public static IEnumerable<T> ToSequence<T>(this T element)
         {
-            if ((object)element == null)
+            if ((object) element == null)
                 throw new ArgumentNullException("element");
 
-            return new [] { element };
+            return new[] {element};
         }
 
         public static IEnumerable<T> ToSequence<T>(T element, params T[] additional)

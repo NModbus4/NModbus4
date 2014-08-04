@@ -2,7 +2,7 @@
 {
     using System;
 
-    static class EventUtility
+    internal static class EventUtility
     {
         public static void Raise(this EventHandler handler, object sender)
         {
