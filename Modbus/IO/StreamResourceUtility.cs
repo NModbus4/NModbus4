@@ -12,8 +12,6 @@ namespace Modbus.IO
 
             do
             {
-                stream.Read(singleByteBuffer, 0, 1);
-
                 if (0 == stream.Read(singleByteBuffer, 0, 1))
                     continue;
 
