@@ -11,12 +11,12 @@
 
         public static string DoubleQuote(this string str)
         {
-            return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", new object[] { str });
+            return string.Format(CultureInfo.InvariantCulture, "\"{0}\"", new object[] {str});
         }
 
         public static string SingleQuote(this string str)
         {
-            return string.Format(CultureInfo.InvariantCulture, "'{0}'", new object[] { str });
+            return string.Format(CultureInfo.InvariantCulture, "'{0}'", new object[] {str});
         }
     }
 }

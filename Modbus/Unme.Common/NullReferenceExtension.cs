@@ -2,18 +2,18 @@
 {
     using System;
 
-    static class NullReferenceExtension
+    internal static class NullReferenceExtension
     {
         public static void IfNotNull<T>(this T element, Action<T> action)
         {
-            if ((object)element == null)
+            if ((object) element == null)
                 return;
             action(element);
         }
 
         public static TResult IfNotNull<T, TResult>(this T element, Func<T, TResult> func)
         {
-            if ((object)element == null)
+            if ((object) element == null)
                 return default(TResult);
 
             return func(element);
@@ -21,7 +21,7 @@
 
         public static TResult IfNotNull<T, TResult>(this T element, Func<T, TResult> func, TResult defaultValue)
         {
-            if ((object)element == null)
+            if ((object) element == null)
                 return defaultValue;
 
             return func(element);
