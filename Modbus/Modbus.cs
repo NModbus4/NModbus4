@@ -25,6 +25,7 @@ namespace Modbus
         public const byte ExceptionOffset = 128;
 
         // modbus slave exception codes
+		public const byte IllegalFunction = 1;
         public const byte Acknowledge = 5;
         public const byte SlaveDeviceBusy = 6;
 
