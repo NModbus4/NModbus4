@@ -26,6 +26,7 @@ namespace Modbus.Device
         /// <summary>
         ///     Occurs when a modbus slave receives a request.
         /// </summary>
+		/// <exception cref="InvalidModbusRequestException">The Modbus request was invalid, and an error response the specified exception should be sent.</exception>
         public event EventHandler<ModbusSlaveRequestEventArgs> ModbusSlaveRequestReceived;
 
         /// <summary>
@@ -107,10 +108,13 @@ namespace Modbus.Device
             Justification = "Cast is not unneccessary.")]
         internal IModbusMessage ApplyRequest(IModbusMessage request)
         {
-            Debug.WriteLine(request.ToString());
-            ModbusSlaveRequestReceived.Raise(this, new ModbusSlaveRequestEventArgs(request));
+			IModbusMessage response;
 
-            IModbusMessage response;
+			try
+			{
+				Debug.WriteLine(request.ToString());
+				ModbusSlaveRequestReceived.Raise(this, new ModbusSlaveRequestEventArgs(request));
+
             switch (request.FunctionCode)
             {
                 case Modbus.ReadCoils:
@@ -151,12 +155,17 @@ namespace Modbus.Device
                     response = ReadRegisters(readWriteRequest.ReadRequest, DataStore, DataStore.HoldingRegisters);
                     WriteMultipleRegisters(readWriteRequest.WriteRequest, DataStore, DataStore.HoldingRegisters);
                     break;
-                default:
-                    string errorMessage = String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
-                        request.FunctionCode);
-                    Debug.WriteLine(errorMessage);
-                    throw new ArgumentException(errorMessage, "request");
-            }
+					default:
+						string errorMessage = String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
+							request.FunctionCode);
+						Debug.WriteLine(errorMessage);
+						throw new InvalidModbusRequestException(Modbus.IllegalFunction);
+				}
+			}
+			catch (InvalidModbusRequestException ex) // Catches the exception for an illegal function or a custom exception from the ModbusSlaveRequestReceived event.
+			{
+				response = new SlaveExceptionResponse(request.SlaveAddress, (byte)(Modbus.ExceptionOffset + request.FunctionCode), ex.ExceptionCode);
+			}
 
             return response;
         }

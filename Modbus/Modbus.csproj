@@ -119,6 +119,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="InvalidModbusRequestException.cs" />
     <Compile Include="SlaveException.cs" />
     <Compile Include="Unme.Common\DisposableUtility.cs" />
     <Compile Include="Unme.Common\EventUtility.cs" />
