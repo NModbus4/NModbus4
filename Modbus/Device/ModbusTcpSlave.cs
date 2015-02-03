@@ -114,7 +114,11 @@ namespace Modbus.Device
                 // use Socket async API for compact framework compat
                 Socket socket = null;
                 lock (_serverLock)
+                {
+                    if (_server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        return;
                     socket = Server.Server.EndAccept(ar);
+                }
 
                 TcpClient client = new TcpClient {Client = socket};
                 var masterConnection = new ModbusMasterTcpConnection(client, slave);
