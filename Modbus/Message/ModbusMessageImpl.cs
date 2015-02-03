@@ -6,6 +6,8 @@ using Modbus.Data;
 
 namespace Modbus.Message
 {
+    using System.IO;
+
     /// <summary>
     ///     Class holding all implementation shared between two or more message types.
     ///     Interfaces expose subsets of type specific implementations.
@@ -44,9 +46,11 @@ namespace Modbus.Message
         {
             get
             {
-                List<byte> frame = new List<byte>();
-                frame.Add(SlaveAddress);
-                frame.AddRange(ProtocolDataUnit);
+                var pdu = ProtocolDataUnit;
+                var frame = new MemoryStream(1 + pdu.Length);
+
+                frame.WriteByte(SlaveAddress);
+                frame.Write(pdu, 0, pdu.Length);
 
                 return frame.ToArray();
             }

@@ -7,6 +7,8 @@ using Modbus.Utility;
 
 namespace Modbus.Data
 {
+    using System.IO;
+
     /// <summary>
     ///     Collection of 16 bit registers.
     /// </summary>
@@ -50,10 +52,13 @@ namespace Modbus.Data
         {
             get
             {
-                List<byte> bytes = new List<byte>();
+                var bytes = new MemoryStream(ByteCount);
 
                 foreach (ushort register in this)
-                    bytes.AddRange(BitConverter.GetBytes((ushort) IPAddress.HostToNetworkOrder((short) register)));
+                {
+                    var b = BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)register));
+                    bytes.Write(b, 0, b.Length);
+                }
 
                 return bytes.ToArray();
             }

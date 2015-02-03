@@ -8,6 +8,8 @@ using Modbus.Utility;
 
 namespace Modbus.IO
 {
+    using System.IO;
+
     using Unme.Common;
 
     /// <summary>
@@ -102,10 +104,12 @@ namespace Modbus.IO
 
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
-            List<byte> messageBody = new List<byte>();
-            messageBody.Add(message.SlaveAddress);
-            messageBody.AddRange(message.ProtocolDataUnit);
-            messageBody.AddRange(ModbusUtility.CalculateCrc(message.MessageFrame));
+            var messageFrame = message.MessageFrame;
+            var crc = ModbusUtility.CalculateCrc(messageFrame);
+            var messageBody = new MemoryStream(messageFrame.Length + crc.Length);
+
+            messageBody.Write(messageFrame, 0, messageFrame.Length);
+            messageBody.Write(crc, 0, crc.Length);
 
             return messageBody.ToArray();
         }

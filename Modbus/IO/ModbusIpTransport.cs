@@ -104,9 +104,12 @@ namespace Modbus.IO
 
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
-            List<byte> messageBody = new List<byte>();
-            messageBody.AddRange(GetMbapHeader(message));
-            messageBody.AddRange(message.ProtocolDataUnit);
+            byte[] header = GetMbapHeader(message);
+            byte[] pdu = message.ProtocolDataUnit;
+            var messageBody = new MemoryStream(header.Length + pdu.Length);
+
+            messageBody.Write(header, 0, header.Length);
+            messageBody.Write(pdu, 0, pdu.Length);
 
             return messageBody.ToArray();
         }
