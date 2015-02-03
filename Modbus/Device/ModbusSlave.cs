@@ -26,6 +26,7 @@ namespace Modbus.Device
         /// <summary>
         ///     Occurs when a modbus slave receives a request.
         /// </summary>
+		/// <exception cref="InvalidModbusRequestException">The Modbus request was invalid, and an error response the specified exception should be sent.</exception>
         public event EventHandler<ModbusSlaveRequestEventArgs> ModbusSlaveRequestReceived;
 
         /// <summary>
