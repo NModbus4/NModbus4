@@ -78,6 +78,7 @@
     <Compile Include="Device\TcpConnectionEventArgs.cs" />
     <Compile Include="Extensions\Enron\EnronModbus.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="InvalidModbusRequestException.cs" />
     <Compile Include="IO\CompactUdpClient.cs" />
     <Compile Include="IO\CrossPlatformUdpClient.cs" />
     <Compile Include="IO\FullUdpClient.cs" />
