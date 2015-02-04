@@ -1,20 +1,33 @@
-using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using Modbus.Data;
-
 namespace Modbus.Message
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+
+    using Data;
+
     using Unme.Common;
 
-    internal class WriteMultipleCoilsRequest : AbstractModbusMessageWithData<DiscreteCollection>, IModbusRequest
+    /// <summary>
+    /// 
+    /// </summary>
+    public class WriteMultipleCoilsRequest : AbstractModbusMessageWithData<DiscreteCollection>, IModbusRequest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public WriteMultipleCoilsRequest()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slaveAddress"></param>
+        /// <param name="startAddress"></param>
+        /// <param name="data"></param>
         public WriteMultipleCoilsRequest(byte slaveAddress, ushort startAddress, DiscreteCollection data)
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
@@ -24,12 +37,18 @@ namespace Modbus.Message
             Data = data;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public byte ByteCount
         {
             get { return MessageImpl.ByteCount.Value; }
             set { MessageImpl.ByteCount = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort NumberOfPoints
         {
             get { return MessageImpl.NumberOfPoints.Value; }
@@ -44,23 +63,37 @@ namespace Modbus.Message
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort StartAddress
         {
             get { return MessageImpl.StartAddress.Value; }
             set { MessageImpl.StartAddress = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 7; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "Write {0} coils starting at address {1}.",
                 NumberOfPoints, StartAddress);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (WriteMultipleCoilsResponse) response;
@@ -82,6 +115,10 @@ namespace Modbus.Message
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[6])

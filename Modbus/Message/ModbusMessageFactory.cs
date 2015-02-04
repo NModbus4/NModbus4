@@ -3,10 +3,19 @@ using System.Globalization;
 
 namespace Modbus.Message
 {
-    internal static class ModbusMessageFactory
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ModbusMessageFactory
     {
         private const int MinRequestFrameLength = 3;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="frame"></param>
+        /// <returns></returns>
         public static T CreateModbusMessage<T>(byte[] frame) where T : IModbusMessage, new()
         {
             IModbusMessage message = new T();
@@ -15,6 +24,11 @@ namespace Modbus.Message
             return (T) message;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
         public static IModbusMessage CreateModbusRequest(byte[] frame)
         {
             if (frame.Length < MinRequestFrameLength)

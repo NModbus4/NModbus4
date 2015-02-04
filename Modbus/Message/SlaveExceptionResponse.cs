@@ -1,28 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-
 namespace Modbus.Message
 {
-    internal class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
     {
         private static readonly Dictionary<byte, string> _exceptionMessages = CreateExceptionMessages();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SlaveExceptionResponse()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slaveAddress"></param>
+        /// <param name="functionCode"></param>
+        /// <param name="exceptionCode"></param>
         public SlaveExceptionResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
             : base(slaveAddress, functionCode)
         {
             SlaveExceptionCode = exceptionCode;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 3; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public byte SlaveExceptionCode
         {
             get { return MessageImpl.ExceptionCode.Value; }
@@ -61,6 +79,10 @@ namespace Modbus.Message
             return messages;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (FunctionCode <= Modbus.ExceptionOffset)

@@ -5,12 +5,25 @@ using System.Net;
 
 namespace Modbus.Message
 {
-    internal class ReadCoilsInputsRequest : AbstractModbusMessage, IModbusRequest
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ReadCoilsInputsRequest : AbstractModbusMessage, IModbusRequest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ReadCoilsInputsRequest()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="functionCode"></param>
+        /// <param name="slaveAddress"></param>
+        /// <param name="startAddress"></param>
+        /// <param name="numberOfPoints"></param>
         public ReadCoilsInputsRequest(byte functionCode, byte slaveAddress, ushort startAddress, ushort numberOfPoints)
             : base(slaveAddress, functionCode)
         {
@@ -18,17 +31,26 @@ namespace Modbus.Message
             NumberOfPoints = numberOfPoints;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort StartAddress
         {
             get { return MessageImpl.StartAddress.Value; }
             set { MessageImpl.StartAddress = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 6; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort NumberOfPoints
         {
             get { return MessageImpl.NumberOfPoints.Value; }
@@ -43,12 +65,20 @@ namespace Modbus.Message
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} starting at address {2}.", NumberOfPoints,
                 FunctionCode == Modbus.ReadCoils ? "coils" : "inputs", StartAddress);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (ReadCoilsInputsResponse) response;
@@ -64,6 +94,10 @@ namespace Modbus.Message
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));

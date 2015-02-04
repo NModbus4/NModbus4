@@ -1,21 +1,34 @@
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using Modbus.Data;
-
 namespace Modbus.Message
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+
+    using Data;
+
     using Unme.Common;
 
-    internal class WriteSingleCoilRequestResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusRequest
+    /// <summary>
+    /// 
+    /// </summary>
+    public class WriteSingleCoilRequestResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusRequest
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public WriteSingleCoilRequestResponse()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slaveAddress"></param>
+        /// <param name="startAddress"></param>
+        /// <param name="coilState"></param>
         public WriteSingleCoilRequestResponse(byte slaveAddress, ushort startAddress, bool coilState)
             : base(slaveAddress, Modbus.WriteSingleCoil)
         {
@@ -23,17 +36,27 @@ namespace Modbus.Message
             Data = new RegisterCollection(coilState ? Modbus.CoilOn : Modbus.CoilOff);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 6; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort StartAddress
         {
             get { return MessageImpl.StartAddress.Value; }
             set { MessageImpl.StartAddress = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             Debug.Assert(Data != null, "Argument Data cannot be null.");
@@ -45,6 +68,10 @@ namespace Modbus.Message
                 StartAddress);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (WriteSingleCoilRequestResponse) response;
@@ -66,6 +93,10 @@ namespace Modbus.Message
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
