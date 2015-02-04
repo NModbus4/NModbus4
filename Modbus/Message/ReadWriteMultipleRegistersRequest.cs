@@ -1,12 +1,10 @@
-using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using Modbus.Data;
-
 namespace Modbus.Message
 {
-    using Unme.Common;
+    using System;
+    using System.Globalization;
+    using System.IO;
+
+    using Data;
 
     /// <summary>
     /// 
@@ -47,12 +45,16 @@ namespace Modbus.Message
         {
             get
             {
-                // read and write PDUs without function codes
-                byte[] read = _readRequest.ProtocolDataUnit.Slice(1, _readRequest.ProtocolDataUnit.Length - 1).ToArray();
-                byte[] write =
-                    _writeRequest.ProtocolDataUnit.Slice(1, _writeRequest.ProtocolDataUnit.Length - 1).ToArray();
+                byte[] readPdu = _readRequest.ProtocolDataUnit;
+                byte[] writePdu = _writeRequest.ProtocolDataUnit;
+                var stream = new MemoryStream(readPdu.Length + writePdu.Length);
 
-                return FunctionCode.ToSequence().Concat(read, write).ToArray();
+                stream.WriteByte(FunctionCode);
+                // read and write PDUs without function codes
+                stream.Write(readPdu, 1, readPdu.Length - 1);
+                stream.Write(writePdu, 1, writePdu.Length - 1);
+
+                return stream.ToArray();
             }
         }
 
@@ -121,16 +123,17 @@ namespace Modbus.Message
             if (frame.Length < MinimumFrameSize + frame[10])
                 throw new FormatException("Message frame does not contain enough bytes.");
 
-            byte[] readFrame = frame.Slice(2, 4).ToArray();
-            byte[] writeFrame = frame.Slice(6, frame.Length - 6).ToArray();
-            byte[] header = {SlaveAddress, FunctionCode};
+            byte[] readFrame = new byte[2 + 4];
+            byte[] writeFrame = new byte[frame.Length - 6 + 2];
 
-            _readRequest =
-                ModbusMessageFactory.CreateModbusMessage<ReadHoldingInputRegistersRequest>(
-                    header.Concat(readFrame).ToArray());
-            _writeRequest =
-                ModbusMessageFactory.CreateModbusMessage<WriteMultipleRegistersRequest>(
-                    header.Concat(writeFrame).ToArray());
+            readFrame[0] = writeFrame[0] = SlaveAddress;
+            readFrame[1] = writeFrame[1] = FunctionCode;
+
+            Buffer.BlockCopy(frame, 2, readFrame, 2, 4);
+            Buffer.BlockCopy(frame, 6, writeFrame, 2, frame.Length - 6);
+
+            _readRequest = ModbusMessageFactory.CreateModbusMessage<ReadHoldingInputRegistersRequest>(readFrame);
+            _writeRequest = ModbusMessageFactory.CreateModbusMessage<WriteMultipleRegistersRequest>(writeFrame);
         }
     }
 }

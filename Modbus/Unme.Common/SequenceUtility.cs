@@ -6,22 +6,6 @@
 
     internal static class SequenceUtility
     {
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> first, IEnumerable<T> second,
-            params IEnumerable<T>[] additionalItems)
-        {
-            if (first == null)
-                throw new ArgumentNullException("first");
-            if (second == null)
-                throw new ArgumentNullException("second");
-            if (additionalItems == null)
-                throw new ArgumentNullException("additionalItems");
-
-            var enumerable = first as T[] ?? first.ToArray();
-            var result = Enumerable.Concat(enumerable, second);
-
-            return additionalItems.Aggregate(result, Enumerable.Concat);
-        }
-
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source == null)
@@ -39,14 +23,6 @@
             if (action == null)
                 throw new ArgumentNullException("action");
             ForEach(WithIndex(source), x => action(x.Item2, x.Item1));
-        }
-
-        public static IEnumerable<T> ToSequence<T>(this T element)
-        {
-            if ((object) element == null)
-                throw new ArgumentNullException("element");
-
-            return new[] {element};
         }
 
         public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int startIndex, int size)
