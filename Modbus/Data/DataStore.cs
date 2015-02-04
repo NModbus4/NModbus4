@@ -27,6 +27,14 @@ namespace Modbus.Data
             InputRegisters = new ModbusDataCollection<ushort> {ModbusDataType = ModbusDataType.InputRegister};
         }
 
+        internal DataStore(IList<bool> coilDiscretes, IList<bool> inputDiscretes, IList<ushort> holdingRegisters, IList<ushort> inputRegisters)
+        {
+            CoilDiscretes = new ModbusDataCollection<bool>(coilDiscretes) { ModbusDataType = ModbusDataType.Coil };
+            InputDiscretes = new ModbusDataCollection<bool>(inputDiscretes) { ModbusDataType = ModbusDataType.Input };
+            HoldingRegisters = new ModbusDataCollection<ushort>(holdingRegisters) { ModbusDataType = ModbusDataType.HoldingRegister };
+            InputRegisters = new ModbusDataCollection<ushort>(inputRegisters) { ModbusDataType = ModbusDataType.InputRegister };
+        }
+
         /// <summary>
         ///     Occurs when the DataStore is written to via a Modbus command.
         /// </summary>

@@ -21,23 +21,20 @@ namespace Modbus.Data
         /// <summary>
         ///     Factory method for default data store - register values set to 0 and discrete values set to false.
         /// </summary>
-        public static DataStore CreateDefaultDataStore(ushort coilsCount, ushort inputsCount,
-            ushort holdingRegistersCount, ushort inputRegistersCount)
+        public static DataStore CreateDefaultDataStore(ushort coilsCount, ushort inputsCount, ushort holdingRegistersCount, ushort inputRegistersCount)
         {
-            DataStore dataStore = new DataStore();
+            var coils = new bool[coilsCount];
+            var inputs = new bool[inputsCount];
+            var holdingRegs = new ushort[holdingRegistersCount];
+            var inputRegs = new ushort[inputRegistersCount];
 
-            Enumerable.Repeat(false, coilsCount).ForEach(value => dataStore.CoilDiscretes.Add(value));
-            Enumerable.Repeat(false, inputsCount).ForEach(value => dataStore.InputDiscretes.Add(value));
-            Enumerable.Repeat((ushort) 0, holdingRegistersCount).ForEach(value => dataStore.HoldingRegisters.Add(value));
-            Enumerable.Repeat((ushort) 0, inputRegistersCount).ForEach(value => dataStore.InputRegisters.Add(value));
-
-            return dataStore;
+            return new DataStore(coils, inputs, holdingRegs, inputRegs);
         }
 
         /// <summary>
         ///     Factory method for test data store.
         /// </summary>
-        public static DataStore CreateTestDataStore()
+        internal static DataStore CreateTestDataStore()
         {
             DataStore dataStore = new DataStore();
 
