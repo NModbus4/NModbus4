@@ -11,7 +11,7 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void ModbusMessageWithDataFixtureCtorInitializesProperties()
         {
-            ModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 10, 1,
+            AbstractModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 10, 1,
                 new DiscreteCollection(true, false, true));
             Assert.AreEqual(Modbus.ReadCoils, message.FunctionCode);
             Assert.AreEqual(10, message.SlaveAddress);
@@ -20,7 +20,7 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void ProtocolDataUnitReadCoilsResponse()
         {
-            ModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 2,
+            AbstractModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 2,
                 new DiscreteCollection(true));
             byte[] expectedResult = {1, 2, 1};
             Assert.AreEqual(expectedResult, message.ProtocolDataUnit);
@@ -31,7 +31,7 @@ namespace Modbus.UnitTests.Message
         {
             DiscreteCollection col = new DiscreteCollection(false, true, false, true, false, true, false, false, false,
                 false);
-            ModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 11, 1, col);
+            AbstractModbusMessageWithData<DiscreteCollection> message = new ReadCoilsInputsResponse(Modbus.ReadCoils, 11, 1, col);
             Assert.AreEqual(col.Count, message.Data.Count);
             Assert.AreEqual(col.NetworkBytes, message.Data.NetworkBytes);
         }

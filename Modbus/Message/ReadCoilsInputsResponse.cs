@@ -7,7 +7,7 @@ namespace Modbus.Message
 {
     using Unme.Common;
 
-    internal class ReadCoilsInputsResponse : ModbusMessageWithData<DiscreteCollection>, IModbusMessage
+    internal class ReadCoilsInputsResponse : AbstractModbusMessageWithData<DiscreteCollection>, IModbusMessage
     {
         public ReadCoilsInputsResponse()
         {

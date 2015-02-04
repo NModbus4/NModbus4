@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Modbus.Message
 {
-    internal class SlaveExceptionResponse : ModbusMessage, IModbusMessage
+    internal class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
     {
         private static readonly Dictionary<byte, string> _exceptionMessages = CreateExceptionMessages();
 

@@ -101,10 +101,10 @@
     <Compile Include="Message\DiagnosticsRequestResponse.cs" />
     <Compile Include="Message\SlaveExceptionResponse.cs" />
     <Compile Include="Message\IModbusMessage.cs" />
-    <Compile Include="Message\ModbusMessage.cs" />
+    <Compile Include="Message\AbstractModbusMessage.cs" />
     <Compile Include="Message\ModbusMessageFactory.cs" />
     <Compile Include="Message\ModbusMessageImpl.cs" />
-    <Compile Include="Message\ModbusMessageWithData.cs" />
+    <Compile Include="Message\AbstractModbusMessageWithData.cs" />
     <Compile Include="Message\ReadCoilsInputsResponse.cs" />
     <Compile Include="Message\ReadHoldingInputRegistersResponse.cs" />
     <Compile Include="Message\WriteMultipleCoilsRequest.cs" />

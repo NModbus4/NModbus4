@@ -10,7 +10,7 @@ namespace Modbus.Message
 {
     using Unme.Common;
 
-    internal class DiagnosticsRequestResponse : ModbusMessageWithData<RegisterCollection>, IModbusMessage
+    internal class DiagnosticsRequestResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusMessage
     {
         public DiagnosticsRequestResponse()
         {

@@ -7,7 +7,7 @@ namespace Modbus.Message
 {
     using Unme.Common;
 
-    internal class ReadHoldingInputRegistersResponse : ModbusMessageWithData<RegisterCollection>, IModbusMessage
+    internal class ReadHoldingInputRegistersResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusMessage
     {
         public ReadHoldingInputRegistersResponse()
         {

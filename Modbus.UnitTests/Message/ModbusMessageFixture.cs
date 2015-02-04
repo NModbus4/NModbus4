@@ -13,7 +13,7 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void ProtocolDataUnitReadCoilsRequest()
         {
-            ModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 100, 9);
+            AbstractModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 100, 9);
             byte[] expectedResult = {Modbus.ReadCoils, 0, 100, 0, 9};
             Assert.AreEqual(expectedResult, message.ProtocolDataUnit);
         }
@@ -21,7 +21,7 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void MessageFrameReadCoilsRequest()
         {
-            ModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 2, 3);
+            AbstractModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 2, 3);
             byte[] expectedMessageFrame = {1, Modbus.ReadCoils, 0, 2, 0, 3};
             Assert.AreEqual(expectedMessageFrame, message.MessageFrame);
         }
@@ -29,8 +29,8 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void ModbusMessageToStringOverriden()
         {
-            var messageTypes = from message in typeof (ModbusMessage).Assembly.GetTypes()
-                where !message.IsAbstract && message.IsSubclassOf(typeof (ModbusMessage))
+            var messageTypes = from message in typeof (AbstractModbusMessage).Assembly.GetTypes()
+                where !message.IsAbstract && message.IsSubclassOf(typeof (AbstractModbusMessage))
                 select message;
 
             foreach (Type messageType in messageTypes)
