@@ -157,7 +157,7 @@ namespace Modbus.UnitTests.IO
             byte[] crc = ModbusUtility.CalculateCrc(messageFrame);
 
             Expect.Call(transport.Read(ModbusRtuTransport.ResponseFrameStartLength))
-                .Return(Enumerable.Concat(messageFrame, SequenceUtility.ToSequence(crc[0])).ToArray());
+                .Return(Enumerable.Concat(messageFrame, new byte[] { crc[0] }).ToArray());
 
             Expect.Call(transport.Read(1))
                 .Return(new byte[] {crc[1]});
@@ -185,7 +185,7 @@ namespace Modbus.UnitTests.IO
             byte[] crc = {0x9, 0x9};
 
             Expect.Call(transport.Read(ModbusRtuTransport.ResponseFrameStartLength))
-                .Return(Enumerable.Concat(messageFrame, crc[0].ToSequence()).ToArray());
+                .Return(Enumerable.Concat(messageFrame, new byte [] { crc[0] }).ToArray());
 
             Expect.Call(transport.Read(1))
                 .Return(new byte[] {crc[1]});

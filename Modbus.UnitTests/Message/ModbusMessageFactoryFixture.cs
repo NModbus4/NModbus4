@@ -285,9 +285,9 @@ namespace Modbus.UnitTests.Message
         [Test]
         public void CreateModbusMessageReturnQueryDataRequestResponse()
         {
-            byte slaveAddress = 5;
+            const byte slaveAddress = 5;
             RegisterCollection data = new RegisterCollection(50);
-            byte[] frame = SequenceUtility.ToSequence<byte>(slaveAddress, 8, 0, 0).Concat(data.NetworkBytes).ToArray();
+            byte[] frame = new byte[] { slaveAddress, 8, 0, 0 }.Concat(data.NetworkBytes).ToArray();
             DiagnosticsRequestResponse message =
                 ModbusMessageFactory.CreateModbusMessage<DiagnosticsRequestResponse>(frame);
             DiagnosticsRequestResponse expectedMessage =

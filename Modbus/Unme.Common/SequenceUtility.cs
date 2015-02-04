@@ -49,16 +49,6 @@
             return new[] {element};
         }
 
-        public static IEnumerable<T> ToSequence<T>(T element, params T[] additional)
-        {
-            var sequence = element.ToSequence().ToArray();
-
-            if (additional != null && additional.Length > 0)
-                return Enumerable.Concat(sequence, additional);
-
-            return sequence;
-        }
-
         public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int startIndex, int size)
         {
             if (source == null)

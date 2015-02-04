@@ -301,9 +301,10 @@ namespace Modbus.UnitTests.IO
         {
             ModbusTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             byte[] frame = {2, 129, 2};
+            byte lrc = ModbusUtility.CalculateLrc(frame);
             IModbusMessage message =
                 transport.CreateResponse<ReadCoilsInputsResponse>(
-                    Enumerable.Concat(frame, SequenceUtility.ToSequence(ModbusUtility.CalculateLrc(frame))).ToArray());
+                    Enumerable.Concat(frame, new byte[] { lrc }).ToArray());
             Assert.IsTrue(message is SlaveExceptionResponse);
         }
 
