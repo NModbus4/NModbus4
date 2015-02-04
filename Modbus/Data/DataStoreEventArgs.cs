@@ -42,22 +42,27 @@ namespace Modbus.Data
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            if (!(typeof (T) == typeof (bool) || typeof (T) == typeof (ushort)))
-                throw new ArgumentException("Generic type T should be of type bool or ushort");
-
-            var eventArgs = new DataStoreEventArgs(startAddress, modbusDataType);
+            DataStoreEventArgs eventArgs;
 
             if (typeof (T) == typeof (bool))
             {
-                eventArgs.Data =
-                    DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateA(
-                        data.Cast<bool>().ToReadOnly());
+                var a = new ReadOnlyCollection<bool>(data.Cast<bool>().ToArray());
+                eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
+                {
+                    Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateA(a)
+                };
+            }
+            else if (typeof(T) == typeof(ushort))
+            {
+                var b = new ReadOnlyCollection<ushort>(data.Cast<ushort>().ToArray());
+                eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
+                {
+                    Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateB(b)
+                };
             }
             else
             {
-                eventArgs.Data =
-                    DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateB(
-                        data.Cast<ushort>().ToReadOnly());
+                throw new ArgumentException("Generic type T should be of type bool or ushort");
             }
 
             return eventArgs;

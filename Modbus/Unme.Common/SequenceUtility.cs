@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
 
     internal static class SequenceUtility
@@ -55,14 +54,6 @@
                 throw new ArgumentNullException("conversion");
 
             return string.Join(separator, sequence.Select(conversion).ToArray());
-        }
-
-        public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> sequence)
-        {
-            if (sequence == null)
-                throw new ArgumentNullException("sequence");
-
-            return new ReadOnlyCollection<T>(sequence.ToArray());
         }
 
         public static IEnumerable<T> ToSequence<T>(this T element)
