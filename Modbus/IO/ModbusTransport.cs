@@ -15,7 +15,7 @@ namespace Modbus.IO
     /// </summary>
     public abstract class ModbusTransport : IDisposable
     {
-        private object _syncLock = new object();
+        private readonly object _syncLock = new object();
         private int _retries = Modbus.DefaultRetries;
         private int _waitToRetryMilliseconds = Modbus.DefaultWaitToRetryMilliseconds;
         private IStreamResource _streamResource;

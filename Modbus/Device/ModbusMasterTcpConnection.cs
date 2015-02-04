@@ -18,7 +18,7 @@ namespace Modbus.Device
         private readonly Stream _stream;
         private readonly ModbusTcpSlave _slave;
 
-        private byte[] _mbapHeader = new byte[6];
+        private readonly byte[] _mbapHeader = new byte[6];
         private byte[] _messageFrame;
 
         public ModbusMasterTcpConnection(TcpClient client, ModbusTcpSlave slave)

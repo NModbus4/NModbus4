@@ -5,7 +5,7 @@ namespace Modbus.Message
 {
     internal abstract class ModbusMessage
     {
-        private ModbusMessageImpl _messageImpl;
+        private readonly ModbusMessageImpl _messageImpl;
 
         public ModbusMessage()
         {
