@@ -104,7 +104,6 @@ namespace Modbus.IO
         {
             IModbusMessage response = null;
             int attempt = 1;
-            bool readAgain;
             bool success = false;
 
             do
@@ -115,6 +114,7 @@ namespace Modbus.IO
                     {
                         Write(message);
 
+                        bool readAgain;
                         do
                         {
                             readAgain = false;
@@ -124,7 +124,8 @@ namespace Modbus.IO
                             if (exceptionResponse != null)
                             {
                                 // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
-                                if (readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge)
+                                readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge;
+                                if (readAgain)
                                 {
                                     Debug.WriteLine(
                                         "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
