@@ -19,14 +19,14 @@ namespace Modbus.UnitTests.Data
             Assert.AreEqual(new ushort[] {1, 2, 3}, result.ToArray());
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof (InvalidModbusRequestException))]
         public void ReadDataStartAddressTooLarge()
         {
             DataStore.ReadData<DiscreteCollection, bool>(new DataStore(), new ModbusDataCollection<bool>(), 3, 2,
                 new object());
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof (InvalidModbusRequestException))]
         public void ReadDataCountTooLarge()
         {
             DataStore.ReadData<DiscreteCollection, bool>(new DataStore(),
@@ -59,7 +59,7 @@ namespace Modbus.UnitTests.Data
             Assert.AreEqual(new bool[] {false, true, true, true, true, false, false, true}, destination.ToArray());
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof(InvalidModbusRequestException))]
         public void WriteDataTooLarge()
         {
             ModbusDataCollection<bool> slaveCol = new ModbusDataCollection<bool>(true);
@@ -74,7 +74,7 @@ namespace Modbus.UnitTests.Data
                 new ModbusDataCollection<bool>(true, true), 0, new object());
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof(InvalidModbusRequestException))]
         public void WriteDataStartAddressTooLarge()
         {
             DataStore.WriteData(new DataStore(), new DiscreteCollection(true), new ModbusDataCollection<bool>(true), 2,
@@ -229,7 +229,7 @@ namespace Modbus.UnitTests.Data
             Assert.AreEqual(new int[] {1, 2, 3, 4, 5, 6}, destination.ToArray());
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof(InvalidModbusRequestException))]
         public void UpdateItemsTooLarge()
         {
             List<int> newItems = new List<int>(new int[] {1, 2, 3, 7, 8, 9});
@@ -237,7 +237,7 @@ namespace Modbus.UnitTests.Data
             DataStore.Update<int>(newItems, destination, 3);
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Test, ExpectedException(typeof(InvalidModbusRequestException))]
         public void UpdateNegativeIndex()
         {
             List<int> newItems = new List<int>(new int[] {1, 2, 3, 7, 8, 9});
