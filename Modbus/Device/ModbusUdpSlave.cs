@@ -57,7 +57,7 @@ namespace Modbus.Device
                     frame = _udpClient.Receive(ref masterEndPoint);
 
                     Debug.WriteLine("Read Frame completed {0} bytes", frame.Length);
-                    Debug.WriteLine("RX: {0}", frame.Join(", "));
+                    Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
                     IModbusMessage request =
                         ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
@@ -69,7 +69,7 @@ namespace Modbus.Device
 
                     // write response
                     byte[] responseFrame = Transport.BuildMessageFrame(response);
-                    Debug.WriteLine("TX: {0}", responseFrame.Join(", "));
+                    Debug.WriteLine("TX: {0}", string.Join(", ", responseFrame));
                     _udpClient.Send(responseFrame, responseFrame.Length, masterEndPoint);
                 }
             }

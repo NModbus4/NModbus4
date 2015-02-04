@@ -41,7 +41,7 @@ namespace Modbus.IO
             DiscardInBuffer();
 
             byte[] frame = BuildMessageFrame(message);
-            Debug.WriteLine("TX: {0}", frame.Join(", "));
+            Debug.WriteLine("TX: {0}", string.Join(", ", frame));
             StreamResource.Write(frame, 0, frame.Length);
         }
 
@@ -53,7 +53,7 @@ namespace Modbus.IO
             if (CheckFrame && !ChecksumsMatch(response, frame))
             {
                 string errorMessage = String.Format(CultureInfo.InvariantCulture, "Checksums failed to match {0} != {1}",
-                    response.MessageFrame.Join(", "), frame.Join(", "));
+                    string.Join(", ", response.MessageFrame), string.Join(", ", frame));
                 Debug.WriteLine(errorMessage);
                 throw new IOException(errorMessage);
             }

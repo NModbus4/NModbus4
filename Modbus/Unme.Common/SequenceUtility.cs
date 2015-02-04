@@ -41,21 +41,6 @@
             ForEach(WithIndex(source), x => action(x.Item2, x.Item1));
         }
 
-        public static string Join<T>(this IEnumerable<T> sequence, string separator)
-        {
-            return sequence.Join(separator, x => x.ToString());
-        }
-
-        public static string Join<T>(this IEnumerable<T> sequence, string separator, Func<T, string> conversion)
-        {
-            if (separator == null)
-                throw new ArgumentNullException("separator");
-            if (conversion == null)
-                throw new ArgumentNullException("conversion");
-
-            return string.Join(separator, sequence.Select(conversion).ToArray());
-        }
-
         public static IEnumerable<T> ToSequence<T>(this T element)
         {
             if ((object) element == null)

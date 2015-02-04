@@ -42,7 +42,7 @@ namespace Modbus.IO
                 numBytesRead += bRead;
             }
 
-            Debug.WriteLine("MBAP header: {0}", mbapHeader.Join(", "));
+            Debug.WriteLine("MBAP header: {0}", string.Join(", ", mbapHeader));
             var frameLength = (ushort) IPAddress.HostToNetworkOrder(BitConverter.ToInt16(mbapHeader, 4));
             Debug.WriteLine("{0} bytes in PDU.", frameLength);
 
@@ -62,7 +62,7 @@ namespace Modbus.IO
 
             Debug.WriteLine("PDU: {0}", frameLength);
             var frame = mbapHeader.Concat(messageFrame).ToArray();
-            Debug.WriteLine("RX: {0}", frame.Join(", "));
+            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
             return frame;
         }
@@ -118,7 +118,7 @@ namespace Modbus.IO
         {
             message.TransactionId = GetNewTransactionId();
             byte[] frame = BuildMessageFrame(message);
-            Debug.WriteLine("TX: {0}", frame.Join(", "));
+            Debug.WriteLine("TX: {0}", string.Join(", ", frame));
             StreamResource.Write(frame, 0, frame.Length);
         }
 

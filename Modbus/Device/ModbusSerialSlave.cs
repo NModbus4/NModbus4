@@ -94,8 +94,8 @@ namespace Modbus.Device
                         if (SerialTransport.CheckFrame && !SerialTransport.ChecksumsMatch(request, frame))
                         {
                             string errorMessage = String.Format(CultureInfo.InvariantCulture,
-                                "Checksums failed to match {0} != {1}", request.MessageFrame.Join(", "),
-                                frame.Join(", "));
+                                "Checksums failed to match {0} != {1}", string.Join(", ", request.MessageFrame),
+                                string.Join(", ", frame));
                             Debug.WriteLine(errorMessage);
                             throw new IOException(errorMessage);
                         }

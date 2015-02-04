@@ -125,7 +125,7 @@ namespace Modbus.IO
             byte[] frameStart = Read(ResponseFrameStartLength);
             byte[] frameEnd = Read(ResponseBytesToRead(frameStart));
             byte[] frame = Enumerable.Concat(frameStart, frameEnd).ToArray();
-            Debug.WriteLine("RX: {0}", frame.Join(", "));
+            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
             return CreateResponse<T>(frame);
         }
@@ -135,7 +135,7 @@ namespace Modbus.IO
             byte[] frameStart = Read(RequestFrameStartLength);
             byte[] frameEnd = Read(RequestBytesToRead(frameStart));
             byte[] frame = Enumerable.Concat(frameStart, frameEnd).ToArray();
-            Debug.WriteLine("RX: {0}", frame.Join(", "));
+            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
             return frame;
         }

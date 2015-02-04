@@ -73,7 +73,7 @@ namespace Modbus.Device
                     return;
                 }
 
-                Debug.WriteLine("MBAP header: {0}", _mbapHeader.Join(", "));
+                Debug.WriteLine("MBAP header: {0}", string.Join(", ", _mbapHeader));
                 ushort frameLength = (ushort) IPAddress.HostToNetworkOrder(BitConverter.ToInt16(_mbapHeader, 4));
                 Debug.WriteLine("{0} bytes in PDU.", frameLength);
                 _messageFrame = new byte[frameLength];
@@ -88,7 +88,7 @@ namespace Modbus.Device
             {
                 Debug.WriteLine("Read Frame completed {0} bytes", Stream.EndRead(ar));
                 byte[] frame = _mbapHeader.Concat(_messageFrame).ToArray();
-                Debug.WriteLine("RX: {0}", frame.Join(", "));
+                Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
                 IModbusMessage request =
                     ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
@@ -100,7 +100,7 @@ namespace Modbus.Device
 
                 // write response
                 byte[] responseFrame = Transport.BuildMessageFrame(response);
-                Debug.WriteLine("TX: {0}", responseFrame.Join(", "));
+                Debug.WriteLine("TX: {0}", string.Join(", ", responseFrame));
                 Stream.BeginWrite(responseFrame, 0, responseFrame.Length, WriteCompleted, null);
             }, EndPoint);
         }
