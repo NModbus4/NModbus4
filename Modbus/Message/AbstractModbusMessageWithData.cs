@@ -1,18 +1,25 @@
-using Modbus.Data;
-
 namespace Modbus.Message
 {
-    internal abstract class AbstractModbusMessageWithData<TData> : AbstractModbusMessage where TData : IModbusMessageDataCollection
+    using Data;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    public abstract class AbstractModbusMessageWithData<TData> : AbstractModbusMessage where TData : IModbusMessageDataCollection
     {
-        public AbstractModbusMessageWithData()
+        internal AbstractModbusMessageWithData()
         {
         }
 
-        public AbstractModbusMessageWithData(byte slaveAddress, byte functionCode)
+        internal AbstractModbusMessageWithData(byte slaveAddress, byte functionCode)
             : base(slaveAddress, functionCode)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TData Data
         {
             get { return (TData) MessageImpl.Data; }
