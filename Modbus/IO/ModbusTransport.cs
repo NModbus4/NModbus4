@@ -206,7 +206,11 @@ namespace Modbus.IO
                     request.SlaveAddress));
 
             // message specific validation
-            request.Is<IModbusRequest>(req => req.ValidateResponse(response));
+            var req = request as IModbusRequest;
+            if (req != null)
+            {
+                req.ValidateResponse(response);
+            }
 
             OnValidateResponse(request, response);
         }

@@ -123,9 +123,7 @@
     <Compile Include="SlaveException.cs" />
     <Compile Include="Unme.Common\DisposableUtility.cs" />
     <Compile Include="Unme.Common\EventUtility.cs" />
-    <Compile Include="Unme.Common\NullReferenceExtension.cs" />
     <Compile Include="Unme.Common\SequenceUtility.cs" />
-    <Compile Include="Unme.Common\StringUtility.cs" />
     <Compile Include="Utility\DiscriminatedUnion.cs" />
     <Compile Include="Utility\ModbusUtility.cs" />
   </ItemGroup>
