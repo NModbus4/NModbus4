@@ -24,10 +24,16 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Occurs when a modbus slave receives a request.
+        ///     Raised when a Modbus slave receives a request, before processing request function.
         /// </summary>
         /// <exception cref="InvalidModbusRequestException">The Modbus request was invalid, and an error response the specified exception should be sent.</exception>
         public event EventHandler<ModbusSlaveRequestEventArgs> ModbusSlaveRequestReceived;
+
+        /// <summary>
+        ///     Raised when a Modbus slave receives a write request, after processing the write portion of the function.
+        /// </summary>
+        /// <remarks>For Read/Write Multiple registers (function code 23), this method is raised after writing and before reading.</remarks>
+        public event EventHandler<ModbusSlaveRequestEventArgs> WriteComplete;
 
         /// <summary>
         ///     Gets or sets the data store.
@@ -108,14 +114,12 @@ namespace Modbus.Device
             Justification = "Cast is not unneccessary.")]
         internal IModbusMessage ApplyRequest(IModbusMessage request)
         {
-            Debug.WriteLine(request.ToString());
-            ModbusSlaveRequestReceived.Raise(this, new ModbusSlaveRequestEventArgs(request));
-
             IModbusMessage response;
             try
             {
                 Debug.WriteLine(request.ToString());
-                ModbusSlaveRequestReceived.Raise(this, new ModbusSlaveRequestEventArgs(request));
+                var eventArgs = new ModbusSlaveRequestEventArgs(request);
+                ModbusSlaveRequestReceived.Raise(this, eventArgs);
 
                 switch (request.FunctionCode)
                 {
@@ -139,23 +143,28 @@ namespace Modbus.Device
                     case Modbus.WriteSingleCoil:
                         response = WriteSingleCoil((WriteSingleCoilRequestResponse)request, DataStore,
                             DataStore.CoilDiscretes);
+                        WriteComplete.Raise(this, eventArgs);
                         break;
                     case Modbus.WriteSingleRegister:
                         response = WriteSingleRegister((WriteSingleRegisterRequestResponse)request, DataStore,
                             DataStore.HoldingRegisters);
+                        WriteComplete.Raise(this, eventArgs);
                         break;
                     case Modbus.WriteMultipleCoils:
                         response = WriteMultipleCoils((WriteMultipleCoilsRequest)request, DataStore,
                             DataStore.CoilDiscretes);
+                        WriteComplete.Raise(this, eventArgs);
                         break;
                     case Modbus.WriteMultipleRegisters:
                         response = WriteMultipleRegisters((WriteMultipleRegistersRequest)request, DataStore,
                             DataStore.HoldingRegisters);
+                        WriteComplete.Raise(this, eventArgs);
                         break;
                     case Modbus.ReadWriteMultipleRegisters:
                         ReadWriteMultipleRegistersRequest readWriteRequest = (ReadWriteMultipleRegistersRequest)request;
-                        response = ReadRegisters(readWriteRequest.ReadRequest, DataStore, DataStore.HoldingRegisters);
                         WriteMultipleRegisters(readWriteRequest.WriteRequest, DataStore, DataStore.HoldingRegisters);
+                        WriteComplete.Raise(this, eventArgs);
+                        response = ReadRegisters(readWriteRequest.ReadRequest, DataStore, DataStore.HoldingRegisters);
                         break;
                     default:
                         string errorMessage = String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
