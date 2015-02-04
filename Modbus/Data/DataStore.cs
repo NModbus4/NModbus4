@@ -75,12 +75,8 @@ namespace Modbus.Data
         {
             int startIndex = startAddress + 1;
 
-            if (startIndex < 0 || startIndex >= dataSource.Count)
-                throw new ArgumentOutOfRangeException(
-                    "Start address was out of range. Must be non-negative and <= the size of the collection.");
-
-            if (dataSource.Count < startIndex + count)
-                throw new ArgumentOutOfRangeException("Read is outside valid range.");
+            if (startIndex < 0 || dataSource.Count < startIndex + count)
+                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
 
             U[] dataToRetrieve;
             lock (syncRoot)
@@ -105,12 +101,8 @@ namespace Modbus.Data
         {
             int startIndex = startAddress + 1;
 
-            if (startIndex < 0 || startIndex >= destination.Count)
-                throw new ArgumentOutOfRangeException(
-                    "Start address was out of range. Must be non-negative and <= the size of the collection.");
-
-            if (destination.Count < startIndex + items.Count())
-                throw new ArgumentOutOfRangeException("Items collection is too large to write at specified start index.");
+            if (startIndex < 0 || destination.Count < startIndex + items.Count())
+                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
 
             lock (syncRoot)
                 Update(items, destination, startIndex);
@@ -125,8 +117,7 @@ namespace Modbus.Data
         internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
-                throw new ArgumentOutOfRangeException(
-                    "Index was out of range. Must be non-negative and less than the size of the collection.");
+                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
 
             items.ForEachWithIndex((item, index) => destination[index + startIndex] = item);
         }
