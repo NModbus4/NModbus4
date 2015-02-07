@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/Maxwe11/NModbus4</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>
+		- Added Async overload to Master classes
+		- ReadWriteMultipleRegisters function performs write before read (in accordance with Modbus spec)
+		- SlaveExceptionResponse returned to master on invalid request
+		- Added WriteComplete event fired by slave after processing write request
+	</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>modbus nmodbus rtu ascii tcp udp serial master slave</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\NModbus4.pdb" target="" /> 
+</files>
+</package>
