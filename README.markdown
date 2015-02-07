@@ -1,22 +1,49 @@
-NModbus. What is it? 
+NModbus4
 =======
+
 NModbus is a C# implementation of the Modbus protocol.
 Provides connectivity to Modbus slave compatible devices and applications.
 Supports serial ASCII, serial RTU, TCP, and UDP protocols.
-Differs from this one (https://code.google.com/p/nmodbus) in following:
+NModbus4 it's a fork of NModbus(https://code.google.com/p/nmodbus).
+NModbus4 differs from original NModbus in following:
 
-    1) removed USB support(FtdAdapter.dll)
-    2) removed log4net dependency
-    3) removed Unme.Common.dll dependency
-    4) assembly renamed to NModbus4.dll
-    5) target framework changed to .NET 4
- 
-Source code available here: https://github.com/Maxwe11/NModbus
+1. removed USB support(FtdAdapter.dll)
+2. removed log4net dependency
+3. removed Unme.Common.dll dependency
+4. assembly renamed to NModbus4.dll
+5. target framework changed to .NET 4
+
+Install
+=======
+
+To install NModbus4, run the following command in the Package Manager Console
+
+    PM> Install-Package NModbus4
+
+Change log
+=======
+
+**NModbus4 2.0** introduces some breaking changes in slave behaviour. In case of slave receives request with invalid function exception response would be returned to master instead of throwing ArgumentException. 
+
+Also introduced new exception type `InvalidModbusRequestException`. You can subscribe on slave's event `ModbusSlaveRequestReceived` and throw this exception. Thus you can filter incoming requests.
+
+Another breaking change related with ReadWriteMultiple function (0x17). Now it works in accordance with the Modbus spec -- performs write operation before read.
+
+`IModbusMaster` and its implementations now have Async versions of its methods which return Task:
+
+    Task<bool[]> ReadCoilsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+    Task<bool[]> ReadInputsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+    Task<ushort[]> ReadHoldingRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+    Task<ushort[]> ReadInputRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+    Task WriteSingleCoilAsync(byte slaveAddress, ushort coilAddress, bool value);
+    Task WriteSingleRegisterAsync(byte slaveAddress, ushort registerAddress, ushort value);
+    Task WriteMultipleRegistersAsync(byte slaveAddress, ushort startAddress, ushort[] data);
+    Task WriteMultipleCoilsAsync(byte slaveAddress, ushort startAddress, bool[] data);
+    Task<ushort[]> ReadWriteMultipleRegistersAsync(byte slaveAddress, ushort startReadAddress, ushort numberOfPointsToRead, ushort startWriteAddress, ushort[] writeData);
 
 Documentation
 =======
 Documentation is available in chm format (NModbus.chm)
-
 
 The MIT License (MIT)
 =======
