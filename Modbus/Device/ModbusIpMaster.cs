@@ -1,13 +1,17 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO.Ports;
-using System.Net.Sockets;
-using Modbus.IO;
-
 namespace Modbus.Device
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO.Ports;
+    using System.Net.Sockets;
+    using System.Threading.Tasks;
+
+    using IO;
+
+    using Message;
+
     /// <summary>
-    ///     Modbus IP master device.
+    ///    Modbus IP master device.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
     public class ModbusIpMaster : ModbusMaster
@@ -18,10 +22,9 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Modbus IP master factory method.
+        ///    Modbus IP master factory method.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change."
-            )]
+        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(TcpClient tcpClient)
         {
             if (tcpClient == null)
@@ -31,10 +34,9 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Modbus IP master factory method.
+        ///    Modbus IP master factory method.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change."
-            )]
+        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -48,8 +50,7 @@ namespace Modbus.Device
         /// <summary>
         ///     Modbus IP master factory method.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change."
-            )]
+        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(SerialPort serialPort)
         {
             if (serialPort == null)
@@ -61,8 +62,7 @@ namespace Modbus.Device
         /// <summary>
         ///     Modbus IP master factory method.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change."
-            )]
+        [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(IStreamResource streamResource)
         {
             if (streamResource == null)
@@ -72,7 +72,7 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Read from 1 to 2000 contiguous coils status.
+        ///    Reads from 1 to 2000 contiguous coils status.
         /// </summary>
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of coils to read.</param>
@@ -83,7 +83,18 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Read from 1 to 2000 contiguous discrete input status.
+        ///    Asynchronously reads from 1 to 2000 contiguous coils status.
+        /// </summary>
+        /// <param name="startAddress">Address to begin reading.</param>
+        /// <param name="numberOfPoints">Number of coils to read.</param>
+        /// <returns>A task that represents the asynchronous read operation</returns>
+        public Task<bool[]> ReadCoilsAsync(ushort startAddress, ushort numberOfPoints)
+        {
+            return base.ReadCoilsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Reads from 1 to 2000 contiguous discrete input status.
         /// </summary>
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of discrete inputs to read.</param>
@@ -94,7 +105,18 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Read contiguous block of holding registers.
+        ///    Asynchronously reads from 1 to 2000 contiguous discrete input status.
+        /// </summary>
+        /// <param name="startAddress">Address to begin reading.</param>
+        /// <param name="numberOfPoints">Number of discrete inputs to read.</param>
+        /// <returns>A task that represents the asynchronous read operation</returns>
+        public Task<bool[]> ReadInputsAsync(ushort startAddress, ushort numberOfPoints)
+        {
+            return base.ReadInputsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Reads contiguous block of holding registers.
         /// </summary>
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
@@ -105,7 +127,18 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Read contiguous block of input registers.
+        ///    Asynchronously reads contiguous block of holding registers.
+        /// </summary>
+        /// <param name="startAddress">Address to begin reading.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>A task that represents the asynchronous read operation</returns>
+        public Task<ushort[]> ReadHoldingRegistersAsync(ushort startAddress, ushort numberOfPoints)
+        {
+            return base.ReadHoldingRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Reads contiguous block of input registers.
         /// </summary>
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
@@ -116,13 +149,35 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///     Write a single coil value.
+        ///    Asynchronously reads contiguous block of input registers.
+        /// </summary>
+        /// <param name="startAddress">Address to begin reading.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>A task that represents the asynchronous read operation</returns>
+        public Task<ushort[]> ReadInputRegistersAsync(ushort startAddress, ushort numberOfPoints)
+        {
+            return base.ReadInputRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Writes a single coil value.
         /// </summary>
         /// <param name="coilAddress">Address to write value to.</param>
         /// <param name="value">Value to write.</param>
         public void WriteSingleCoil(ushort coilAddress, bool value)
         {
             base.WriteSingleCoil(Modbus.DefaultIpSlaveUnitId, coilAddress, value);
+        }
+
+        /// <summary>
+        ///    Asynchronously writes a single coil value.
+        /// </summary>
+        /// <param name="coilAddress">Address to write value to.</param>
+        /// <param name="value">Value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation</returns>
+        public Task WriteSingleCoilAsync(ushort coilAddress, bool value)
+        {
+            return base.WriteSingleCoilAsync(Modbus.DefaultIpSlaveUnitId, coilAddress, value);
         }
 
         /// <summary>
@@ -136,6 +191,17 @@ namespace Modbus.Device
         }
 
         /// <summary>
+        ///    Asynchronously writes a single holding register.
+        /// </summary>
+        /// <param name="registerAddress">Address to write.</param>
+        /// <param name="value">Value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation</returns>
+        public Task WriteSingleRegisterAsync(ushort registerAddress, ushort value)
+        {
+            return base.WriteSingleRegisterAsync(Modbus.DefaultIpSlaveUnitId, registerAddress, value);
+        }
+
+        /// <summary>
         ///     Write a block of 1 to 123 contiguous registers.
         /// </summary>
         /// <param name="startAddress">Address to begin writing values.</param>
@@ -146,6 +212,17 @@ namespace Modbus.Device
         }
 
         /// <summary>
+        ///    Asynchronously writes a block of 1 to 123 contiguous registers.
+        /// </summary>
+        /// <param name="startAddress">Address to begin writing values.</param>
+        /// <param name="data">Values to write.</param>
+        /// <returns>A task that represents the asynchronous write operation</returns>
+        public Task WriteMultipleRegistersAsync(ushort startAddress, ushort[] data)
+        {
+            return base.WriteMultipleRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+        }
+
+        /// <summary>
         ///     Force each coil in a sequence of coils to a provided value.
         /// </summary>
         /// <param name="startAddress">Address to begin writing values.</param>
@@ -153,6 +230,17 @@ namespace Modbus.Device
         public void WriteMultipleCoils(ushort startAddress, bool[] data)
         {
             base.WriteMultipleCoils(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+        }
+
+        /// <summary>
+        ///    Asynchronously writes a sequence of coils.
+        /// </summary>
+        /// <param name="startAddress">Address to begin writing values.</param>
+        /// <param name="data">Values to write.</param>
+        /// <returns>A task that represents the asynchronous write operation</returns>
+        public Task WriteMultipleCoilsAsync(ushort startAddress, bool[] data)
+        {
+            return base.WriteMultipleCoilsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, data);
         }
 
         /// <summary>
@@ -168,6 +256,22 @@ namespace Modbus.Device
             ushort startWriteAddress, ushort[] writeData)
         {
             return base.ReadWriteMultipleRegisters(Modbus.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
+                startWriteAddress, writeData);
+        }
+
+        /// <summary>
+        ///    Asynchronously performs a combination of one read operation and one write operation in a single Modbus transaction.
+        ///    The write operation is performed before the read.
+        /// </summary>
+        /// <param name="startReadAddress">Address to begin reading (Holding registers are addressed starting at 0).</param>
+        /// <param name="numberOfPointsToRead">Number of registers to read.</param>
+        /// <param name="startWriteAddress">Address to begin writing (Holding registers are addressed starting at 0).</param>
+        /// <param name="writeData">Register values to write.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public Task<ushort[]> ReadWriteMultipleRegistersAsync(ushort startReadAddress, ushort numberOfPointsToRead,
+            ushort startWriteAddress, ushort[] writeData)
+        {
+            return base.ReadWriteMultipleRegistersAsync(Modbus.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
                 startWriteAddress, writeData);
         }
     }
