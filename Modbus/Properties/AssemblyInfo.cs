@@ -7,23 +7,16 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("NModbus4")]
 [assembly: AssemblyCompany("Maxwe11")]
 [assembly: AssemblyCopyright("Licensed under MIT License.")]
-[assembly: AssemblyDescription("Differs from this one (https://code.google.com/p/nmodbus) in following: " +
-                               "removed FtdAdapter.dll, log4net, Unme.Common.dll dependencies, assembly renamed to NModbus.dll, " +
-                               "target framework changed to .NET 4")]
+[assembly: AssemblyDescription("NModbus is a C# implementation of the Modbus protocol. " +
+           "Provides connectivity to Modbus slave compatible devices and applications. " +
+           "Supports serial ASCII, serial RTU, TCP, and UDP protocols. "+
+           "NModbus4 it's a fork of NModbus(https://code.google.com/p/nmodbus)")]
 
-// required for VBA applications
-
-[assembly: ComVisible(true)]
 [assembly: CLSCompliant(false)]
 [assembly: Guid("95B2AE1E-E0DC-4306-8431-D81ED10A2D5D")]
-[assembly: AssemblyVersion("1.12.0.0")]
-#if !WindowsCE
-
-[assembly: AssemblyFileVersion("1.12.0.0")]
-#endif
+[assembly: AssemblyVersion("2.0.*")]
 
 #if !SIGNED
-
 [assembly: InternalsVisibleTo(@"Modbus.UnitTests")]
 [assembly: InternalsVisibleTo(@"DynamicProxyGenAssembly2")]
 #endif
