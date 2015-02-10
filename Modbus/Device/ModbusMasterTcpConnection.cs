@@ -11,6 +11,9 @@ namespace Modbus.Device
     using System.Diagnostics;
     using Unme.Common;
 
+    /// <summary>
+    /// Represents an incoming connection from a Modbus master. Contains the slave's logic to process the connection.
+    /// </summary>
     internal class ModbusMasterTcpConnection : ModbusDevice, IDisposable
     {
         private readonly TcpClient _client;
@@ -134,24 +137,12 @@ namespace Modbus.Device
             {
                 action.Invoke();
             }
-            catch (IOException ioe)
+            catch (Exception ex)
             {
-                Debug.WriteLine("IOException encountered in ReadHeaderCompleted - {0}", ioe.Message);
-                ModbusMasterTcpConnectionClosed.Raise(this, new TcpConnectionEventArgs(EndPoint));
-
-                SocketException socketException = ioe.InnerException as SocketException;
-                if (socketException != null && socketException.ErrorCode == Modbus.ConnectionResetByPeer)
-                {
-                    Debug.WriteLine("Socket Exception ConnectionResetByPeer, Master closed connection.");
-                    return;
-                }
-
-                throw;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Unexpected exception encountered: [{0}] {1}", e.GetType().Name, e.Message);
-                throw;
+                Debug.WriteLine("Exception processing request: [{0}] {1}", ex.GetType().Name, ex.Message);
+                if (!(ex is IOException || ex is FormatException))
+                    throw; // This will typically result in the exception being unhandled, which will terminate the thread pool thread and thereby the process, depending on the process's configuration. Such a crash would cause all connections to be dropped, even if the slave were restarted.
+                // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize the frame, it can drop the connection.
             }
         }
     }
