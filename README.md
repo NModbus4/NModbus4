@@ -1,5 +1,6 @@
 NModbus4
 =======
+[![Build status](https://ci.appveyor.com/api/projects/status/xh645h4skw32pu6j?svg=true)](https://ci.appveyor.com/project/Maxwe11/nmodbus4)
 
 NModbus is a C# implementation of the Modbus protocol.
 Provides connectivity to Modbus slave compatible devices and applications.
