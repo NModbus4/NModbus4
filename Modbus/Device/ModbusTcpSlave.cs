@@ -9,6 +9,7 @@ using Modbus.IO;
 namespace Modbus.Device
 {
     using System.Diagnostics;
+    using System.IO;
 
     /// <summary>
     ///     Modbus TCP slave device.
@@ -111,24 +112,32 @@ namespace Modbus.Device
 
             try
             {
-                // use Socket async API for compact framework compat
-                Socket socket = null;
-                lock (_serverLock)
+                try
                 {
-                    if (_server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
-                        return;
-                    socket = Server.Server.EndAccept(ar);
+                    // use Socket async API for compact framework compat
+                    Socket socket = null;
+                    lock (_serverLock)
+                    {
+                        if (_server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                            return;
+                        socket = Server.Server.EndAccept(ar);
+                    }
+
+                    TcpClient client = new TcpClient {Client = socket};
+                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
+                    masterConnection.ModbusMasterTcpConnectionClosed +=
+                        (sender, eventArgs) => RemoveMaster(eventArgs.EndPoint);
+
+                    lock (_mastersLock)
+                        _masters.Add(client.Client.RemoteEndPoint.ToString(), masterConnection);
+
+                    Debug.WriteLine("Accept completed.");
                 }
-
-                TcpClient client = new TcpClient {Client = socket};
-                var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                masterConnection.ModbusMasterTcpConnectionClosed +=
-                    (sender, eventArgs) => RemoveMaster(eventArgs.EndPoint);
-
-                lock (_mastersLock)
-                    _masters.Add(client.Client.RemoteEndPoint.ToString(), masterConnection);
-
-                Debug.WriteLine("Accept completed.");
+                catch (IOException ex)
+                {
+                    // Abandon the connection attempt and continue to accepting the next connection.
+                    Debug.WriteLine("Accept failed: " + ex.Message);
+                }
 
                 // Accept another client
                 // use Socket async API for compact framework compat
