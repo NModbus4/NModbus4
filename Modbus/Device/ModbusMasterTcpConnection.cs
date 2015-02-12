@@ -30,7 +30,7 @@ namespace Modbus.Device
             if (client == null)
                 throw new ArgumentNullException("client");
             if (slave == null)
-                throw new ArgumentException("slave");
+                throw new ArgumentNullException("slave");
 
             _client = client;
             _endPoint = client.Client.RemoteEndPoint.ToString();
