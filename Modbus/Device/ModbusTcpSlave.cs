@@ -92,20 +92,20 @@ namespace Modbus.Device
             }
         }
 
-        internal void RemoveMaster(string endPoint)
+        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
             ModbusMasterTcpConnection connection;
-            if (!_masters.TryRemove(endPoint, out connection))
+            if (!_masters.TryRemove(e.EndPoint, out connection))
             {
                 var msg = string.Format(
                     CultureInfo.InvariantCulture,
                     "EndPoint {0} cannot be removed, it does not exist.",
-                    endPoint);
+                    e.EndPoint);
 
                 throw new ArgumentException(msg);
             }
 
-            Debug.WriteLine("Removed Master {0}", endPoint);
+            Debug.WriteLine("Removed Master {0}", e.EndPoint);
         }
 
         internal void AcceptCompleted(IAsyncResult ar)
@@ -127,8 +127,7 @@ namespace Modbus.Device
 
                     TcpClient client = new TcpClient {Client = socket};
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed +=
-                        (sender, eventArgs) => RemoveMaster(eventArgs.EndPoint);
+                    masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
 
                     _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
 
