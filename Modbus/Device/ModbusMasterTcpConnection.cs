@@ -140,10 +140,22 @@ namespace Modbus.Device
             catch (Exception ex)
             {
                 Debug.WriteLine("Exception processing request: [{0}] {1}", ex.GetType().Name, ex.Message);
-                if (!(ex is IOException || ex is FormatException))
-                    throw; // This will typically result in the exception being unhandled, which will terminate the thread pool thread and thereby the process, depending on the process's configuration. Such a crash would cause all connections to be dropped, even if the slave were restarted.
-                // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize the frame, it can drop the connection.
+
+                // This will typically result in the exception being unhandled, which will terminate the thread pool thread and
+                // thereby the process, depending on the process's configuration. Such a crash would cause all connections to be
+                // dropped, even if the slave were restarted.
+                // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize
+                //the frame, it can drop the connection.
+                if (!(ex is IOException || ex is FormatException || ex is ObjectDisposedException))
+                    throw;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                _stream.Close();
+            base.Dispose(disposing);
         }
     }
 }
