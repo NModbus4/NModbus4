@@ -171,6 +171,16 @@ namespace Modbus.Device
                         {
                             _server.Stop();
                             _server = null;
+
+                            foreach (var key in _masters.Keys)
+                            {
+                                ModbusMasterTcpConnection connection;
+                                if (_masters.TryRemove(key, out connection))
+                                {
+                                    connection.ModbusMasterTcpConnectionClosed -= OnMasterConnectionClosedHandler;
+                                    connection.Dispose();
+                                }
+                            }
                         }
                     }
                 }
