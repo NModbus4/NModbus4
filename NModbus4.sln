@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40121.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus", "Modbus\Modbus.csproj", "{FF96B252-2B24-44A1-A09C-6401B5D7ED23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NModbus4", "NModbus4\NModbus4.csproj", "{FF96B252-2B24-44A1-A09C-6401B5D7ED23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus.UnitTests", "Modbus.UnitTests\Modbus.UnitTests.csproj", "{A3A86846-316D-4A49-AEF8-C5348826A499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NModbus4.UnitTests", "NModbus4.UnitTests\NModbus4.UnitTests.csproj", "{A3A86846-316D-4A49-AEF8-C5348826A499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySample", "MySample\MySample.csproj", "{72FA8AB6-CE77-4578-8202-0DD32264783E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples.csproj", "{72FA8AB6-CE77-4578-8202-0DD32264783E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B14D514B-058C-4949-BB39-9ED1C487F492}"
 	ProjectSection(SolutionItems) = preProject

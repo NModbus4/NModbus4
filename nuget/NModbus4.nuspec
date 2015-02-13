@@ -11,11 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-		- Added Async overload to Master classes
-		- ReadWriteMultipleRegisters function performs write before read (in accordance with Modbus spec)
-		- SlaveExceptionResponse returned to master on invalid request
-		- Added WriteComplete event fired by slave after processing write request
-	</releaseNotes>
+        - fixes issue #7
+        - fixes issue #8
+    </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>modbus nmodbus rtu ascii tcp udp serial master slave</tags>
   </metadata>
