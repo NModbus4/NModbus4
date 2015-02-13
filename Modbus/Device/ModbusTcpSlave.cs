@@ -1,26 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Net.Sockets;
-using Modbus.IO;
-
 namespace Modbus.Device
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.ObjectModel;
+    using System.Globalization;
+    using System.Linq;
+    using System.Net.Sockets;
     using System.Diagnostics;
     using System.IO;
+
+    using IO;
 
     /// <summary>
     ///     Modbus TCP slave device.
     /// </summary>
     public class ModbusTcpSlave : ModbusSlave
     {
-        private readonly object _mastersLock = new object();
         private readonly object _serverLock = new object();
 
-        private readonly Dictionary<string, ModbusMasterTcpConnection> _masters =
-            new Dictionary<string, ModbusMasterTcpConnection>();
+        private readonly ConcurrentDictionary<string, ModbusMasterTcpConnection> _masters =
+            new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
 
@@ -40,8 +39,7 @@ namespace Modbus.Device
         {
             get
             {
-                lock (_mastersLock)
-                    return new ReadOnlyCollection<TcpClient>(_masters.Values.Select(mc => mc.TcpClient).ToList());
+                return new ReadOnlyCollection<TcpClient>(_masters.Values.Select(mc => mc.TcpClient).ToList());
             }
         }
 
@@ -94,16 +92,20 @@ namespace Modbus.Device
             }
         }
 
-        internal void RemoveMaster(string endPoint)
+        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
-            lock (_mastersLock)
+            ModbusMasterTcpConnection connection;
+            if (!_masters.TryRemove(e.EndPoint, out connection))
             {
-                if (!_masters.Remove(endPoint))
-                    throw new ArgumentException(String.Format(CultureInfo.InvariantCulture,
-                        "EndPoint {0} cannot be removed, it does not exist.", endPoint));
+                var msg = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "EndPoint {0} cannot be removed, it does not exist.",
+                    e.EndPoint);
+
+                throw new ArgumentException(msg);
             }
 
-            Debug.WriteLine("Removed Master {0}", endPoint);
+            Debug.WriteLine("Removed Master {0}", e.EndPoint);
         }
 
         internal void AcceptCompleted(IAsyncResult ar)
@@ -125,11 +127,9 @@ namespace Modbus.Device
 
                     TcpClient client = new TcpClient {Client = socket};
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed +=
-                        (sender, eventArgs) => RemoveMaster(eventArgs.EndPoint);
+                    masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
 
-                    lock (_mastersLock)
-                        _masters.Add(client.Client.RemoteEndPoint.ToString(), masterConnection);
+                    _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
 
                     Debug.WriteLine("Accept completed.");
                 }
@@ -171,6 +171,16 @@ namespace Modbus.Device
                         {
                             _server.Stop();
                             _server = null;
+
+                            foreach (var key in _masters.Keys)
+                            {
+                                ModbusMasterTcpConnection connection;
+                                if (_masters.TryRemove(key, out connection))
+                                {
+                                    connection.ModbusMasterTcpConnectionClosed -= OnMasterConnectionClosedHandler;
+                                    connection.Dispose();
+                                }
+                            }
                         }
                     }
                 }
