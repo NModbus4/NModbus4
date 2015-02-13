@@ -1,8 +1,9 @@
 ﻿#if !WindowsCE
-using System.Net.Sockets;
 
 namespace Modbus.IO
 {
+    using System.Net.Sockets;
+
     internal class FullUdpClient : CrossPlatformUdpClient
     {
         public FullUdpClient(UdpClient udpClient)

@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
 namespace Modbus.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     /// <summary>
     ///     A 1 origin collection represetative of the Modbus Data Model.
     /// </summary>

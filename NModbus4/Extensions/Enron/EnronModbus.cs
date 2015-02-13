@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using Modbus.Device;
-using Modbus.Utility;
-
-namespace Modbus.Extensions.Enron
+﻿namespace Modbus.Extensions.Enron
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+
+    using Device;
+    using Utility;
+
+
     /// <summary>
     ///     Utility extensions for the Enron Modbus dialect.
     /// </summary>

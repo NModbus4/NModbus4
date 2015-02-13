@@ -1,8 +1,10 @@
-﻿using System;
-using Modbus.Message;
-
+﻿
 namespace Modbus.IO
 {
+    using System;
+
+    using Message;
+
     /// <summary>
     ///     Empty placeholder.
     /// </summary>

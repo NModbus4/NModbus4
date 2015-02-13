@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using Modbus.Message;
-using Modbus.Utility;
-
 namespace Modbus.IO
 {
+    using System;
     using System.IO;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Linq;
 
-    using Unme.Common;
+    using Message;
+    using Utility;
 
     /// <summary>
     ///     Refined Abstraction - http://en.wikipedia.org/wiki/Bridge_Pattern

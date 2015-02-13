@@ -1,12 +1,13 @@
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading;
-using Modbus.Message;
-
 namespace Modbus.IO
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Threading;
+
+    using Message;
+
     using Unme.Common;
 
     /// <summary>

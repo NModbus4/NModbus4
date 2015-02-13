@@ -1,14 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using Modbus.IO;
-using Modbus.Message;
-
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
+    using System;
     using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+
+    using IO;
+    using Message;
+
     using Unme.Common;
 
     /// <summary>

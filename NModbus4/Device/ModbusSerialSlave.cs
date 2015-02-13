@@ -1,14 +1,13 @@
-using System;
-using System.Globalization;
-using System.IO;
-using System.IO.Ports;
-using Modbus.IO;
-using Modbus.Message;
-
 namespace Modbus.Device
 {
+    using System;
     using System.Diagnostics;
-    using Unme.Common;
+    using System.Globalization;
+    using System.IO;
+    using System.IO.Ports;
+
+    using IO;
+    using Message;
 
     /// <summary>
     ///     Modbus serial slave device.

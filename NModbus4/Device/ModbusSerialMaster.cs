@@ -1,13 +1,14 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO.Ports;
-using System.Net.Sockets;
-using Modbus.Data;
-using Modbus.IO;
-using Modbus.Message;
-
 namespace Modbus.Device
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO.Ports;
+    using System.Net.Sockets;
+
+    using Data;
+    using IO;
+    using Message;
+
     /// <summary>
     ///     Modbus serial master device.
     /// </summary>

@@ -1,4 +1,3 @@
-
 namespace Modbus.Message
 {
     using System;

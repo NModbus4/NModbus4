@@ -1,9 +1,9 @@
-using System;
-using System.Globalization;
-using System.Net;
-
 namespace Modbus.Message
 {
+    using System;
+    using System.Globalization;
+    using System.Net;
+
     /// <summary>
     /// 
     /// </summary>

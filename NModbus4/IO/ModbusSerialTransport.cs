@@ -1,12 +1,11 @@
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using Modbus.Message;
-
 namespace Modbus.IO
 {
-    using Unme.Common;
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+
+    using Message;
 
     /// <summary>
     ///     Transport for Serial protocols.
