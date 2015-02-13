@@ -24,23 +24,33 @@ To install NModbus4, run the following command in the Package Manager Console
 Change log
 =======
 
-**NModbus4 2.0** introduces some breaking changes in slave behaviour. In case of slave receives request with invalid function exception response would be returned to master instead of throwing ArgumentException. 
+Version **2.0** of **NModbus4** introduces some breaking changes.
+## NModbus4 2.0.5516.31020 ##
+In case of slave receives request with invalid function exception response would be returned to master instead of throwing ArgumentException (issue [#2](/../../issues/2)). 
 
-Also introduced new exception type `InvalidModbusRequestException`. You can subscribe on slave's event `ModbusSlaveRequestReceived` and throw this exception. Thus you can filter incoming requests.
+Also introduced new exception type `InvalidModbusRequestException`. You can subscribe on slave's event `ModbusSlaveRequestReceived` and throw this exception. Thus you can filter incoming requests ([#6](/../../issues/6)).
 
-Another breaking change related with ReadWriteMultiple function (0x17). Now it works in accordance with the Modbus spec -- performs write operation before read.
+Another breaking change related with ReadWriteMultiple function (0x17). Now it works in accordance with the Modbus spec -- performs write operation before read(fixes [#6](/../../issues/6)).
 
-`IModbusMaster` and its implementations now have Async versions of its methods which return Task:
+**API addition**
 
-    Task<bool[]> ReadCoilsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
-    Task<bool[]> ReadInputsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
-    Task<ushort[]> ReadHoldingRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
-    Task<ushort[]> ReadInputRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
-    Task WriteSingleCoilAsync(byte slaveAddress, ushort coilAddress, bool value);
-    Task WriteSingleRegisterAsync(byte slaveAddress, ushort registerAddress, ushort value);
-    Task WriteMultipleRegistersAsync(byte slaveAddress, ushort startAddress, ushort[] data);
-    Task WriteMultipleCoilsAsync(byte slaveAddress, ushort startAddress, bool[] data);
-    Task<ushort[]> ReadWriteMultipleRegistersAsync(byte slaveAddress, ushort startReadAddress, ushort numberOfPointsToRead, ushort startWriteAddress, ushort[] writeData);
+1. `IModbusMaster` and its implementations now have Async versions of its methods which return `Task`:
+
+        Task<bool[]> ReadCoilsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+        Task<bool[]> ReadInputsAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+        Task<ushort[]> ReadHoldingRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+        Task<ushort[]> ReadInputRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+        Task WriteSingleCoilAsync(byte slaveAddress, ushort coilAddress, bool value);
+        Task WriteSingleRegisterAsync(byte slaveAddress, ushort registerAddress, ushort value);
+        Task WriteMultipleRegistersAsync(byte slaveAddress, ushort startAddress, ushort[] data);
+        Task WriteMultipleCoilsAsync(byte slaveAddress, ushort startAddress, bool[] data);
+        Task<ushort[]> ReadWriteMultipleRegistersAsync(byte slaveAddress, ushort startReadAddress, ushort numberOfPointsToRead, ushort startWriteAddress, ushort[] writeData);
+
+2. Opposite to event `ModbusSlaveRequestReceived` added event `WriteComplete` which fired by slave after write operation completed.
+
+## NModbus4 2.0.5522.34406 ##
+ - fixes issue [#7](/../../issues/7)
+ - fixes issue [#8](/../../issues/8)
 
 Documentation
 =======
