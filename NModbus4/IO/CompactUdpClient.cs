@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Threading;
-
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
+    using System;
+    using System.Net.Sockets;
+    using System.Threading;
+
     /// <summary>
     ///     No timeout support for compact framework.
     /// </summary>

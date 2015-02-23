@@ -327,44 +327,48 @@ namespace Modbus.Device
             return Transport.UnicastMessage<TResponse>(request);
         }
 
-        internal static void ValidateData<T>(string argumentName, T[] data, int maxDataLength)
+        private static void ValidateData<T>(string argumentName, T[] data, int maxDataLength)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
 
             if (data.Length == 0 || data.Length > maxDataLength)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture,
+                var msg = string.Format(
+                    CultureInfo.InvariantCulture,
                     "The length of argument {0} must be between 1 and {1} inclusive.",
                     argumentName,
-                    maxDataLength));
+                    maxDataLength);
+                throw new ArgumentException(msg);
             }
         }
 
-        internal static void ValidateNumberOfPoints(string argumentName, ushort numberOfPoints, ushort maxNumberOfPoints)
+        private static void ValidateNumberOfPoints(string argumentName, ushort numberOfPoints, ushort maxNumberOfPoints)
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture,
+                var msg = string.Format(
+                    CultureInfo.InvariantCulture,
                     "Argument {0} must be between 1 and {1} inclusive.",
                     argumentName,
-                    maxNumberOfPoints));
+                    maxNumberOfPoints);
+                throw new ArgumentException(msg);
             }
         }
 
-        internal bool[] PerformReadDiscretes(ReadCoilsInputsRequest request)
+        private bool[] PerformReadDiscretes(ReadCoilsInputsRequest request)
         {
             ReadCoilsInputsResponse response = Transport.UnicastMessage<ReadCoilsInputsResponse>(request);
 
             return response.Data.Take(request.NumberOfPoints).ToArray();
         }
 
-        internal Task<bool[]> PerformReadDiscretesAsync(ReadCoilsInputsRequest request)
+        private Task<bool[]> PerformReadDiscretesAsync(ReadCoilsInputsRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadDiscretes(request));
         }
 
-        internal ushort[] PerformReadRegisters(ReadHoldingInputRegistersRequest request)
+        private ushort[] PerformReadRegisters(ReadHoldingInputRegistersRequest request)
         {
             ReadHoldingInputRegistersResponse response =
                 Transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
@@ -372,12 +376,12 @@ namespace Modbus.Device
             return response.Data.Take(request.NumberOfPoints).ToArray();
         }
 
-        internal Task<ushort[]> PerformReadRegistersAsync(ReadHoldingInputRegistersRequest request)
+        private Task<ushort[]> PerformReadRegistersAsync(ReadHoldingInputRegistersRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadRegisters(request));
         }
 
-        internal ushort[] PerformReadRegisters(ReadWriteMultipleRegistersRequest request)
+        private ushort[] PerformReadRegisters(ReadWriteMultipleRegistersRequest request)
         {
             ReadHoldingInputRegistersResponse response =
                 Transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
@@ -385,12 +389,12 @@ namespace Modbus.Device
             return response.Data.Take(request.ReadRequest.NumberOfPoints).ToArray();
         }
 
-        internal Task<ushort[]> PerformReadRegistersAsync(ReadWriteMultipleRegistersRequest request)
+        private Task<ushort[]> PerformReadRegistersAsync(ReadWriteMultipleRegistersRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadRegisters(request));
         }
 
-        internal Task PerformWriteRequestAsync<T>(IModbusMessage request) where T : IModbusMessage, new()
+        private Task PerformWriteRequestAsync<T>(IModbusMessage request) where T : IModbusMessage, new()
         {
             return Task.Factory.StartNew(() => Transport.UnicastMessage<T>(request));
         }

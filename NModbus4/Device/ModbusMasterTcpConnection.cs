@@ -1,14 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using Modbus.IO;
-using Modbus.Message;
-
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
+    using System;
     using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+
+    using IO;
+    using Message;
+
     using Unme.Common;
 
     /// <summary>
@@ -62,7 +63,7 @@ namespace Modbus.Device
             get { return _client; }
         }
 
-        internal void ReadHeaderCompleted(IAsyncResult ar)
+        private void ReadHeaderCompleted(IAsyncResult ar)
         {
             Debug.WriteLine("Read header completed.");
 
@@ -85,7 +86,7 @@ namespace Modbus.Device
             }, EndPoint);
         }
 
-        internal void ReadFrameCompleted(IAsyncResult ar)
+        private void ReadFrameCompleted(IAsyncResult ar)
         {
             CatchExceptionAndRemoveMasterEndPoint(() =>
             {
@@ -108,7 +109,7 @@ namespace Modbus.Device
             }, EndPoint);
         }
 
-        internal void WriteCompleted(IAsyncResult ar)
+        private void WriteCompleted(IAsyncResult ar)
         {
             Debug.WriteLine("End write.");
 
@@ -124,7 +125,7 @@ namespace Modbus.Device
         ///     Catches all exceptions thrown when action is executed and removes the master end point.
         ///     The exception is ignored when it simply signals a master closing its connection.
         /// </summary>
-        internal void CatchExceptionAndRemoveMasterEndPoint(Action action, string endPoint)
+        private void CatchExceptionAndRemoveMasterEndPoint(Action action, string endPoint)
         {
             if (action == null)
                 throw new ArgumentNullException("action");

@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net;
-using Modbus.Utility;
-
 namespace Modbus.Data
 {
+    using System;
     using System.IO;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Net;
+
+    using Utility;
 
     /// <summary>
     ///     Collection of 16 bit registers.

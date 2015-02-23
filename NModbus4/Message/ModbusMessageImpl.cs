@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
-using Modbus.Data;
-
 namespace Modbus.Message
 {
+    using System;
     using System.IO;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Net;
+
+    using Data;
 
     /// <summary>
     ///     Class holding all implementation shared between two or more message types.

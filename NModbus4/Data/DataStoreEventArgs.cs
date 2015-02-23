@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Modbus.Utility;
-
-namespace Modbus.Data
+﻿namespace Modbus.Data
 {
-    using Unme.Common;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+
+    using Utility;
 
     /// <summary>
     ///     Event args for read write actions performed on the DataStore.

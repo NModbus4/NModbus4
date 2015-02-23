@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Text;
-
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
+    using System.Linq;
+    using System.Text;
+
     internal static class StreamResourceUtility
     {
         internal static string ReadLine(IStreamResource stream)

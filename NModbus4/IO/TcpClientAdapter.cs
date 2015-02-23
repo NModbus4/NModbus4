@@ -1,10 +1,10 @@
-using System;
-using System.Diagnostics;
-using System.Net.Sockets;
-using System.Threading;
-
 namespace Modbus.IO
 {
+    using System;
+    using System.Diagnostics;
+    using System.Net.Sockets;
+    using System.Threading;
+
     using Unme.Common;
 
     /// <summary>

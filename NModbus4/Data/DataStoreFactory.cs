@@ -1,10 +1,5 @@
-using System;
-using System.Linq;
-
 namespace Modbus.Data
 {
-    using Unme.Common;
-
     /// <summary>
     ///     Data story factory.
     /// </summary>
@@ -15,7 +10,7 @@ namespace Modbus.Data
         /// </summary>
         public static DataStore CreateDefaultDataStore()
         {
-            return CreateDefaultDataStore(UInt16.MaxValue, UInt16.MaxValue, UInt16.MaxValue, UInt16.MaxValue);
+            return CreateDefaultDataStore(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue, ushort.MaxValue);
         }
 
         /// <summary>

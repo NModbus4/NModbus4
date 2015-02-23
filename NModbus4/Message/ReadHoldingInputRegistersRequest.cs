@@ -73,7 +73,7 @@ namespace Modbus.Message
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers starting at address {2}.",
+            return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers starting at address {2}.",
                 NumberOfPoints, FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input", StartAddress);
         }
 
@@ -89,7 +89,7 @@ namespace Modbus.Message
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected byte count. Expected {0}, received {1}.",
                     expectedByteCount,
                     typedResponse.ByteCount));

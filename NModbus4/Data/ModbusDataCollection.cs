@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
 namespace Modbus.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
     /// <summary>
     ///     A 1 origin collection represetative of the Modbus Data Model.
     /// </summary>
@@ -45,7 +45,7 @@ namespace Modbus.Data
         ///     Adds a default element to the collection.
         /// </summary>
         /// <param name="data">The data.</param>
-        internal static IList<TData> AddDefault(IList<TData> data)
+        private static IList<TData> AddDefault(IList<TData> data)
         {
             data.Insert(0, default(TData));
             return data;

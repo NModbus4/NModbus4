@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
-namespace Modbus.Utility
+﻿namespace Modbus.Utility
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+
     /// <summary>
     ///     Possible options for DiscriminatedUnion type
     /// </summary>

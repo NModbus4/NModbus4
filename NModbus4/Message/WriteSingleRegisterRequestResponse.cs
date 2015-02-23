@@ -1,13 +1,14 @@
-using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using Modbus.Data;
-
 namespace Modbus.Message
 {
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+
+    using Data;
+
     /// <summary>
     /// 
     /// </summary>

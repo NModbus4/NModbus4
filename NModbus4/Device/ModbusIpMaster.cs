@@ -8,8 +8,6 @@ namespace Modbus.Device
 
     using IO;
 
-    using Message;
-
     /// <summary>
     ///    Modbus IP master device.
     /// </summary>

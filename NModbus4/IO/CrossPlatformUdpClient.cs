@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+
     using Unme.Common;
 
     internal abstract class CrossPlatformUdpClient : IDisposable

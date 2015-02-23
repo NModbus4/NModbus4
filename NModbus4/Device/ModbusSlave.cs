@@ -1,14 +1,15 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Linq;
-using Modbus.Data;
-using Modbus.IO;
-using Modbus.Message;
-
 namespace Modbus.Device
 {
+    using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
+
+    using Data;
+    using IO;
+    using Message;
+
     using Unme.Common;
 
     /// <summary>
@@ -55,8 +56,7 @@ namespace Modbus.Device
         {
             DiscreteCollection data = DataStore.ReadData<DiscreteCollection, bool>(dataStore, dataSource,
                 request.StartAddress, request.NumberOfPoints, dataStore.SyncRoot);
-            ReadCoilsInputsResponse response = new ReadCoilsInputsResponse(request.FunctionCode, request.SlaveAddress,
-                data.ByteCount, data);
+            var response = new ReadCoilsInputsResponse(request.FunctionCode, request.SlaveAddress, data.ByteCount, data);
 
             return response;
         }
@@ -66,8 +66,7 @@ namespace Modbus.Device
         {
             RegisterCollection data = DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataSource,
                 request.StartAddress, request.NumberOfPoints, dataStore.SyncRoot);
-            ReadHoldingInputRegistersResponse response = new ReadHoldingInputRegistersResponse(request.FunctionCode,
-                request.SlaveAddress, data);
+            var response = new ReadHoldingInputRegistersResponse(request.FunctionCode, request.SlaveAddress, data);
 
             return response;
         }
@@ -86,8 +85,7 @@ namespace Modbus.Device
         {
             DataStore.WriteData(dataStore, request.Data.Take(request.NumberOfPoints), dataSource, request.StartAddress,
                 dataStore.SyncRoot);
-            WriteMultipleCoilsResponse response = new WriteMultipleCoilsResponse(request.SlaveAddress,
-                request.StartAddress, request.NumberOfPoints);
+            var response = new WriteMultipleCoilsResponse(request.SlaveAddress, request.StartAddress, request.NumberOfPoints);
 
             return response;
         }
@@ -104,8 +102,7 @@ namespace Modbus.Device
             DataStore dataStore, ModbusDataCollection<ushort> dataSource)
         {
             DataStore.WriteData(dataStore, request.Data, dataSource, request.StartAddress, dataStore.SyncRoot);
-            WriteMultipleRegistersResponse response = new WriteMultipleRegistersResponse(request.SlaveAddress,
-                request.StartAddress, request.NumberOfPoints);
+            var response = new WriteMultipleRegistersResponse(request.SlaveAddress, request.StartAddress, request.NumberOfPoints);
 
             return response;
         }

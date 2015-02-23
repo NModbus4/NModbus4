@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using Modbus.Device;
-using Modbus.Utility;
-
-namespace Modbus.Extensions.Enron
+﻿namespace Modbus.Extensions.Enron
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+
+    using Device;
+    using Utility;
+
+
     /// <summary>
     ///     Utility extensions for the Enron Modbus dialect.
     /// </summary>
@@ -96,7 +98,7 @@ namespace Modbus.Extensions.Enron
         /// <summary>
         ///     Convert the 32 bit registers to two 16 bit values.
         /// </summary>
-        internal static IEnumerable<ushort> Convert(uint[] registers)
+        private static IEnumerable<ushort> Convert(uint[] registers)
         {
             foreach (var register in registers)
             {
@@ -111,7 +113,7 @@ namespace Modbus.Extensions.Enron
         /// <summary>
         ///     Convert the 16 bit registers to 32 bit registers.
         /// </summary>
-        internal static IEnumerable<uint> Convert(ushort[] registers)
+        private static IEnumerable<uint> Convert(ushort[] registers)
         {
             for (int i = 0; i < registers.Length; i++)
             {
@@ -120,7 +122,7 @@ namespace Modbus.Extensions.Enron
             }
         }
 
-        internal static void ValidateNumberOfPoints(ushort numberOfPoints, ushort maxNumberOfPoints)
+        private static void ValidateNumberOfPoints(ushort numberOfPoints, ushort maxNumberOfPoints)
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)
             {
