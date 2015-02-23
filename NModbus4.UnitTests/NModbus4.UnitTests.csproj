@@ -98,8 +98,6 @@
     <Compile Include="Device\ModbusMasterFixture.cs" />
     <Compile Include="Device\ModbusSlaveFixture.cs" />
     <Compile Include="Device\TcpConnectionEventArgsFixture.cs" />
-    <Compile Include="IO\CompactUdpClientFixture.cs" />
-    <Compile Include="IO\CrossPlatformUdpClientFixture.cs" />
     <Compile Include="IO\ModbusAsciiTransportFixture.cs" />
     <Compile Include="IO\ModbusRtuTransportFixture.cs" />
     <Compile Include="IO\ModbusSerialTransportFixture.cs" />

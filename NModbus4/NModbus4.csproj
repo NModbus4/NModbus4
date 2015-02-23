@@ -77,9 +77,6 @@
     <Compile Include="Extensions\Enron\EnronModbus.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InvalidModbusRequestException.cs" />
-    <Compile Include="IO\CompactUdpClient.cs" />
-    <Compile Include="IO\CrossPlatformUdpClient.cs" />
-    <Compile Include="IO\FullUdpClient.cs" />
     <Compile Include="IO\StreamResourceUtility.cs" />
     <Compile Include="IO\IStreamResource.cs" />
     <Compile Include="IO\ModbusAsciiTransport.cs" />

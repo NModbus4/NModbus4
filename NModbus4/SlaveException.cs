@@ -57,7 +57,6 @@ namespace Modbus
             _slaveExceptionResponse = slaveExceptionResponse;
         }
 
-#if !WindowsCE
         /// <summary>
         ///     Initializes a new instance of the <see cref="SlaveException" /> class.
         /// </summary>
@@ -83,7 +82,6 @@ namespace Modbus
                     info.GetByte(FunctionCodePropertyName), info.GetByte(SlaveExceptionCodePropertyName));
             }
         }
-#endif
 
         /// <summary>
         ///     Gets a message that describes the current exception.
@@ -128,7 +126,6 @@ namespace Modbus
             get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte) 0; }
         }
 
-#if !WindowsCE
         /// <summary>
         ///     When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"></see>
         ///     with information about the exception.
@@ -164,6 +161,5 @@ namespace Modbus
                 info.AddValue(SlaveExceptionCodePropertyName, _slaveExceptionResponse.SlaveExceptionCode);
             }
         }
-#endif
     }
 }
