@@ -96,7 +96,7 @@
         }
 
         /// <summary>
-        ///     Convert the 32 bit registers to two 16 bit values.
+        /// Convert the 32 bit registers to two 16 bit values.
         /// </summary>
         private static IEnumerable<ushort> Convert(uint[] registers)
         {
