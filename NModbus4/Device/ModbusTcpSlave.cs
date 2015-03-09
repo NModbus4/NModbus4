@@ -8,6 +8,7 @@ namespace Modbus.Device
     using System.Net.Sockets;
     using System.Diagnostics;
     using System.IO;
+    using System.Timers;
 
     using IO;
 
@@ -22,6 +23,8 @@ namespace Modbus.Device
             new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
+        private Timer _timer;
+        private const int TimeWaitResponse = 1000;
 
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
@@ -30,6 +33,18 @@ namespace Modbus.Device
                 throw new ArgumentNullException("tcpListener");
 
             _server = tcpListener;
+        }
+
+        private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
+            : base(unitId, new EmptyTransport())
+        {
+            if (tcpListener == null)
+                throw new ArgumentNullException("tcpListener");
+
+            _server = tcpListener;
+            _timer = new Timer(timeInterval);
+            _timer.Elapsed += OnTimer;
+            _timer.Enabled = true;
         }
 
         /// <summary>
@@ -70,6 +85,22 @@ namespace Modbus.Device
         }
 
         /// <summary>
+        ///     Creates ModbusTcpSlave with timer which polls connected clients every <paramref name="pollInterval"/>
+        /// milliseconds on that they are connected.
+        /// </summary>
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double pollInterval)
+        {
+            return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
+        }
+
+        private static bool IsSocketConnected(Socket socket)
+        {
+            bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
+            bool available = (socket.Available == 0);
+            return poll && available;
+        }
+
+        /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
         public override void Listen()
@@ -88,6 +119,17 @@ namespace Modbus.Device
                 catch (ObjectDisposedException)
                 {
                     // this happens when the server stops
+                }
+            }
+        }
+
+        private void OnTimer(object sender, ElapsedEventArgs e)
+        {
+            foreach (var master in _masters.ToList())
+            {
+                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
+                {
+                    master.Value.Dispose();
                 }
             }
         }
@@ -171,6 +213,12 @@ namespace Modbus.Device
                         {
                             _server.Stop();
                             _server = null;
+
+                            if (_timer != null)
+                            {
+                                _timer.Dispose();
+                                _timer = null;
+                            }
 
                             foreach (var key in _masters.Keys)
                             {
