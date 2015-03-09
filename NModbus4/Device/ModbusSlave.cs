@@ -25,29 +25,29 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        /// Raised when a Modbus slave receives a request, before processing request function.
+        ///     Raised when a Modbus slave receives a request, before processing request function.
         /// </summary>
         /// <exception cref="InvalidModbusRequestException">The Modbus request was invalid, and an error response the specified exception should be sent.</exception>
         public event EventHandler<ModbusSlaveRequestEventArgs> ModbusSlaveRequestReceived;
 
         /// <summary>
-        /// Raised when a Modbus slave receives a write request, after processing the write portion of the function.
+        ///     Raised when a Modbus slave receives a write request, after processing the write portion of the function.
         /// </summary>
         /// <remarks>For Read/Write Multiple registers (function code 23), this method is raised after writing and before reading.</remarks>
         public event EventHandler<ModbusSlaveRequestEventArgs> WriteComplete;
 
         /// <summary>
-        /// Gets or sets the data store.
+        ///     Gets or sets the data store.
         /// </summary>
         public DataStore DataStore { get; set; }
 
         /// <summary>
-        /// Gets or sets the unit ID.
+        ///     Gets or sets the unit ID.
         /// </summary>
         public byte UnitId { get; set; }
 
         /// <summary>
-        /// Start slave listening for requests.
+        ///     Start slave listening for requests.
         /// </summary>
         public abstract void Listen();
 

@@ -22,7 +22,7 @@ namespace Modbus.Device
             new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
-        System.Timers.Timer _timer;
+        private System.Timers.Timer _timer;
 
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
@@ -31,45 +31,52 @@ namespace Modbus.Device
                 throw new ArgumentNullException("tcpListener");
 
             _server = tcpListener;
+        }
+
+        private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
+            : base(unitId, new EmptyTransport())
+        {
+            if (tcpListener == null)
+                throw new ArgumentNullException("tcpListener");
+
+            _server = tcpListener;
 
             //default timeout(ms) for closing TcpClient when it isn't active
-            _timer = new System.Timers.Timer(30000);
-            _timer.Elapsed += _timer_Elapsed;
+            _timer = new System.Timers.Timer(timeInterval);
+            _timer.Elapsed += OnTimer;
             _timer.Enabled = true;
         }
 
-        void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            foreach (var key in _masters.Keys)
-            {
-                if (SocketConnected(_masters[key].TcpClient.Client) == false)
-                {
-                    ModbusMasterTcpConnection connection;
-                    if (_masters.TryRemove(key, out connection))
-                    {
-                        Debug.WriteLine("Removed Master {0}", connection.EndPoint);
 
-                        connection.ModbusMasterTcpConnectionClosed -= OnMasterConnectionClosedHandler;
-                        connection.Dispose();
-                    }
+        private void OnTimer(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            foreach (var master in _masters.ToList())
+            {
+                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
+                {
+                    Debug.WriteLine("Removed Master {0}", master.Value.EndPoint);
+
+                    master.Value.Dispose();
                 }
             }
         }
+
+        /// <summary>
+        /// The time to wait for a response, in microseconds.
+        /// </summary>
+        private const int TimeWaitResponse = 1000;
 
         /// <summary>
         /// Check a socket (connected=true/disconnected=false)
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        bool SocketConnected(System.Net.Sockets.Socket s)
+        private static bool IsSocketConnected(Socket s)
         {
-            bool part1 = s.Poll(1000, System.Net.Sockets.SelectMode.SelectRead);
-            bool part2 = (s.Available == 0);
-            if (part1 & part2)
-            {//connection is closed
-                return false;
-            }
-            return true;
+            bool poll = s.Poll(TimeWaitResponse, SelectMode.SelectRead);
+            bool available = (s.Available == 0);
+
+            return poll && available;
         }
 
         /// <summary>
@@ -107,6 +114,14 @@ namespace Modbus.Device
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
         {
             return new ModbusTcpSlave(unitId, tcpListener);
+        }
+
+        /// <summary>
+        ///     Modbus TCP slave factory method with timeInterval
+        /// </summary>
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double timeInterval)
+        {
+            return new ModbusTcpSlave(unitId, tcpListener, timeInterval);
         }
 
         /// <summary>
