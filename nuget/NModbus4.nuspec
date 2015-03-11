@@ -11,8 +11,8 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-- fixes issue #7
-- fixes issue #8
+- fixes issue #11
+- fixes issue #12
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>modbus nmodbus rtu ascii tcp udp serial master slave</tags>
