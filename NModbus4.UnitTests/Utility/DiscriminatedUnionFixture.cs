@@ -1,56 +1,54 @@
 ﻿using System;
 using Modbus.Utility;
+using Xunit;
 
 namespace Modbus.UnitTests.Utility
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class DiscriminatedUnionTestSuite
     {
-        [Test]
+        [Fact]
         public void DiscriminatedUnion_CreateA()
         {
             var du = DiscriminatedUnion<string, string>.CreateA("foo");
-            Assert.AreEqual(DiscriminatedUnionOption.A, du.Option);
-            Assert.AreEqual("foo", du.A);
+            Assert.Equal(DiscriminatedUnionOption.A, du.Option);
+            Assert.Equal("foo", du.A);
         }
 
-        [Test]
+        [Fact]
         public void DiscriminatedUnion_CreateB()
         {
             var du = DiscriminatedUnion<string, string>.CreateB("foo");
-            Assert.AreEqual(DiscriminatedUnionOption.B, du.Option);
-            Assert.AreEqual("foo", du.B);
+            Assert.Equal(DiscriminatedUnionOption.B, du.Option);
+            Assert.Equal("foo", du.B);
         }
 
-        [Test]
+        [Fact]
         public void DiscriminatedUnion_AllowNulls()
         {
             var du = DiscriminatedUnion<object, object>.CreateB(null);
-            Assert.AreEqual(DiscriminatedUnionOption.B, du.Option);
-            Assert.AreEqual(null, du.B);
+            Assert.Equal(DiscriminatedUnionOption.B, du.Option);
+            Assert.Equal(null, du.B);
         }
 
-        [Test, ExpectedException(typeof (InvalidOperationException))]
+        [Fact]
         public void AccessInvalidOption_A()
         {
             var du = DiscriminatedUnion<string, string>.CreateB("foo");
-            du.A.ToString();
+            Assert.Throws<InvalidOperationException>(() => du.A.ToString());
         }
 
-        [Test, ExpectedException(typeof (InvalidOperationException))]
+        [Fact]
         public void AccessInvalidOption_B()
         {
             var du = DiscriminatedUnion<string, string>.CreateA("foo");
-            du.B.ToString();
+            Assert.Throws<InvalidOperationException>(() => du.B.ToString());
         }
 
-        [Test]
+        [Fact]
         public void DiscriminatedUnion_ToString()
         {
             var du = DiscriminatedUnion<string, string>.CreateA("foo");
-            Assert.AreEqual(du.ToString(), "foo");
+            Assert.Equal(du.ToString(), "foo");
         }
     }
 }

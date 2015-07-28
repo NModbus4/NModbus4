@@ -6,15 +6,13 @@ using Modbus.Message;
 using Modbus.UnitTests.Message;
 using Modbus.Utility;
 using Rhino.Mocks;
+using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class ModbusSerialTransportFixture : ModbusMessageFixture
     {
-        [Test]
+        [Fact]
         public void CreateResponse()
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
@@ -24,19 +22,19 @@ namespace Modbus.UnitTests.IO
             ReadCoilsInputsResponse response =
                 transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {2, Modbus.ReadCoils, 1, 129, lrc}) as
                     ReadCoilsInputsResponse;
-            Assert.IsNotNull(response);
+            Assert.NotNull(response);
             AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
-        [Test, ExpectedException(typeof (IOException))]
+        [Fact]
         public void CreateResponseErroneousLrc()
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             transport.CheckFrame = true;
-            transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115});
+            Assert.Throws<IOException>(() => transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115}));
         }
 
-        [Test]
+        [Fact]
         public void CreateResponseErroneousLrcDoNotCheckFrame()
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
@@ -49,7 +47,7 @@ namespace Modbus.UnitTests.IO
         ///     type.
         ///     We want to be sure to try the message again so clear the RX buffer and try again.
         /// </summary>
-        [Test]
+        [Fact]
         public void UnicastMessage_PurgeReceiveBuffer()
         {
             MockRepository mocks = new MockRepository();
@@ -74,18 +72,18 @@ namespace Modbus.UnitTests.IO
             // read header
             Expect.Call(serialResource.Read(new byte[] {0, 0, 0, 0}, 0, 4))
                 .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
-                {
-                    Array.Copy(response.MessageFrame, 0, buf, 0, 4);
-                    return 4;
-                }));
+               {
+                   Array.Copy(response.MessageFrame, 0, buf, 0, 4);
+                   return 4;
+               }));
 
             // read remainder
             Expect.Call(serialResource.Read(new byte[] {0, 0}, 0, 2))
                 .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
-                {
-                    Array.Copy(ModbusUtility.CalculateCrc(response.MessageFrame), 0, buf, 0, 2);
-                    return 2;
-                }));
+               {
+                   Array.Copy(ModbusUtility.CalculateCrc(response.MessageFrame), 0, buf, 0, 2);
+                   return 2;
+               }));
 
             mocks.ReplayAll();
 

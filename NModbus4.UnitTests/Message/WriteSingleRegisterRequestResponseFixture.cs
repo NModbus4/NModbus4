@@ -1,27 +1,25 @@
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class WriteSingleRegisterRequestResponseFixture
     {
-        [Test]
+        [Fact]
         public void NewWriteSingleRegisterRequestResponse()
         {
             WriteSingleRegisterRequestResponse message = new WriteSingleRegisterRequestResponse(12, 5, 1200);
-            Assert.AreEqual(12, message.SlaveAddress);
-            Assert.AreEqual(5, message.StartAddress);
-            Assert.AreEqual(1, message.Data.Count);
-            Assert.AreEqual(1200, message.Data[0]);
+            Assert.Equal(12, message.SlaveAddress);
+            Assert.Equal(5, message.StartAddress);
+            Assert.Equal(1, message.Data.Count);
+            Assert.Equal(1200, message.Data[0]);
         }
 
-        [Test]
+        [Fact]
         public void ToStringOverride()
         {
             WriteSingleRegisterRequestResponse message = new WriteSingleRegisterRequestResponse(12, 5, 1200);
-            Assert.AreEqual("Write single holding register 1200 at address 5.", message.ToString());
+            Assert.Equal("Write single holding register 1200 at address 5.", message.ToString());
         }
     }
 }

@@ -1,28 +1,26 @@
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class SlaveExceptionResponseFixture
     {
-        [Test]
+        [Fact]
         public void CreateSlaveExceptionResponse()
         {
             SlaveExceptionResponse response = new SlaveExceptionResponse(11, Modbus.ReadCoils + Modbus.ExceptionOffset,
                 2);
-            Assert.AreEqual(11, response.SlaveAddress);
-            Assert.AreEqual(Modbus.ReadCoils + Modbus.ExceptionOffset, response.FunctionCode);
-            Assert.AreEqual(2, response.SlaveExceptionCode);
+            Assert.Equal(11, response.SlaveAddress);
+            Assert.Equal(Modbus.ReadCoils + Modbus.ExceptionOffset, response.FunctionCode);
+            Assert.Equal(2, response.SlaveExceptionCode);
         }
 
-        [Test]
+        [Fact]
         public void SlaveExceptionResponsePDU()
         {
             SlaveExceptionResponse response = new SlaveExceptionResponse(11, Modbus.ReadCoils + Modbus.ExceptionOffset,
                 2);
-            Assert.AreEqual(new byte[] {response.FunctionCode, response.SlaveExceptionCode}, response.ProtocolDataUnit);
+            Assert.Equal(new byte[] {response.FunctionCode, response.SlaveExceptionCode}, response.ProtocolDataUnit);
         }
     }
 }

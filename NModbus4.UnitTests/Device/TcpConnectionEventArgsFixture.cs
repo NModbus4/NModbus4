@@ -1,31 +1,29 @@
 ﻿using System;
 using Modbus.Device;
+using Xunit;
 
 namespace Modbus.UnitTests.Device
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class TcpConnectionEventArgsFixture
     {
-        [Test, ExpectedException(typeof (ArgumentNullException))]
+        [Fact]
         public void TcpConnectionEventArgs_NullEndPoint()
         {
-            new TcpConnectionEventArgs(null);
+            Assert.Throws<ArgumentNullException>(() => new TcpConnectionEventArgs(null));
         }
 
-        [Test, ExpectedException(typeof (ArgumentException))]
+        [Fact]
         public void TcpConnectionEventArgs_EmptyEndPoint()
         {
-            new TcpConnectionEventArgs(String.Empty);
+            Assert.Throws<ArgumentException>(() => new TcpConnectionEventArgs(String.Empty));
         }
 
-        [Test]
+        [Fact]
         public void TcpConnectionEventArgs()
         {
             var args = new TcpConnectionEventArgs("foo");
 
-            Assert.AreEqual("foo", args.EndPoint);
+            Assert.Equal("foo", args.EndPoint);
         }
     }
 }
