@@ -114,7 +114,7 @@ namespace Modbus.Device
                     Server.Start();
 
                     // use Socket async API for compact framework compat
-                    Server.Server.BeginAccept(AcceptCompleted, this);
+                    Server.Server.BeginAccept(state => AcceptCompleted(state), this);
                 }
                 catch (ObjectDisposedException)
                 {
@@ -150,9 +150,9 @@ namespace Modbus.Device
             Debug.WriteLine("Removed Master {0}", e.EndPoint);
         }
 
-        internal void AcceptCompleted(IAsyncResult ar)
+        private static void AcceptCompleted(IAsyncResult ar)
         {
-            ModbusTcpSlave slave = (ModbusTcpSlave) ar.AsyncState;
+            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
 
             try
             {
@@ -160,18 +160,18 @@ namespace Modbus.Device
                 {
                     // use Socket async API for compact framework compat
                     Socket socket = null;
-                    lock (_serverLock)
+                    lock (slave._serverLock)
                     {
-                        if (_server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        if (slave._server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
                             return;
-                        socket = Server.Server.EndAccept(ar);
+                        socket = slave.Server.Server.EndAccept(ar);
                     }
 
                     TcpClient client = new TcpClient {Client = socket};
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
+                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
 
-                    _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
+                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
 
                     Debug.WriteLine("Accept completed.");
                 }
@@ -183,8 +183,10 @@ namespace Modbus.Device
 
                 // Accept another client
                 // use Socket async API for compact framework compat
-                lock (_serverLock)
-                    Server.Server.BeginAccept(AcceptCompleted, slave);
+                lock (slave._serverLock)
+                {
+                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
+                }
             }
             catch (ObjectDisposedException)
             {
