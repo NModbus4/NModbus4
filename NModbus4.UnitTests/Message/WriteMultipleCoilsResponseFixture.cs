@@ -1,43 +1,41 @@
 using System;
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class WriteMultipleCoilsResponseFixture
     {
-        [Test]
+        [Fact]
         public void CreateWriteMultipleCoilsResponse()
         {
             WriteMultipleCoilsResponse response = new WriteMultipleCoilsResponse(17, 19, 45);
-            Assert.AreEqual(Modbus.WriteMultipleCoils, response.FunctionCode);
-            Assert.AreEqual(17, response.SlaveAddress);
-            Assert.AreEqual(19, response.StartAddress);
-            Assert.AreEqual(45, response.NumberOfPoints);
+            Assert.Equal(Modbus.WriteMultipleCoils, response.FunctionCode);
+            Assert.Equal(17, response.SlaveAddress);
+            Assert.Equal(19, response.StartAddress);
+            Assert.Equal(45, response.NumberOfPoints);
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Fact]
         public void CreateWriteMultipleCoilsResponseTooMuchData()
         {
-            new WriteMultipleCoilsResponse(1, 2, Modbus.MaximumDiscreteRequestResponseSize + 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new WriteMultipleCoilsResponse(1, 2, Modbus.MaximumDiscreteRequestResponseSize + 1));
         }
 
-        [Test]
+        [Fact]
         public void CreateWriteMultipleCoilsResponseMaxSize()
         {
             WriteMultipleCoilsResponse response = new WriteMultipleCoilsResponse(1, 2,
                 Modbus.MaximumDiscreteRequestResponseSize);
-            Assert.AreEqual(Modbus.MaximumDiscreteRequestResponseSize, response.NumberOfPoints);
+            Assert.Equal(Modbus.MaximumDiscreteRequestResponseSize, response.NumberOfPoints);
         }
 
-        [Test]
+        [Fact]
         public void ToString_Test()
         {
             var response = new WriteMultipleCoilsResponse(1, 2, 3);
 
-            Assert.AreEqual("Wrote 3 coils starting at address 2.", response.ToString());
+            Assert.Equal("Wrote 3 coils starting at address 2.", response.ToString());
         }
     }
 }
