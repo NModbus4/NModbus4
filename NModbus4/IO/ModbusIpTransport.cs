@@ -142,5 +142,16 @@ namespace Modbus.IO
                     "Response was not of expected transaction ID. Expected {0}, received {1}.", request.TransactionId,
                     response.TransactionId));
         }
+
+        internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        {
+            if (request.TransactionId > response.TransactionId && request.TransactionId - response.TransactionId < RetryOnOldResponseThreshold)
+            {
+                // This response was from a previous request
+                return true;
+            }
+
+            return base.OnShouldRetryResponse(request, response);
+        }
     }
 }

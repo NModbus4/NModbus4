@@ -294,6 +294,38 @@ namespace Modbus.UnitTests.IO
         }
 
         [Fact]
+        public void UnicastMessage_ReReads_IfShouldRetryReturnTrue()
+        {
+            MockRepository mocks = new MockRepository();
+            ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
+
+            transport.RetryOnOldResponseThreshold = 3;
+            transport.Stub(x => x.Write(null)).IgnoreArguments();
+
+            Expect.Call(transport.ReadResponse<ReadHoldingInputRegistersResponse>())
+                .Return(new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection(1)))
+                .Repeat.Times(2)
+                .Message("ReadResponse should be called twice, one for the retry");
+
+            transport.Expect(x => x.OnValidateResponse(null, null)).IgnoreArguments();
+
+            Expect.Call(transport.OnShouldRetryResponse(null, null))
+                .IgnoreArguments()
+                .Return(true)
+                .Repeat.Times(1);
+            Expect.Call(transport.OnShouldRetryResponse(null, null))
+                .IgnoreArguments()
+                .Return(false)
+                .Repeat.Times(1);
+
+            mocks.ReplayAll();
+            ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 1, 1, 1);
+            ReadHoldingInputRegistersResponse response = transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
+
+            mocks.VerifyAll();
+        }
+
+        [Fact]
         public void CreateResponse_SlaveException()
         {
             ModbusTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
@@ -303,6 +335,16 @@ namespace Modbus.UnitTests.IO
                 transport.CreateResponse<ReadCoilsInputsResponse>(
                     Enumerable.Concat(frame, new byte[] { lrc }).ToArray());
             Assert.True(message is SlaveExceptionResponse);
+        }
+
+        [Fact]
+        public void ShouldRetryResponse_ReturnsFalse_IfDifferentMessage()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            Assert.False(transport.ShouldRetryResponse(request, response));
         }
 
         [Fact]
@@ -321,7 +363,7 @@ namespace Modbus.UnitTests.IO
         }
 
         [Fact]
-        public void ValidateResponse()
+        public void ValidateResponse_CallsOnValidateResponse()
         {
             MockRepository mocks = new MockRepository();
             ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
