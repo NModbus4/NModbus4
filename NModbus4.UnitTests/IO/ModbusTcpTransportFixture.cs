@@ -129,6 +129,62 @@ namespace Modbus.UnitTests.IO
         }
 
         [Fact]
+        public void OnShouldRetryResponse_ReturnsTrue_IfWithinThreshold()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            request.TransactionId = 5;
+            response.TransactionId = 4;
+            transport.RetryOnOldResponseThreshold = 3;
+
+            Assert.True(transport.OnShouldRetryResponse(request, response));
+        }
+
+        [Fact]
+        public void OnShouldRetryResponse_ReturnsFalse_IfThresholdDisabled()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            request.TransactionId = 5;
+            response.TransactionId = 4;
+            transport.RetryOnOldResponseThreshold = 0;
+
+            Assert.False(transport.OnShouldRetryResponse(request, response));
+        }
+
+        [Fact]
+        public void OnShouldRetryResponse_ReturnsFalse_IfEqualTransactionId()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            request.TransactionId = 5;
+            response.TransactionId = 5;
+            transport.RetryOnOldResponseThreshold = 3;
+
+            Assert.False(transport.OnShouldRetryResponse(request, response));
+        }
+
+        [Fact]
+        public void OnShouldRetryResponse_ReturnsFalse_IfOutsideThreshold()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            request.TransactionId = 5;
+            response.TransactionId = 2;
+            transport.RetryOnOldResponseThreshold = 3;
+
+            Assert.False(transport.OnShouldRetryResponse(request, response));
+        }
+
+        [Fact]
         public void ValidateResponse_MismatchingTransactionIds()
         {
             ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
