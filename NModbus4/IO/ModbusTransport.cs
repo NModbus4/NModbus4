@@ -131,7 +131,7 @@ namespace Modbus.IO
                                     Debug.WriteLine(
                                         "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
                                         _waitToRetryMilliseconds);
-                                    Thread.Sleep(WaitToRetryMilliseconds);
+                                    Sleep(WaitToRetryMilliseconds);
                                 }
                                 else
                                 {
@@ -155,7 +155,7 @@ namespace Modbus.IO
                     Debug.WriteLine(
                         "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
                         _waitToRetryMilliseconds);
-                    Thread.Sleep(WaitToRetryMilliseconds);
+                    Sleep(WaitToRetryMilliseconds);
                 }
                 catch (Exception e)
                 {
@@ -240,6 +240,11 @@ namespace Modbus.IO
         {
             if (disposing)
                 DisposableUtility.Dispose(ref _streamResource);
+        }
+
+        private static void Sleep(int millisecondsTimeout)
+        {
+            Thread.Sleep(millisecondsTimeout);
         }
     }
 }
