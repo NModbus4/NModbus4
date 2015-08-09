@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Modbus.Data;
 using Xunit;
@@ -47,6 +48,27 @@ namespace Modbus.UnitTests.Data
         {
             DiscreteCollection col = new DiscreteCollection(1, 2, 3);
             Assert.Equal(24, col.Count);
+            var expected = new bool[]
+            {
+                true, false, false, false, false, false, false, false,
+                false, true, false, false, false, false, false, false,
+                true, true, false, false, false, false, false, false,
+            };
+
+            Assert.Equal(expected, col);
+        }
+
+        [Fact]
+        public void CreateNewDiscreteCollectionFromBytesParams_ZeroLengthArray()
+        {
+            DiscreteCollection col = new DiscreteCollection(new byte[0]);
+            Assert.Equal(0, col.Count);
+        }
+
+        [Fact]
+        public void CreateNewDiscreteCollectionFromBytesParams_NullArray()
+        {
+            Assert.Throws<ArgumentNullException>(() => new DiscreteCollection((byte[])null));
         }
 
         [Fact]
