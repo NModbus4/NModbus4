@@ -14,7 +14,8 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(false)]
 [assembly: Guid("95B2AE1E-E0DC-4306-8431-D81ED10A2D5D")]
-[assembly: AssemblyVersion("2.0.*")]
+[assembly: AssemblyVersion("2.1.0.0")]
+[assembly: AssemblyInformationalVersion("2.1.0-dev")]
 
 #if !SIGNED
 [assembly: InternalsVisibleTo(@"Modbus.UnitTests")]

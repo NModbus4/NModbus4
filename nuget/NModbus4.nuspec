@@ -7,12 +7,11 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/Maxwe11/NModbus4</projectUrl>
+    <projectUrl>https://github.com/NModbus4/NModbus4</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-- fixes issue #11
-- fixes issue #12
+https://github.com/NModbus4/NModbus4/releases
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>modbus nmodbus rtu ascii tcp udp serial master slave</tags>
