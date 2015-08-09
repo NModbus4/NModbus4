@@ -97,7 +97,7 @@
     <Compile Include="Message\WriteMultipleRegistersResponse.cs" />
     <Compile Include="Message\WriteSingleCoilRequestResponse.cs" />
     <Compile Include="Message\WriteSingleRegisterRequestResponse.cs" />
-    <Compile Include="Modbus.cs" />
+    <Compile Include="ModbusConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

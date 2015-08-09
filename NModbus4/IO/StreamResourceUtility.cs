@@ -16,9 +16,9 @@
                     continue;
 
                 result.Append(Encoding.ASCII.GetChars(singleByteBuffer).First());
-            } while (!result.ToString().EndsWith(Modbus.NewLine));
+            } while (!result.ToString().EndsWith(ModbusConstants.NewLine));
 
-            return result.ToString().Substring(0, result.Length - Modbus.NewLine.Length);
+            return result.ToString().Substring(0, result.Length - ModbusConstants.NewLine.Length);
         }
     }
 }

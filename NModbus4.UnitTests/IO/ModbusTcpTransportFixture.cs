@@ -19,7 +19,7 @@ namespace Modbus.UnitTests.IO
             MockRepository mocks = new MockRepository();
             ModbusIpTransport mockModbusTcpTransport =
                 mocks.PartialMock<ModbusIpTransport>(MockRepository.GenerateStub<IStreamResource>());
-            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 10, 5);
+            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 2, 10, 5);
             mocks.ReplayAll();
             byte[] result = mockModbusTcpTransport.BuildMessageFrame(message);
             Assert.Equal(new byte[] {0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5}, result);
@@ -45,7 +45,7 @@ namespace Modbus.UnitTests.IO
             ModbusIpTransport mockModbusTcpTransport = mocks.PartialMock<ModbusIpTransport>(mockTcpStreamAdapter);
             Expect.Call(mockModbusTcpTransport.GetNewTransactionId()).Return(UInt16.MaxValue);
             mocks.ReplayAll();
-            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 3);
+            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 1, 1, 3);
             mockModbusTcpTransport.Write(request);
             mocks.VerifyAll();
         }
@@ -65,7 +65,7 @@ namespace Modbus.UnitTests.IO
                    return 6;
                }));
 
-            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 3);
+            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 1, 1, 3);
 
             Expect.Call(mockTransport.Read(new byte[6], 0, 6))
                 .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
@@ -133,9 +133,9 @@ namespace Modbus.UnitTests.IO
         {
             ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
 
-            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 1, 1, 1);
             request.TransactionId = 5;
-            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+            IModbusMessage response = new ReadCoilsInputsResponse(ModbusConstants.ReadCoils, 1, 1, null);
             response.TransactionId = 6;
 
             Assert.Throws<IOException>(() => transport.ValidateResponse(request, response));
@@ -146,9 +146,9 @@ namespace Modbus.UnitTests.IO
         {
             ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
 
-            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
+            IModbusMessage request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 1, 1, 1);
             request.TransactionId = 5;
-            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+            IModbusMessage response = new ReadCoilsInputsResponse(ModbusConstants.ReadCoils, 1, 1, null);
             response.TransactionId = 5;
 
             // no exception is thrown

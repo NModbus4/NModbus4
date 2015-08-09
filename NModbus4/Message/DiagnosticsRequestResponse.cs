@@ -18,7 +18,7 @@ namespace Modbus.Message
         }
 
         public DiagnosticsRequestResponse(ushort subFunctionCode, byte slaveAddress, RegisterCollection data)
-            : base(slaveAddress, Modbus.Diagnostics)
+            : base(slaveAddress, ModbusConstants.Diagnostics)
         {
             SubFunctionCode = subFunctionCode;
             Data = data;
@@ -39,7 +39,7 @@ namespace Modbus.Message
 
         public override string ToString()
         {
-            Debug.Assert(SubFunctionCode == Modbus.DiagnosticsReturnQueryData,
+            Debug.Assert(SubFunctionCode == ModbusConstants.DiagnosticsReturnQueryData,
                 "Need to add support for additional sub-function.");
 
             return String.Format(CultureInfo.InvariantCulture,

@@ -60,7 +60,7 @@ namespace Modbus.Message
             return String.Format(CultureInfo.InvariantCulture,
                 "Read {0} {1} - {2}.",
                 Data.Count(),
-                FunctionCode == Modbus.ReadInputs ? "inputs" : "coils",
+                FunctionCode == ModbusConstants.ReadInputs ? "inputs" : "coils",
                 Data);
         }
 

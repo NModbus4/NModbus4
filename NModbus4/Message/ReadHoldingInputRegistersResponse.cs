@@ -60,7 +60,7 @@ namespace Modbus.Message
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers.", Data.Count,
-                FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input");
+                FunctionCode == ModbusConstants.ReadHoldingRegisters ? "holding" : "input");
         }
 
         /// <summary>

@@ -30,10 +30,10 @@ namespace Modbus.Message
         /// <param name="startAddress"></param>
         /// <param name="coilState"></param>
         public WriteSingleCoilRequestResponse(byte slaveAddress, ushort startAddress, bool coilState)
-            : base(slaveAddress, Modbus.WriteSingleCoil)
+            : base(slaveAddress, ModbusConstants.WriteSingleCoil)
         {
             StartAddress = startAddress;
-            Data = new RegisterCollection(coilState ? Modbus.CoilOn : Modbus.CoilOff);
+            Data = new RegisterCollection(coilState ? ModbusConstants.CoilOn : ModbusConstants.CoilOff);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Modbus.Message
 
             return String.Format(CultureInfo.InvariantCulture,
                 "Write single coil {0} at address {1}.",
-                Data.First() == Modbus.CoilOn ? 1 : 0,
+                Data.First() == ModbusConstants.CoilOn ? 1 : 0,
                 StartAddress);
         }
 

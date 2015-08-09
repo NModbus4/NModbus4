@@ -12,7 +12,7 @@ namespace Modbus.UnitTests.Message
             Assert.Equal(11, request.SlaveAddress);
             Assert.Equal(5, request.StartAddress);
             Assert.Equal(1, request.Data.Count);
-            Assert.Equal(Modbus.CoilOn, request.Data[0]);
+            Assert.Equal(ModbusConstants.CoilOn, request.Data[0]);
         }
 
         [Fact]

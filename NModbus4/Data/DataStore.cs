@@ -84,7 +84,7 @@ namespace Modbus.Data
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || dataSource.Count < startIndex + count)
-                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+                throw new InvalidModbusRequestException(ModbusConstants.IllegalDataAddress);
 
             U[] dataToRetrieve;
             lock (syncRoot)
@@ -110,7 +110,7 @@ namespace Modbus.Data
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
-                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+                throw new InvalidModbusRequestException(ModbusConstants.IllegalDataAddress);
 
             lock (syncRoot)
                 Update(items, destination, startIndex);
@@ -125,7 +125,7 @@ namespace Modbus.Data
         internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
-                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+                throw new InvalidModbusRequestException(ModbusConstants.IllegalDataAddress);
 
             int index = startIndex;
             foreach (T item in items)

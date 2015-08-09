@@ -12,7 +12,7 @@ namespace Modbus.UnitTests.Message
         {
             DiscreteCollection col = new DiscreteCollection(true, false, true, false, true, true, true, false, false);
             WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest(34, 45, col);
-            Assert.Equal(Modbus.WriteMultipleCoils, request.FunctionCode);
+            Assert.Equal(ModbusConstants.WriteMultipleCoils, request.FunctionCode);
             Assert.Equal(34, request.SlaveAddress);
             Assert.Equal(45, request.StartAddress);
             Assert.Equal(9, request.NumberOfPoints);
@@ -26,7 +26,7 @@ namespace Modbus.UnitTests.Message
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new WriteMultipleCoilsRequest(1, 2,
                 MessageUtility.CreateDefaultCollection<DiscreteCollection, bool>(true,
-                    Modbus.MaximumDiscreteRequestResponseSize + 1)));
+                    ModbusConstants.MaximumDiscreteRequestResponseSize + 1)));
         }
 
         [Fact]
@@ -34,8 +34,8 @@ namespace Modbus.UnitTests.Message
         {
             WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest(1, 2,
                 MessageUtility.CreateDefaultCollection<DiscreteCollection, bool>(true,
-                    Modbus.MaximumDiscreteRequestResponseSize));
-            Assert.Equal(Modbus.MaximumDiscreteRequestResponseSize, request.Data.Count);
+                    ModbusConstants.MaximumDiscreteRequestResponseSize));
+            Assert.Equal(ModbusConstants.MaximumDiscreteRequestResponseSize, request.Data.Count);
         }
 
         [Fact]

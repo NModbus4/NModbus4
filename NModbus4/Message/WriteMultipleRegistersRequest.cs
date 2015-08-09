@@ -29,7 +29,7 @@ namespace Modbus.Message
         /// <param name="startAddress"></param>
         /// <param name="data"></param>
         public WriteMultipleRegistersRequest(byte slaveAddress, ushort startAddress, RegisterCollection data)
-            : base(slaveAddress, Modbus.WriteMultipleRegisters)
+            : base(slaveAddress, ModbusConstants.WriteMultipleRegisters)
         {
             StartAddress = startAddress;
             NumberOfPoints = (ushort) data.Count;
@@ -54,10 +54,10 @@ namespace Modbus.Message
             get { return MessageImpl.NumberOfPoints.Value; }
             set
             {
-                if (value > Modbus.MaximumRegisterRequestResponseSize)
+                if (value > ModbusConstants.MaximumRegisterRequestResponseSize)
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
                         String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
-                            Modbus.MaximumRegisterRequestResponseSize));
+                            ModbusConstants.MaximumRegisterRequestResponseSize));
 
                 MessageImpl.NumberOfPoints = value;
             }

@@ -30,17 +30,17 @@ namespace Modbus.IO
 
             switch (functionCode)
             {
-                case Modbus.ReadCoils:
-                case Modbus.ReadInputs:
-                case Modbus.ReadHoldingRegisters:
-                case Modbus.ReadInputRegisters:
-                case Modbus.WriteSingleCoil:
-                case Modbus.WriteSingleRegister:
-                case Modbus.Diagnostics:
+                case ModbusConstants.ReadCoils:
+                case ModbusConstants.ReadInputs:
+                case ModbusConstants.ReadHoldingRegisters:
+                case ModbusConstants.ReadInputRegisters:
+                case ModbusConstants.WriteSingleCoil:
+                case ModbusConstants.WriteSingleRegister:
+                case ModbusConstants.Diagnostics:
                     numBytes = 1;
                     break;
-                case Modbus.WriteMultipleCoils:
-                case Modbus.WriteMultipleRegisters:
+                case ModbusConstants.WriteMultipleCoils:
+                case ModbusConstants.WriteMultipleRegisters:
                     byte byteCount = frameStart[6];
                     numBytes = byteCount + 2;
                     break;
@@ -59,23 +59,23 @@ namespace Modbus.IO
             byte functionCode = frameStart[1];
 
             // exception response
-            if (functionCode > Modbus.ExceptionOffset)
+            if (functionCode > ModbusConstants.ExceptionOffset)
                 return 1;
 
             int numBytes;
             switch (functionCode)
             {
-                case Modbus.ReadCoils:
-                case Modbus.ReadInputs:
-                case Modbus.ReadHoldingRegisters:
-                case Modbus.ReadInputRegisters:
+                case ModbusConstants.ReadCoils:
+                case ModbusConstants.ReadInputs:
+                case ModbusConstants.ReadHoldingRegisters:
+                case ModbusConstants.ReadInputRegisters:
                     numBytes = frameStart[2] + 1;
                     break;
-                case Modbus.WriteSingleCoil:
-                case Modbus.WriteSingleRegister:
-                case Modbus.WriteMultipleCoils:
-                case Modbus.WriteMultipleRegisters:
-                case Modbus.Diagnostics:
+                case ModbusConstants.WriteSingleCoil:
+                case ModbusConstants.WriteSingleRegister:
+                case ModbusConstants.WriteMultipleCoils:
+                case ModbusConstants.WriteMultipleRegisters:
+                case ModbusConstants.Diagnostics:
                     numBytes = 4;
                     break;
                 default:

@@ -17,8 +17,8 @@ namespace Modbus.IO
     public abstract class ModbusTransport : IDisposable
     {
         private readonly object _syncLock = new object();
-        private int _retries = Modbus.DefaultRetries;
-        private int _waitToRetryMilliseconds = Modbus.DefaultWaitToRetryMilliseconds;
+        private int _retries = ModbusConstants.DefaultRetries;
+        private int _waitToRetryMilliseconds = ModbusConstants.DefaultWaitToRetryMilliseconds;
         private IStreamResource _streamResource;
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Modbus.IO
                             if (exceptionResponse != null)
                             {
                                 // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
-                                readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge;
+                                readAgain = exceptionResponse.SlaveExceptionCode == ModbusConstants.Acknowledge;
                                 if (readAgain)
                                 {
                                     Debug.WriteLine(
@@ -146,7 +146,7 @@ namespace Modbus.IO
                 }
                 catch (SlaveException se)
                 {
-                    if (se.SlaveExceptionCode != Modbus.SlaveDeviceBusy)
+                    if (se.SlaveExceptionCode != ModbusConstants.SlaveDeviceBusy)
                         throw;
 
                     if (SlaveBusyUsesRetryCount && attempt++ > _retries)
@@ -185,7 +185,7 @@ namespace Modbus.IO
             IModbusMessage response;
 
             // check for slave exception response else create message from frame
-            if (functionCode > Modbus.ExceptionOffset)
+            if (functionCode > ModbusConstants.ExceptionOffset)
                 response = ModbusMessageFactory.CreateModbusMessage<SlaveExceptionResponse>(frame);
             else
                 response = ModbusMessageFactory.CreateModbusMessage<T>(frame);

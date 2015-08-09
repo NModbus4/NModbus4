@@ -30,7 +30,7 @@ namespace Modbus.Device
         /// </summary>
         public static ModbusUdpSlave CreateUdp(UdpClient client)
         {
-            return new ModbusUdpSlave(Modbus.DefaultIpSlaveUnitId, client);
+            return new ModbusUdpSlave(ModbusConstants.DefaultIpSlaveUnitId, client);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Modbus.Device
             catch (SocketException se)
             {
                 // this hapens when slave stops
-                if (se.ErrorCode != Modbus.WSACancelBlockingCall)
+                if (se.ErrorCode != ModbusConstants.WSACancelBlockingCall)
                     throw;
             }
         }

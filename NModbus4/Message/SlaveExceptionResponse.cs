@@ -85,7 +85,7 @@ namespace Modbus.Message
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
-            if (FunctionCode <= Modbus.ExceptionOffset)
+            if (FunctionCode <= ModbusConstants.ExceptionOffset)
                 throw new FormatException(Resources.SlaveExceptionResponseInvalidFunctionCode);
 
             SlaveExceptionCode = frame[2];
