@@ -2,31 +2,29 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class ModbusMessageFixture
     {
-        [Test]
+        [Fact]
         public void ProtocolDataUnitReadCoilsRequest()
         {
             AbstractModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 100, 9);
             byte[] expectedResult = {Modbus.ReadCoils, 0, 100, 0, 9};
-            Assert.AreEqual(expectedResult, message.ProtocolDataUnit);
+            Assert.Equal(expectedResult, message.ProtocolDataUnit);
         }
 
-        [Test]
+        [Fact]
         public void MessageFrameReadCoilsRequest()
         {
             AbstractModbusMessage message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 2, 3);
             byte[] expectedMessageFrame = {1, Modbus.ReadCoils, 0, 2, 0, 3};
-            Assert.AreEqual(expectedMessageFrame, message.MessageFrame);
+            Assert.Equal(expectedMessageFrame, message.MessageFrame);
         }
 
-        [Test]
+        [Fact]
         public void ModbusMessageToStringOverriden()
         {
             var messageTypes = from message in typeof (AbstractModbusMessage).Assembly.GetTypes()
@@ -34,18 +32,19 @@ namespace Modbus.UnitTests.Message
                 select message;
 
             foreach (Type messageType in messageTypes)
-                Assert.IsNotNull(
+            {
+                Assert.NotNull(
                     messageType.GetMethod("ToString",
-                        BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                    String.Concat("No ToString override in message ", messageType.FullName));
+                        BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            }
         }
 
         internal static void AssertModbusMessagePropertiesAreEqual(IModbusMessage obj1, IModbusMessage obj2)
         {
-            Assert.AreEqual(obj1.FunctionCode, obj2.FunctionCode);
-            Assert.AreEqual(obj1.SlaveAddress, obj2.SlaveAddress);
-            Assert.AreEqual(obj1.MessageFrame, obj2.MessageFrame);
-            Assert.AreEqual(obj1.ProtocolDataUnit, obj2.ProtocolDataUnit);
+            Assert.Equal(obj1.FunctionCode, obj2.FunctionCode);
+            Assert.Equal(obj1.SlaveAddress, obj2.SlaveAddress);
+            Assert.Equal(obj1.MessageFrame, obj2.MessageFrame);
+            Assert.Equal(obj1.ProtocolDataUnit, obj2.ProtocolDataUnit);
         }
     }
 }

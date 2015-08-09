@@ -1,24 +1,20 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Modbus.Data;
 using Modbus.IO;
 using Modbus.Message;
 using Modbus.Utility;
 using Rhino.Mocks;
+using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
-    using Unme.Common;
-    using NUnit.Framework;
-
     internal delegate ReadCoilsInputsResponse ThrowExceptionDelegate();
 
-    [TestFixture]
     public class ModbusTransportFixture
     {
-        [Test]
+        [Fact]
         public void UnicastMessage()
         {
             MockRepository mocks = new MockRepository();
@@ -38,12 +34,12 @@ namespace Modbus.UnitTests.IO
             ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 1,
                 new DiscreteCollection(true, false, true, false, false, false, false, false));
             ReadCoilsInputsResponse response = transport.UnicastMessage<ReadCoilsInputsResponse>(request);
-            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
 
             mocks.VerifyAll();
         }
 
-        [Test, ExpectedException(typeof (IOException))]
+        [Fact]
         public void UnicastMessage_WrongResponseFunctionCode()
         {
             MockRepository mocks = new MockRepository();
@@ -58,25 +54,25 @@ namespace Modbus.UnitTests.IO
             mocks.ReplayAll();
 
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadInputs, 2, 3, 4);
-            transport.UnicastMessage<ReadCoilsInputsResponse>(request);
+            Assert.Throws<IOException>(() => transport.UnicastMessage<ReadCoilsInputsResponse>(request));
 
             mocks.VerifyAll();
         }
 
-        [Test, ExpectedException(typeof (SlaveException))]
+        [Fact]
         public void UnicastMessage_ErrorSlaveException()
         {
             MockRepository mocks = new MockRepository();
             ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
             transport.Write(null);
-            LastCall.IgnoreArguments().Repeat.Times(Modbus.DefaultRetries + 1);
+            LastCall.IgnoreArguments();
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate { throw new SlaveException(); });
+                .Do((ThrowExceptionDelegate)delegate { throw new SlaveException(); });
 
             mocks.ReplayAll();
 
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadInputs, 2, 3, 4);
-            transport.UnicastMessage<ReadCoilsInputsResponse>(request);
+            Assert.Throws<SlaveException>(() => transport.UnicastMessage<ReadCoilsInputsResponse>(request));
 
             mocks.VerifyAll();
         }
@@ -84,7 +80,7 @@ namespace Modbus.UnitTests.IO
         /// <summary>
         ///     We should reread the response w/o retransmitting the request.
         /// </summary>
-        [Test]
+        [Fact]
         public void UnicastMessage_AcknowlegeSlaveException()
         {
             MockRepository mocks = new MockRepository();
@@ -116,7 +112,7 @@ namespace Modbus.UnitTests.IO
                 new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection(1));
             ReadHoldingInputRegistersResponse response =
                 transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
-            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
 
             mocks.VerifyAll();
         }
@@ -124,7 +120,7 @@ namespace Modbus.UnitTests.IO
         /// <summary>
         ///     We should retransmit the request.
         /// </summary>
-        [Test]
+        [Fact]
         public void UnicastMessage_SlaveDeviceBusySlaveException()
         {
             MockRepository mocks = new MockRepository();
@@ -156,7 +152,7 @@ namespace Modbus.UnitTests.IO
                 new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection(1));
             ReadHoldingInputRegistersResponse response =
                 transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
-            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
 
             mocks.VerifyAll();
         }
@@ -164,7 +160,7 @@ namespace Modbus.UnitTests.IO
         /// <summary>
         ///     We should retransmit the request.
         /// </summary>
-        [Test]
+        [Fact]
         public void UnicastMessage_SlaveDeviceBusySlaveExceptionDoesNotFailAfterExceedingRetries()
         {
             MockRepository mocks = new MockRepository();
@@ -197,16 +193,16 @@ namespace Modbus.UnitTests.IO
                 new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection(1));
             ReadHoldingInputRegistersResponse response =
                 transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
-            Assert.AreEqual(expectedResponse.MessageFrame, response.MessageFrame);
+            Assert.Equal(expectedResponse.MessageFrame, response.MessageFrame);
 
             mocks.VerifyAll();
         }
 
-        [
-            TestCase(typeof (TimeoutException)),
-            TestCase(typeof (IOException)),
-            TestCase(typeof (NotImplementedException)),
-            TestCase(typeof (FormatException))]
+        [Theory,
+            InlineData(typeof (TimeoutException)),
+            InlineData(typeof (IOException)),
+            InlineData(typeof (NotImplementedException)),
+            InlineData(typeof (FormatException))]
         public void UnicastMessage_SingleFailingException(Type exceptionType)
         {
             MockRepository mocks = new MockRepository();
@@ -232,10 +228,11 @@ namespace Modbus.UnitTests.IO
             mocks.VerifyAll();
         }
 
-        [TestCase(typeof (TimeoutException)),
-         TestCase(typeof (IOException)),
-         TestCase(typeof (NotImplementedException)),
-         TestCase(typeof (FormatException))]
+        [Theory,
+            InlineData(typeof (TimeoutException)),
+            InlineData(typeof (IOException)),
+            InlineData(typeof (NotImplementedException)),
+            InlineData(typeof (FormatException))]
         public void UnicastMessage_TooManyFailingExceptions(Type exceptionType)
         {
             MockRepository mocks = new MockRepository();
@@ -245,7 +242,7 @@ namespace Modbus.UnitTests.IO
             LastCall.IgnoreArguments().Repeat.Times(transport.Retries + 1);
 
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate { throw (Exception) Activator.CreateInstance(exceptionType); })
+                .Do((ThrowExceptionDelegate)delegate { throw (Exception)Activator.CreateInstance(exceptionType); })
                 .Repeat.Times(transport.Retries + 1);
 
             mocks.ReplayAll();
@@ -257,7 +254,7 @@ namespace Modbus.UnitTests.IO
             mocks.VerifyAll();
         }
 
-        [Test, ExpectedException(typeof (TimeoutException))]
+        [Fact]
         public void UnicastMessage_TimeoutException()
         {
             MockRepository mocks = new MockRepository();
@@ -265,18 +262,18 @@ namespace Modbus.UnitTests.IO
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(Modbus.DefaultRetries + 1);
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate { throw new TimeoutException(); })
+                .Do((ThrowExceptionDelegate) delegate{ throw new TimeoutException(); })
                 .Repeat.Times(Modbus.DefaultRetries + 1);
 
             mocks.ReplayAll();
 
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadInputs, 2, 3, 4);
-            transport.UnicastMessage<ReadCoilsInputsResponse>(request);
+            Assert.Throws<TimeoutException>(() => transport.UnicastMessage<ReadCoilsInputsResponse>(request));
 
             mocks.VerifyAll();
         }
 
-        [Test, ExpectedException(typeof (TimeoutException))]
+        [Fact]
         public void UnicastMessage_Retries()
         {
             MockRepository mocks = new MockRepository();
@@ -285,18 +282,50 @@ namespace Modbus.UnitTests.IO
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(transport.Retries + 1);
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate { throw new TimeoutException(); })
+                .Do((ThrowExceptionDelegate) delegate{ throw new TimeoutException(); })
                 .Repeat.Times(transport.Retries + 1);
 
             mocks.ReplayAll();
 
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadInputs, 2, 3, 4);
-            transport.UnicastMessage<ReadCoilsInputsResponse>(request);
+            Assert.Throws<TimeoutException>(() => transport.UnicastMessage<ReadCoilsInputsResponse>(request));
 
             mocks.VerifyAll();
         }
 
-        [Test]
+        [Fact]
+        public void UnicastMessage_ReReads_IfShouldRetryReturnTrue()
+        {
+            MockRepository mocks = new MockRepository();
+            ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
+
+            transport.RetryOnOldResponseThreshold = 3;
+            transport.Stub(x => x.Write(null)).IgnoreArguments();
+
+            Expect.Call(transport.ReadResponse<ReadHoldingInputRegistersResponse>())
+                .Return(new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection(1)))
+                .Repeat.Times(2)
+                .Message("ReadResponse should be called twice, one for the retry");
+
+            transport.Expect(x => x.OnValidateResponse(null, null)).IgnoreArguments();
+
+            Expect.Call(transport.OnShouldRetryResponse(null, null))
+                .IgnoreArguments()
+                .Return(true)
+                .Repeat.Times(1);
+            Expect.Call(transport.OnShouldRetryResponse(null, null))
+                .IgnoreArguments()
+                .Return(false)
+                .Repeat.Times(1);
+
+            mocks.ReplayAll();
+            ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 1, 1, 1);
+            ReadHoldingInputRegistersResponse response = transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
+
+            mocks.VerifyAll();
+        }
+
+        [Fact]
         public void CreateResponse_SlaveException()
         {
             ModbusTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
@@ -305,10 +334,20 @@ namespace Modbus.UnitTests.IO
             IModbusMessage message =
                 transport.CreateResponse<ReadCoilsInputsResponse>(
                     Enumerable.Concat(frame, new byte[] { lrc }).ToArray());
-            Assert.IsTrue(message is SlaveExceptionResponse);
+            Assert.True(message is SlaveExceptionResponse);
         }
 
-        [Test, ExpectedException(typeof (IOException))]
+        [Fact]
+        public void ShouldRetryResponse_ReturnsFalse_IfDifferentMessage()
+        {
+            ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 1, 1);
+            IModbusMessage response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1, null);
+
+            Assert.False(transport.ShouldRetryResponse(request, response));
+        }
+
+        [Fact]
         public void ValidateResponse_MismatchingFunctionCodes()
         {
             MockRepository mocks = new MockRepository();
@@ -319,12 +358,12 @@ namespace Modbus.UnitTests.IO
                 new RegisterCollection());
 
             mocks.ReplayAll();
-            transport.ValidateResponse(request, response);
+            Assert.Throws<IOException>(() => transport.ValidateResponse(request, response));
             mocks.VerifyAll();
         }
 
-        [Test]
-        public void ValidateResponse()
+        [Fact]
+        public void ValidateResponse_CallsOnValidateResponse()
         {
             MockRepository mocks = new MockRepository();
             ModbusTransport transport = mocks.PartialMock<ModbusTransport>();

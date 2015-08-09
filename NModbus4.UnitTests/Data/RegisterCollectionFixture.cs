@@ -1,80 +1,78 @@
 using Modbus.Data;
+using Xunit;
 
 namespace Modbus.UnitTests.Data
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class RegisterCollectionFixture
     {
-        [Test]
+        [Fact]
         public void ByteCount()
         {
             RegisterCollection col = new RegisterCollection(1, 2, 3);
-            Assert.AreEqual(6, col.ByteCount);
+            Assert.Equal(6, col.ByteCount);
         }
 
-        [Test]
+        [Fact]
         public void NewRegisterCollection()
         {
             RegisterCollection col = new RegisterCollection(5, 3, 4, 6);
-            Assert.IsNotNull(col);
-            Assert.AreEqual(4, col.Count);
-            Assert.AreEqual(5, col[0]);
+            Assert.NotNull(col);
+            Assert.Equal(4, col.Count);
+            Assert.Equal(5, col[0]);
         }
 
-        [Test]
+        [Fact]
         public void NewRegisterCollectionFromBytes()
         {
             RegisterCollection col = new RegisterCollection(new byte[] {0, 1, 0, 2, 0, 3});
-            Assert.IsNotNull(col);
-            Assert.AreEqual(3, col.Count);
-            Assert.AreEqual(1, col[0]);
-            Assert.AreEqual(2, col[1]);
-            Assert.AreEqual(3, col[2]);
+            Assert.NotNull(col);
+            Assert.Equal(3, col.Count);
+            Assert.Equal(1, col[0]);
+            Assert.Equal(2, col[1]);
+            Assert.Equal(3, col[2]);
         }
 
-        [Test]
+        [Fact]
         public void RegisterCollectionNetworkBytes()
         {
             RegisterCollection col = new RegisterCollection(5, 3, 4, 6);
             byte[] bytes = col.NetworkBytes;
-            Assert.IsNotNull(bytes);
-            Assert.AreEqual(8, bytes.Length);
-            Assert.AreEqual(new byte[] {0, 5, 0, 3, 0, 4, 0, 6}, bytes);
+            Assert.NotNull(bytes);
+            Assert.Equal(8, bytes.Length);
+            Assert.Equal(new byte[] {0, 5, 0, 3, 0, 4, 0, 6}, bytes);
         }
 
-        [Test]
+        [Fact]
         public void RegisterCollectionEmpty()
         {
             RegisterCollection col = new RegisterCollection();
-            Assert.IsNotNull(col);
-            Assert.AreEqual(0, col.NetworkBytes.Length);
+            Assert.NotNull(col);
+            Assert.Equal(0, col.NetworkBytes.Length);
         }
 
-        [Test]
+        [Fact]
         public void ModifyRegister()
         {
             RegisterCollection col = new RegisterCollection(1, 2, 3, 4);
             col[0] = 5;
         }
 
-        [Test]
+        [Fact]
         public void AddRegister()
         {
             RegisterCollection col = new RegisterCollection();
-            Assert.AreEqual(0, col.Count);
+            Assert.Equal(0, col.Count);
             col.Add(45);
-            Assert.AreEqual(1, col.Count);
+            Assert.Equal(1, col.Count);
         }
 
-        [Test]
+        [Fact]
         public void RemoveRegister()
         {
             RegisterCollection col = new RegisterCollection(3, 4, 5);
-            Assert.AreEqual(3, col.Count);
+            Assert.Equal(3, col.Count);
             col.RemoveAt(2);
-            Assert.AreEqual(2, col.Count);
+            Assert.Equal(2, col.Count);
         }
     }
 }

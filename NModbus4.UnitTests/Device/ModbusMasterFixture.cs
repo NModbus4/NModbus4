@@ -3,15 +3,13 @@ using System.Linq;
 using Modbus.Device;
 using Modbus.IO;
 using Rhino.Mocks;
+using Xunit;
 
 namespace Modbus.UnitTests.Device
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class ModbusMasterFixture
     {
-        [Test]
+        [Fact]
         public void ReadCoils()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -21,7 +19,7 @@ namespace Modbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => master.ReadCoils(1, 1, 2001));
         }
 
-        [Test]
+        [Fact]
         public void ReadInputs()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -31,7 +29,7 @@ namespace Modbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => master.ReadInputs(1, 1, 2001));
         }
 
-        [Test]
+        [Fact]
         public void ReadHoldingRegisters()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -41,7 +39,7 @@ namespace Modbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => master.ReadHoldingRegisters(1, 1, 126));
         }
 
-        [Test]
+        [Fact]
         public void ReadInputRegisters()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -51,7 +49,7 @@ namespace Modbus.UnitTests.Device
             Assert.Throws<ArgumentException>(() => master.ReadInputRegisters(1, 1, 126));
         }
 
-        [Test]
+        [Fact]
         public void WriteMultipleRegisters()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -63,7 +61,7 @@ namespace Modbus.UnitTests.Device
                 () => master.WriteMultipleRegisters(1, 1, Enumerable.Repeat<ushort>(1, 124).ToArray()));
         }
 
-        [Test]
+        [Fact]
         public void WriteMultipleCoils()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();
@@ -75,7 +73,7 @@ namespace Modbus.UnitTests.Device
                 () => master.WriteMultipleCoils(1, 1, Enumerable.Repeat<bool>(false, 1969).ToArray()));
         }
 
-        [Test]
+        [Fact]
         public void ReadWriteMultipleRegisters()
         {
             var mockSerialResource = MockRepository.GenerateStub<IStreamResource>();

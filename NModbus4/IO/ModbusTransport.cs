@@ -46,6 +46,13 @@ namespace Modbus.IO
         }
 
         /// <summary>
+        /// If non-zero, this will cause a second reply to be read if the first is behind the sequence number of the
+        /// request by less than this number.  For example, set this to 3, and if when sending request 5, response 3 is
+        /// read, we will attempt to re-read responses.
+        /// </summary>
+        public uint RetryOnOldResponseThreshold { get; set; }
+
+        /// <summary>
         /// If set, Slave Busy exception causes retry count to be used.  If false, Slave Busy will cause infinite retries
         /// </summary>
         public bool SlaveBusyUsesRetryCount { get; set; }
@@ -131,12 +138,16 @@ namespace Modbus.IO
                                     Debug.WriteLine(
                                         "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
                                         _waitToRetryMilliseconds);
-                                    Thread.Sleep(WaitToRetryMilliseconds);
+                                    Sleep(WaitToRetryMilliseconds);
                                 }
                                 else
                                 {
                                     throw new SlaveException(exceptionResponse);
                                 }
+                            }
+                            else if (ShouldRetryResponse(message, response))
+                            {
+                                readAgain = true;
                             }
                         } while (readAgain);
                     }
@@ -155,7 +166,7 @@ namespace Modbus.IO
                     Debug.WriteLine(
                         "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
                         _waitToRetryMilliseconds);
-                    Thread.Sleep(WaitToRetryMilliseconds);
+                    Sleep(WaitToRetryMilliseconds);
                 }
                 catch (Exception e)
                 {
@@ -217,6 +228,25 @@ namespace Modbus.IO
         }
 
         /// <summary>
+        /// Check whether we need to attempt to read another response before processing it (e.g. response was from previous request)
+        /// </summary>
+        internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        {
+            // These checks are enforced in ValidateRequest, we don't want to retry for these
+            if (request.FunctionCode != response.FunctionCode) { return false; }
+            if (request.SlaveAddress != response.SlaveAddress) { return false; }
+            return OnShouldRetryResponse(request, response); ;
+        }
+
+        /// <summary>
+        /// Provide hook to check whether receiving a response should be retried
+        /// </summary>
+        internal virtual bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        {
+            return false;
+        }
+
+        /// <summary>
         ///     Provide hook to do transport level message validation.
         /// </summary>
         internal abstract void OnValidateResponse(IModbusMessage request, IModbusMessage response);
@@ -240,6 +270,11 @@ namespace Modbus.IO
         {
             if (disposing)
                 DisposableUtility.Dispose(ref _streamResource);
+        }
+
+        private static void Sleep(int millisecondsTimeout)
+        {
+            Thread.Sleep(millisecondsTimeout);
         }
     }
 }

@@ -1,51 +1,50 @@
 using System;
 using Modbus.Data;
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class WriteMultipleCoilsRequestFixture
     {
-        [Test]
+        [Fact]
         public void CreateWriteMultipleCoilsRequest()
         {
             DiscreteCollection col = new DiscreteCollection(true, false, true, false, true, true, true, false, false);
             WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest(34, 45, col);
-            Assert.AreEqual(Modbus.WriteMultipleCoils, request.FunctionCode);
-            Assert.AreEqual(34, request.SlaveAddress);
-            Assert.AreEqual(45, request.StartAddress);
-            Assert.AreEqual(9, request.NumberOfPoints);
-            Assert.AreEqual(2, request.ByteCount);
-            Assert.AreEqual(col.NetworkBytes, request.Data.NetworkBytes);
+            Assert.Equal(Modbus.WriteMultipleCoils, request.FunctionCode);
+            Assert.Equal(34, request.SlaveAddress);
+            Assert.Equal(45, request.StartAddress);
+            Assert.Equal(9, request.NumberOfPoints);
+            Assert.Equal(2, request.ByteCount);
+            Assert.Equal(col.NetworkBytes, request.Data.NetworkBytes);
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Fact]
         public void CreateWriteMultipleCoilsRequestTooMuchData()
         {
-            new WriteMultipleCoilsRequest(1, 2,
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new WriteMultipleCoilsRequest(1, 2,
                 MessageUtility.CreateDefaultCollection<DiscreteCollection, bool>(true,
-                    Modbus.MaximumDiscreteRequestResponseSize + 1));
+                    Modbus.MaximumDiscreteRequestResponseSize + 1)));
         }
 
-        [Test]
+        [Fact]
         public void CreateWriteMultipleCoilsRequestMaxSize()
         {
             WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest(1, 2,
                 MessageUtility.CreateDefaultCollection<DiscreteCollection, bool>(true,
                     Modbus.MaximumDiscreteRequestResponseSize));
-            Assert.AreEqual(Modbus.MaximumDiscreteRequestResponseSize, request.Data.Count);
+            Assert.Equal(Modbus.MaximumDiscreteRequestResponseSize, request.Data.Count);
         }
 
-        [Test]
+        [Fact]
         public void ToString_WriteMultipleCoilsRequest()
         {
             DiscreteCollection col = new DiscreteCollection(true, false, true, false, true, true, true, false, false);
             WriteMultipleCoilsRequest request = new WriteMultipleCoilsRequest(34, 45, col);
 
-            Assert.AreEqual("Write 9 coils starting at address 45.", request.ToString());
+            Assert.Equal("Write 9 coils starting at address 45.", request.ToString());
         }
     }
 }

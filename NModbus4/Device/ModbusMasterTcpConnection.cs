@@ -21,6 +21,9 @@
         private readonly string _endPoint;
         private readonly Stream _stream;
         private readonly ModbusTcpSlave _slave;
+        private readonly AsyncCallback _readHeaderCompletedCallback;
+        private readonly AsyncCallback _readFrameCompletedCallback;
+        private readonly AsyncCallback _writeCompletedCallback;
 
         private readonly byte[] _mbapHeader = new byte[6];
         private byte[] _messageFrame;
@@ -37,10 +40,14 @@
             _endPoint = client.Client.RemoteEndPoint.ToString();
             _stream = client.GetStream();
             _slave = slave;
-            Debug.WriteLine("Creating new Master connection at IP:{0}", EndPoint);
+            _readHeaderCompletedCallback = ReadHeaderCompleted;
+            _readFrameCompletedCallback = ReadFrameCompleted;
+            _writeCompletedCallback = WriteCompleted;
 
+            Debug.WriteLine("Creating new Master connection at IP:{0}", EndPoint);
             Debug.WriteLine("Begin reading header.");
-            Stream.BeginRead(_mbapHeader, 0, 6, ReadHeaderCompleted, null);
+
+            Stream.BeginRead(_mbapHeader, 0, 6, _readHeaderCompletedCallback, null);
         }
 
         /// <summary>
@@ -67,45 +74,45 @@
         {
             Debug.WriteLine("Read header completed.");
 
-            CatchExceptionAndRemoveMasterEndPoint(() =>
+            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
             {
                 // this is the normal way a master closes its connection
-                if (Stream.EndRead(ar) == 0)
+                if (thisRef.Stream.EndRead(asyncResult) == 0)
                 {
                     Debug.WriteLine("0 bytes read, Master has closed Socket connection.");
-                    ModbusMasterTcpConnectionClosed.Raise(this, new TcpConnectionEventArgs(EndPoint));
+                    thisRef.ModbusMasterTcpConnectionClosed.Raise(thisRef, new TcpConnectionEventArgs(thisRef.EndPoint));
                     return;
                 }
 
-                Debug.WriteLine("MBAP header: {0}", string.Join(", ", _mbapHeader));
-                ushort frameLength = (ushort) IPAddress.HostToNetworkOrder(BitConverter.ToInt16(_mbapHeader, 4));
+                Debug.WriteLine("MBAP header: {0}", string.Join(", ", thisRef._mbapHeader));
+                ushort frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(thisRef._mbapHeader, 4));
                 Debug.WriteLine("{0} bytes in PDU.", frameLength);
-                _messageFrame = new byte[frameLength];
+                thisRef._messageFrame = new byte[frameLength];
 
-                Stream.BeginRead(_messageFrame, 0, frameLength, ReadFrameCompleted, null);
+                thisRef.Stream.BeginRead(thisRef._messageFrame, 0, frameLength, thisRef._readFrameCompletedCallback, null);
             }, EndPoint);
         }
 
         private void ReadFrameCompleted(IAsyncResult ar)
         {
-            CatchExceptionAndRemoveMasterEndPoint(() =>
+            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
             {
-                Debug.WriteLine("Read Frame completed {0} bytes", Stream.EndRead(ar));
-                byte[] frame = _mbapHeader.Concat(_messageFrame).ToArray();
+                Debug.WriteLine("Read Frame completed {0} bytes", thisRef.Stream.EndRead(asyncResult));
+                byte[] frame = thisRef._mbapHeader.Concat(thisRef._messageFrame).ToArray();
                 Debug.WriteLine("RX: {0}", string.Join(", ", frame));
 
                 IModbusMessage request =
                     ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
-                request.TransactionId = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
+                request.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
 
                 // perform action and build response
-                IModbusMessage response = _slave.ApplyRequest(request);
+                IModbusMessage response = thisRef._slave.ApplyRequest(request);
                 response.TransactionId = request.TransactionId;
 
                 // write response
-                byte[] responseFrame = Transport.BuildMessageFrame(response);
+                byte[] responseFrame = thisRef.Transport.BuildMessageFrame(response);
                 Debug.WriteLine("TX: {0}", string.Join(", ", responseFrame));
-                Stream.BeginWrite(responseFrame, 0, responseFrame.Length, WriteCompleted, null);
+                thisRef.Stream.BeginWrite(responseFrame, 0, responseFrame.Length, thisRef._writeCompletedCallback, null);
             }, EndPoint);
         }
 
@@ -113,11 +120,11 @@
         {
             Debug.WriteLine("End write.");
 
-            CatchExceptionAndRemoveMasterEndPoint(() =>
+            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
             {
-                Stream.EndWrite(ar);
+                thisRef.Stream.EndWrite(asyncResult);
                 Debug.WriteLine("Begin reading another request.");
-                Stream.BeginRead(_mbapHeader, 0, 6, ReadHeaderCompleted, null);
+                thisRef.Stream.BeginRead(thisRef._mbapHeader, 0, 6, thisRef._readHeaderCompletedCallback, null);
             }, EndPoint);
         }
 
@@ -125,7 +132,7 @@
         ///     Catches all exceptions thrown when action is executed and removes the master end point.
         ///     The exception is ignored when it simply signals a master closing its connection.
         /// </summary>
-        private void CatchExceptionAndRemoveMasterEndPoint(Action action, string endPoint)
+        private void CatchExceptionAndRemoveMasterEndPoint(IAsyncResult ar, Action<ModbusMasterTcpConnection, IAsyncResult> action, string endPoint)
         {
             if (action == null)
                 throw new ArgumentNullException("action");
@@ -136,7 +143,7 @@
 
             try
             {
-                action.Invoke();
+                action(this, ar);
             }
             catch (Exception ex)
             {
@@ -155,7 +162,9 @@
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                _stream.Close();
+            {
+                _stream.Dispose();
+            }
             base.Dispose(disposing);
         }
     }

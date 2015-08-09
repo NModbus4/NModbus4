@@ -127,7 +127,12 @@ namespace Modbus.Data
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
 
-            items.ForEachWithIndex((item, index) => destination[index + startIndex] = item);
+            int index = startIndex;
+            foreach (T item in items)
+            {
+                destination[index] = item;
+                ++index;
+            }
         }
     }
 }

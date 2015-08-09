@@ -2,7 +2,7 @@ NModbus4
 =======
 
 [![Join the chat at https://gitter.im/NModbus4/NModbus4](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NModbus4/NModbus4?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build status](https://ci.appveyor.com/api/projects/status/xh645h4skw32pu6j?svg=true)](https://ci.appveyor.com/project/Maxwe11/nmodbus4)
+[![Build status](https://ci.appveyor.com/api/projects/status/9irkluk69cr0f5ed?svg=true)](https://ci.appveyor.com/project/Maxwe11/nmodbus4-ss8e4)
 
 NModbus is a C# implementation of the Modbus protocol.
 Provides connectivity to Modbus slave compatible devices and applications.

@@ -1,66 +1,64 @@
 using System;
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    using NUnit.Framework;
-
-    [TestFixture]
     public class ReadHoldingInputRegistersRequestFixture
     {
-        [Test]
+        [Fact]
         public void CreateReadHoldingRegistersRequest()
         {
             ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(
                 Modbus.ReadHoldingRegisters, 5, 1, 10);
-            Assert.AreEqual(Modbus.ReadHoldingRegisters, request.FunctionCode);
-            Assert.AreEqual(5, request.SlaveAddress);
-            Assert.AreEqual(1, request.StartAddress);
-            Assert.AreEqual(10, request.NumberOfPoints);
+            Assert.Equal(Modbus.ReadHoldingRegisters, request.FunctionCode);
+            Assert.Equal(5, request.SlaveAddress);
+            Assert.Equal(1, request.StartAddress);
+            Assert.Equal(10, request.NumberOfPoints);
         }
 
-        [Test]
+        [Fact]
         public void CreateReadInputRegistersRequest()
         {
             ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(Modbus.ReadInputRegisters, 5,
                 1, 10);
-            Assert.AreEqual(Modbus.ReadInputRegisters, request.FunctionCode);
-            Assert.AreEqual(5, request.SlaveAddress);
-            Assert.AreEqual(1, request.StartAddress);
-            Assert.AreEqual(10, request.NumberOfPoints);
+            Assert.Equal(Modbus.ReadInputRegisters, request.FunctionCode);
+            Assert.Equal(5, request.SlaveAddress);
+            Assert.Equal(1, request.StartAddress);
+            Assert.Equal(10, request.NumberOfPoints);
         }
 
-        [Test, ExpectedException(typeof (ArgumentOutOfRangeException))]
+        [Fact]
         public void CreateReadHoldingInputRegistersRequestTooMuchData()
         {
-            new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 1, 2,
-                Modbus.MaximumRegisterRequestResponseSize + 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 1, 2,
+                Modbus.MaximumRegisterRequestResponseSize + 1));
         }
 
-        [Test]
+        [Fact]
         public void CreateReadHoldingInputRegistersRequestMaxSize()
         {
             ReadHoldingInputRegistersRequest response = new ReadHoldingInputRegistersRequest(
                 Modbus.ReadHoldingRegisters, 1, 2, Modbus.MaximumRegisterRequestResponseSize);
-            Assert.AreEqual(Modbus.MaximumRegisterRequestResponseSize, response.NumberOfPoints);
+            Assert.Equal(Modbus.MaximumRegisterRequestResponseSize, response.NumberOfPoints);
         }
 
-        [Test]
+        [Fact]
         public void ToString_ReadHoldingRegistersRequest()
         {
             ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(
                 Modbus.ReadHoldingRegisters, 5, 1, 10);
 
-            Assert.AreEqual("Read 10 holding registers starting at address 1.", request.ToString());
+            Assert.Equal("Read 10 holding registers starting at address 1.", request.ToString());
         }
 
-        [Test]
+        [Fact]
         public void ToString_ReadInputRegistersRequest()
         {
             ReadHoldingInputRegistersRequest request = new ReadHoldingInputRegistersRequest(Modbus.ReadInputRegisters, 5,
                 1, 10);
 
-            Assert.AreEqual("Read 10 input registers starting at address 1.", request.ToString());
+            Assert.Equal("Read 10 input registers starting at address 1.", request.ToString());
         }
     }
 }
