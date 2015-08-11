@@ -1,4 +1,4 @@
-using Modbus.Data;
+﻿using Modbus.Data;
 using Modbus.Message;
 using Xunit;
 
@@ -24,7 +24,7 @@ namespace Modbus.UnitTests.Message
             RegisterCollection data = new RegisterCollection(1, 2, 3, 4);
             DiagnosticsRequestResponse request = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData, 5,
                 data);
-            Assert.Equal(new byte[] {8, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4}, request.ProtocolDataUnit);
+            Assert.Equal(new byte[] { 8, 0, 0, 0, 1, 0, 2, 0, 3, 0, 4 }, request.ProtocolDataUnit);
         }
     }
 }

@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Modbus.Data;
 using Xunit;
@@ -14,7 +13,7 @@ namespace Modbus.UnitTests.Data
             ModbusDataCollection<ushort> slaveCol = new ModbusDataCollection<ushort>(0, 1, 2, 3, 4, 5, 6);
             RegisterCollection result = DataStore.ReadData<RegisterCollection, ushort>(new DataStore(), slaveCol, 1, 3,
                 new object());
-            Assert.Equal(new ushort[] {1, 2, 3}, result.ToArray());
+            Assert.Equal(new ushort[] { 1, 2, 3 }, result.ToArray());
         }
 
         [Fact]
@@ -55,7 +54,7 @@ namespace Modbus.UnitTests.Data
                 false, true);
             DiscreteCollection newValues = new DiscreteCollection(true, true, true, true);
             DataStore.WriteData(new DataStore(), newValues, destination, 0, new object());
-            Assert.Equal(new bool[] {false, true, true, true, true, false, false, true}, destination.ToArray());
+            Assert.Equal(new bool[] { false, true, true, true, true, false, false, true }, destination.ToArray());
         }
 
         [Fact]
@@ -94,11 +93,9 @@ namespace Modbus.UnitTests.Data
             dataStore.HoldingRegisters.Insert(2, 42);
 
             Assert.Equal(45,
-                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 0, 1, new object())
-                    [0]);
+                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 0, 1, new object())[0]);
             Assert.Equal(42,
-                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 1, 1, new object())
-                    [0]);
+                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 1, 1, new object())[0]);
         }
 
         [Fact]
@@ -113,7 +110,7 @@ namespace Modbus.UnitTests.Data
             {
                 readFromEventFired = true;
                 Assert.Equal(3, e.StartAddress);
-                Assert.Equal(new ushort[] {4, 5, 6}, e.Data.B.ToArray());
+                Assert.Equal(new ushort[] { 4, 5, 6 }, e.Data.B.ToArray());
                 Assert.Equal(ModbusDataType.HoldingRegister, e.ModbusDataType);
             };
 
@@ -136,7 +133,7 @@ namespace Modbus.UnitTests.Data
             {
                 readFromEventFired = true;
                 Assert.Equal(4, e.StartAddress);
-                Assert.Equal(new ushort[] {}, e.Data.B.ToArray());
+                Assert.Equal(new ushort[] { }, e.Data.B.ToArray());
                 Assert.Equal(ModbusDataType.InputRegister, e.ModbusDataType);
             };
 
@@ -159,7 +156,7 @@ namespace Modbus.UnitTests.Data
             {
                 readFromEventFired = true;
                 Assert.Equal(4, e.StartAddress);
-                Assert.Equal(new bool[] {false}, e.Data.A.ToArray());
+                Assert.Equal(new bool[] { false }, e.Data.A.ToArray());
                 Assert.Equal(ModbusDataType.Input, e.ModbusDataType);
             };
 
@@ -183,7 +180,7 @@ namespace Modbus.UnitTests.Data
                 writtenToEventFired = true;
                 Assert.Equal(3, e.Data.A.Count);
                 Assert.Equal(4, e.StartAddress);
-                Assert.Equal(new[] {true, false, true}, e.Data.A.ToArray());
+                Assert.Equal(new[] { true, false, true }, e.Data.A.ToArray());
                 Assert.Equal(ModbusDataType.Coil, e.ModbusDataType);
             };
 
@@ -208,7 +205,7 @@ namespace Modbus.UnitTests.Data
                 writtenToEventFired = true;
                 Assert.Equal(3, e.Data.B.Count);
                 Assert.Equal(0, e.StartAddress);
-                Assert.Equal(new ushort[] {5, 6, 7}, e.Data.B.ToArray());
+                Assert.Equal(new ushort[] { 5, 6, 7 }, e.Data.B.ToArray());
                 Assert.Equal(ModbusDataType.HoldingRegister, e.ModbusDataType);
             };
 
@@ -222,25 +219,25 @@ namespace Modbus.UnitTests.Data
         [Fact]
         public void Update()
         {
-            List<int> newItems = new List<int>(new int[] {4, 5, 6});
-            List<int> destination = new List<int>(new int[] {1, 2, 3, 7, 8, 9});
+            List<int> newItems = new List<int>(new int[] { 4, 5, 6 });
+            List<int> destination = new List<int>(new int[] { 1, 2, 3, 7, 8, 9 });
             DataStore.Update<int>(newItems, destination, 3);
-            Assert.Equal(new int[] {1, 2, 3, 4, 5, 6}, destination.ToArray());
+            Assert.Equal(new int[] { 1, 2, 3, 4, 5, 6 }, destination.ToArray());
         }
 
         [Fact]
         public void UpdateItemsTooLarge()
         {
-            List<int> newItems = new List<int>(new int[] {1, 2, 3, 7, 8, 9});
-            List<int> destination = new List<int>(new int[] {4, 5, 6});
+            List<int> newItems = new List<int>(new int[] { 1, 2, 3, 7, 8, 9 });
+            List<int> destination = new List<int>(new int[] { 4, 5, 6 });
             Assert.Throws<InvalidModbusRequestException>(() => DataStore.Update<int>(newItems, destination, 3));
         }
 
         [Fact]
         public void UpdateNegativeIndex()
         {
-            List<int> newItems = new List<int>(new int[] {1, 2, 3, 7, 8, 9});
-            List<int> destination = new List<int>(new int[] {4, 5, 6});
+            List<int> newItems = new List<int>(new int[] { 1, 2, 3, 7, 8, 9 });
+            List<int> destination = new List<int>(new int[] { 4, 5, 6 });
             Assert.Throws<InvalidModbusRequestException>(() => DataStore.Update<int>(newItems, destination, -1));
         }
     }

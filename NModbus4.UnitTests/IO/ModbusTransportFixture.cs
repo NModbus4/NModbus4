@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using Modbus.Data;
@@ -21,6 +21,7 @@ namespace Modbus.UnitTests.IO
             ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
             transport.Write(null);
             LastCall.IgnoreArguments();
+
             // read 4 coils from slave id 2
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
                 .Return(new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 1,
@@ -46,6 +47,7 @@ namespace Modbus.UnitTests.IO
             ModbusTransport transport = mocks.PartialMock<ModbusTransport>();
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(Modbus.DefaultRetries + 1);
+
             // read 4 coils from slave id 2
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
                 .Return(new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 0, new DiscreteCollection()))
@@ -199,10 +201,10 @@ namespace Modbus.UnitTests.IO
         }
 
         [Theory,
-            InlineData(typeof (TimeoutException)),
-            InlineData(typeof (IOException)),
-            InlineData(typeof (NotImplementedException)),
-            InlineData(typeof (FormatException))]
+            InlineData(typeof(TimeoutException)),
+            InlineData(typeof(IOException)),
+            InlineData(typeof(NotImplementedException)),
+            InlineData(typeof(FormatException))]
         public void UnicastMessage_SingleFailingException(Type exceptionType)
         {
             MockRepository mocks = new MockRepository();
@@ -211,7 +213,7 @@ namespace Modbus.UnitTests.IO
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(2);
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate { throw (Exception) Activator.CreateInstance(exceptionType); });
+                .Do((ThrowExceptionDelegate)delegate { throw (Exception)Activator.CreateInstance(exceptionType); });
 
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
                 .Return(new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 1,
@@ -229,10 +231,10 @@ namespace Modbus.UnitTests.IO
         }
 
         [Theory,
-            InlineData(typeof (TimeoutException)),
-            InlineData(typeof (IOException)),
-            InlineData(typeof (NotImplementedException)),
-            InlineData(typeof (FormatException))]
+            InlineData(typeof(TimeoutException)),
+            InlineData(typeof(IOException)),
+            InlineData(typeof(NotImplementedException)),
+            InlineData(typeof(FormatException))]
         public void UnicastMessage_TooManyFailingExceptions(Type exceptionType)
         {
             MockRepository mocks = new MockRepository();
@@ -262,7 +264,7 @@ namespace Modbus.UnitTests.IO
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(Modbus.DefaultRetries + 1);
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate{ throw new TimeoutException(); })
+                .Do((ThrowExceptionDelegate)delegate { throw new TimeoutException(); })
                 .Repeat.Times(Modbus.DefaultRetries + 1);
 
             mocks.ReplayAll();
@@ -282,7 +284,7 @@ namespace Modbus.UnitTests.IO
             transport.Write(null);
             LastCall.IgnoreArguments().Repeat.Times(transport.Retries + 1);
             Expect.Call(transport.ReadResponse<ReadCoilsInputsResponse>())
-                .Do((ThrowExceptionDelegate) delegate{ throw new TimeoutException(); })
+                .Do((ThrowExceptionDelegate)delegate { throw new TimeoutException(); })
                 .Repeat.Times(transport.Retries + 1);
 
             mocks.ReplayAll();
@@ -329,7 +331,7 @@ namespace Modbus.UnitTests.IO
         public void CreateResponse_SlaveException()
         {
             ModbusTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
-            byte[] frame = {2, 129, 2};
+            byte[] frame = { 2, 129, 2 };
             byte lrc = ModbusUtility.CalculateLrc(frame);
             IModbusMessage message =
                 transport.CreateResponse<ReadCoilsInputsResponse>(

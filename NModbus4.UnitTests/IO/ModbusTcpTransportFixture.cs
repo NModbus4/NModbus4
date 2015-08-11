@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace Modbus.UnitTests.IO
             ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 10, 5);
             mocks.ReplayAll();
             byte[] result = mockModbusTcpTransport.BuildMessageFrame(message);
-            Assert.Equal(new byte[] {0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5}, result);
+            Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5 }, result);
             mocks.VerifyAll();
         }
 
@@ -32,7 +32,7 @@ namespace Modbus.UnitTests.IO
             WriteMultipleRegistersRequest message = new WriteMultipleRegistersRequest(3, 1,
                 MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(0, 120));
             message.TransactionId = 45;
-            Assert.Equal(new byte[] {0, 45, 0, 0, 0, 247, 3}, ModbusIpTransport.GetMbapHeader(message));
+            Assert.Equal(new byte[] { 0, 45, 0, 0, 0, 247, 3 }, ModbusIpTransport.GetMbapHeader(message));
         }
 
         [Fact]
@@ -40,10 +40,10 @@ namespace Modbus.UnitTests.IO
         {
             MockRepository mocks = new MockRepository();
             var mockTcpStreamAdapter = mocks.StrictMock<IStreamResource>();
-            var bytesToWrite = new byte[] {255, 255, 0, 0, 0, 6, 1, 1, 0, 1, 0, 3};
+            var bytesToWrite = new byte[] { 255, 255, 0, 0, 0, 6, 1, 1, 0, 1, 0, 3 };
             mockTcpStreamAdapter.Write(bytesToWrite, 0, bytesToWrite.Length);
             ModbusIpTransport mockModbusTcpTransport = mocks.PartialMock<ModbusIpTransport>(mockTcpStreamAdapter);
-            Expect.Call(mockModbusTcpTransport.GetNewTransactionId()).Return(UInt16.MaxValue);
+            Expect.Call(mockModbusTcpTransport.GetNewTransactionId()).Return(ushort.MaxValue);
             mocks.ReplayAll();
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 3);
             mockModbusTcpTransport.Write(request);
@@ -56,10 +56,10 @@ namespace Modbus.UnitTests.IO
             MockRepository mocks = new MockRepository();
             var mockTransport = mocks.StrictMock<IStreamResource>(null);
 
-            byte[] mbapHeader = {45, 63, 0, 0, 0, 6};
+            byte[] mbapHeader = { 45, 63, 0, 0, 0, 6 };
 
             Expect.Call(mockTransport.Read(new byte[6], 0, 6))
-                .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+                .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                {
                    Array.Copy(mbapHeader, buf, 6);
                    return 6;
@@ -68,15 +68,15 @@ namespace Modbus.UnitTests.IO
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 3);
 
             Expect.Call(mockTransport.Read(new byte[6], 0, 6))
-                .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+                .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                {
-                   Array.Copy(new byte[] {1}.Concat(request.ProtocolDataUnit).ToArray(), buf, 6);
+                   Array.Copy(new byte[] { 1 }.Concat(request.ProtocolDataUnit).ToArray(), buf, 6);
                    return 6;
                }));
 
             mocks.ReplayAll();
             Assert.Equal(ModbusIpTransport.ReadRequestResponse(mockTransport),
-                new byte[] {45, 63, 0, 0, 0, 6, 1, 1, 0, 1, 0, 3});
+                new byte[] { 45, 63, 0, 0, 0, 6, 1, 1, 0, 1, 0, 3 });
             mocks.VerifyAll();
         }
 
@@ -99,10 +99,10 @@ namespace Modbus.UnitTests.IO
             MockRepository mocks = new MockRepository();
             var mockTransport = mocks.StrictMock<IStreamResource>(null);
 
-            byte[] mbapHeader = {45, 63, 0, 0, 0, 6};
+            byte[] mbapHeader = { 45, 63, 0, 0, 0, 6 };
 
             Expect.Call(mockTransport.Read(new byte[6], 0, 6))
-                .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+                .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                {
                    Array.Copy(mbapHeader, buf, 6);
                    return 6;
@@ -121,8 +121,10 @@ namespace Modbus.UnitTests.IO
             ModbusIpTransport transport = new ModbusIpTransport(MockRepository.GenerateStub<IStreamResource>());
             Dictionary<int, string> transactionIds = new Dictionary<int, string>();
 
-            for (int i = 0; i < UInt16.MaxValue; i++)
-                transactionIds.Add(transport.GetNewTransactionId(), String.Empty);
+            for (int i = 0; i < ushort.MaxValue; i++)
+            {
+                transactionIds.Add(transport.GetNewTransactionId(), string.Empty);
+            }
 
             Assert.Equal(1, transport.GetNewTransactionId());
             Assert.Equal(2, transport.GetNewTransactionId());

@@ -1,4 +1,4 @@
-using Modbus.Message;
+﻿using Modbus.Message;
 using Xunit;
 
 namespace Modbus.UnitTests.Message
@@ -20,7 +20,7 @@ namespace Modbus.UnitTests.Message
         {
             SlaveExceptionResponse response = new SlaveExceptionResponse(11, Modbus.ReadCoils + Modbus.ExceptionOffset,
                 2);
-            Assert.Equal(new byte[] {response.FunctionCode, response.SlaveExceptionCode}, response.ProtocolDataUnit);
+            Assert.Equal(new byte[] { response.FunctionCode, response.SlaveExceptionCode }, response.ProtocolDataUnit);
         }
     }
 }

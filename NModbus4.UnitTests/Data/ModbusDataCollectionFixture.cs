@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Modbus.Data;
 using Xunit;
@@ -10,7 +10,7 @@ namespace Modbus.UnitTests.Data
         [Fact]
         public void FromReadOnlyList()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(new bool[] {true, false});
+            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(new bool[] { true, false });
             Assert.Equal(3, col.Count);
         }
 
@@ -33,7 +33,7 @@ namespace Modbus.UnitTests.Data
         {
             ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, true);
             Assert.Equal(3, col.Count);
-            Assert.Equal(new bool[] {false, true, true}, col.ToArray());
+            Assert.Equal(new bool[] { false, true, true }, col.ToArray());
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Modbus.UnitTests.Data
         {
             ModbusDataCollection<ushort> col = new ModbusDataCollection<ushort>(1, 1);
             Assert.Equal(3, col.Count);
-            Assert.Equal(new ushort[] {0, 1, 1}, col.ToArray());
+            Assert.Equal(new ushort[] { 0, 1, 1 }, col.ToArray());
         }
 
         [Fact]

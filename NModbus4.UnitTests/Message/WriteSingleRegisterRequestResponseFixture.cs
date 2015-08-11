@@ -1,4 +1,4 @@
-using Modbus.Message;
+﻿using Modbus.Message;
 using Xunit;
 
 namespace Modbus.UnitTests.Message

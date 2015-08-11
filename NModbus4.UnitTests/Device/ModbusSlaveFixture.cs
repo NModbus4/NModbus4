@@ -1,4 +1,4 @@
-using System.IO.Ports;
+﻿using System.IO.Ports;
 using System.Linq;
 using Modbus.Data;
 using Modbus.Device;
@@ -95,7 +95,7 @@ namespace Modbus.UnitTests.Device
                         new DiscreteCollection(val, val, val, val, val, val, val, val, val, val)), _testDataStore,
                     _testDataStore.CoilDiscretes);
             AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
-            Assert.Equal(new bool[] {val, val, val, val, val, val, val, val, val, val},
+            Assert.Equal(new bool[] { val, val, val, val, val, val, val, val, val, val },
                 _testDataStore.CoilDiscretes.Slice(startAddress + 1, numberOfPoints).ToArray());
         }
 
@@ -117,11 +117,11 @@ namespace Modbus.UnitTests.Device
         public void WriteMultipleRegisters()
         {
             ushort startAddress = 35;
-            ushort[] valuesToWrite = new ushort[] {1, 2, 3, 4, 5};
+            ushort[] valuesToWrite = new ushort[] { 1, 2, 3, 4, 5 };
             Assert.NotEqual(valuesToWrite,
                 _testDataStore.HoldingRegisters.Slice(startAddress - 1, valuesToWrite.Length).ToArray());
             WriteMultipleRegistersResponse expectedResponse = new WriteMultipleRegistersResponse(1, startAddress,
-                (ushort) valuesToWrite.Length);
+                (ushort)valuesToWrite.Length);
             WriteMultipleRegistersResponse response =
                 ModbusSlave.WriteMultipleRegisters(
                     new WriteMultipleRegistersRequest(1, startAddress, new RegisterCollection(valuesToWrite)),
@@ -152,11 +152,11 @@ namespace Modbus.UnitTests.Device
             var dataStore = DataStoreFactory.CreateDefaultDataStore();
 
             var request = new WriteMultipleCoilsRequest(1, 0,
-                new DiscreteCollection(Enumerable.Repeat(true, 8).ToArray())) {NumberOfPoints = 2};
+                new DiscreteCollection(Enumerable.Repeat(true, 8).ToArray())) { NumberOfPoints = 2 };
             ModbusSlave.WriteMultipleCoils(request, dataStore, dataStore.CoilDiscretes);
 
             Assert.Equal(dataStore.CoilDiscretes.Slice(1, 8).ToArray(),
-                new[] {true, true, false, false, false, false, false, false});
+                new[] { true, true, false, false, false, false, false, false });
         }
     }
 }
