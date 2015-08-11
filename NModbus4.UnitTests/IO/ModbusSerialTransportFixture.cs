@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Ports;
 using Modbus.Data;
 using Modbus.IO;
 using Modbus.Message;
@@ -12,6 +13,12 @@ namespace Modbus.UnitTests.IO
 {
     public class ModbusSerialTransportFixture : ModbusMessageFixture
     {
+        [Fact]
+        public void TestPorts()
+        {
+            Assert.Equal(new[] { "foo" }, SerialPort.GetPortNames());
+        }
+        
         [Fact]
         public void CreateResponse()
         {
