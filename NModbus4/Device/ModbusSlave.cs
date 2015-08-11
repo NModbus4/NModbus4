@@ -5,6 +5,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Data;
     using IO;
@@ -45,6 +47,19 @@
         ///     Gets or sets the unit ID.
         /// </summary>
         public byte UnitId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract Task ListenAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public abstract Task ListenAsync(CancellationToken cancellationToken);
 
         /// <summary>
         ///     Start slave listening for requests.

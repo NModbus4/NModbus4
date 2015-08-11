@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using IO;
     using Message;
@@ -39,6 +41,25 @@
         public static ModbusUdpSlave CreateUdp(byte unitId, UdpClient client)
         {
             return new ModbusUdpSlave(unitId, client);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override Task ListenAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task ListenAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

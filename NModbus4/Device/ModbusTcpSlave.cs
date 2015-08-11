@@ -1,4 +1,8 @@
-﻿namespace Modbus.Device
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Modbus.Unme.Common;
+
+namespace Modbus.Device
 {
     using System;
     using System.Collections.Concurrent;
@@ -107,6 +111,27 @@
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override Task ListenAsync()
+        {
+            return ListenAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task ListenAsync(CancellationToken cancellationToken)
+        {
+            //TODO: add state {stoped, listening} and check it before starting
+
+            return Task.Run(() => ListenCoreAsync(cancellationToken), cancellationToken);
+        }
+
+        /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
         public override void Listen()
@@ -127,6 +152,24 @@
                     // this happens when the server stops
                 }
             }
+        }
+
+        private async Task ListenCoreAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            while (true)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                TcpClient client = await Server.AcceptTcpClientAsync();
+                var masterConnection = new ModbusMasterTcpConnection(client, this);
+                masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
+
+                _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
+
+                Debug.WriteLine("Accept completed.");
+            }
+
         }
 
         private void OnTimer(object sender, ElapsedEventArgs e)

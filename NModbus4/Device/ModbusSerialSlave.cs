@@ -5,6 +5,8 @@
     using System.Globalization;
     using System.IO;
     using System.IO.Ports;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using IO;
     using Message;
@@ -83,6 +85,25 @@
             }
 
             return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override Task ListenAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public override Task ListenAsync(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
