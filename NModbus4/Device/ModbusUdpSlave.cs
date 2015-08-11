@@ -1,4 +1,4 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
     using System.Diagnostics;
@@ -62,7 +62,7 @@ namespace Modbus.Device
 
                     IModbusMessage request =
                         ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
-                    request.TransactionId = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
+                    request.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
 
                     // perform action and build response
                     IModbusMessage response = ApplyRequest(request);
@@ -78,7 +78,9 @@ namespace Modbus.Device
             {
                 // this hapens when slave stops
                 if (se.ErrorCode != Modbus.WSACancelBlockingCall)
+                {
                     throw;
+                }
             }
         }
     }

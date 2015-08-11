@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Diagnostics;
@@ -60,7 +60,7 @@ namespace Modbus.Message
             Debug.Assert(Data != null, "Argument Data cannot be null.");
             Debug.Assert(Data.Count() == 1, "Data should have a count of 1.");
 
-            return String.Format(CultureInfo.InvariantCulture, "Write single holding register {0} at address {1}.",
+            return string.Format(CultureInfo.InvariantCulture, "Write single holding register {0} at address {1}.",
                 Data[0], StartAddress);
         }
 
@@ -70,11 +70,11 @@ namespace Modbus.Message
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
-            var typedResponse = (WriteSingleRegisterRequestResponse) response;
+            var typedResponse = (WriteSingleRegisterRequestResponse)response;
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected start address in response. Expected {0}, received {1}.",
                     StartAddress,
                     typedResponse.StartAddress));
@@ -82,7 +82,7 @@ namespace Modbus.Message
 
             if (Data.First() != typedResponse.Data.First())
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected data in response. Expected {0}, received {1}.",
                     Data.First(),
                     typedResponse.Data.First()));
@@ -95,8 +95,8 @@ namespace Modbus.Message
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-            Data = new RegisterCollection((ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4)));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            Data = new RegisterCollection((ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4)));
         }
     }
 }

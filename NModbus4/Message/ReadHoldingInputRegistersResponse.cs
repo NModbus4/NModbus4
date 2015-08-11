@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Globalization;
@@ -30,7 +30,9 @@ namespace Modbus.Message
             : base(slaveAddress, functionCode)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException("data");
+            }
 
             ByteCount = data.ByteCount;
             Data = data;
@@ -59,7 +61,7 @@ namespace Modbus.Message
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers.", Data.Count,
+            return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers.", Data.Count,
                 FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input");
         }
 
@@ -70,7 +72,9 @@ namespace Modbus.Message
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[2])
+            {
                 throw new FormatException("Message frame does not contain enough bytes.");
+            }
 
             ByteCount = frame[2];
             Data = new RegisterCollection(frame.Slice(3, ByteCount).ToArray());

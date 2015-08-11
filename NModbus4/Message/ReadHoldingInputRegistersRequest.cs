@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Diagnostics;
@@ -59,9 +59,11 @@ namespace Modbus.Message
             set
             {
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
+                {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
                             Modbus.MaximumRegisterRequestResponseSize));
+                }
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -85,7 +87,7 @@ namespace Modbus.Message
         {
             var typedResponse = response as ReadHoldingInputRegistersResponse;
             Debug.Assert(typedResponse != null, "Argument response should be of type ReadHoldingInputRegistersResponse.");
-            var expectedByteCount = NumberOfPoints*2;
+            var expectedByteCount = NumberOfPoints * 2;
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
@@ -102,8 +104,8 @@ namespace Modbus.Message
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-            NumberOfPoints = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            NumberOfPoints = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
         }
     }
 }

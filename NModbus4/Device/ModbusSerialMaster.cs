@@ -1,4 +1,4 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -22,7 +22,7 @@ namespace Modbus.Device
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ModbusSerialTransport IModbusSerialMaster.Transport
         {
-            get { return (ModbusSerialTransport) Transport; }
+            get { return (ModbusSerialTransport)Transport; }
         }
 
         /// <summary>
@@ -31,7 +31,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateAscii(SerialPort serialPort)
         {
             if (serialPort == null)
+            {
                 throw new ArgumentNullException("serialPort");
+            }
 
             return CreateAscii(new SerialPortAdapter(serialPort));
         }
@@ -42,7 +44,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateAscii(TcpClient tcpClient)
         {
             if (tcpClient == null)
+            {
                 throw new ArgumentNullException("tcpClient");
+            }
 
             return CreateAscii(new TcpClientAdapter(tcpClient));
         }
@@ -53,9 +57,14 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateAscii(UdpClient udpClient)
         {
             if (udpClient == null)
+            {
                 throw new ArgumentNullException("udpClient");
+            }
+
             if (!udpClient.Client.Connected)
+            {
                 throw new InvalidOperationException(Resources.UdpClientNotConnected);
+            }
 
             return CreateAscii(new UdpClientAdapter(udpClient));
         }
@@ -66,7 +75,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateAscii(IStreamResource streamResource)
         {
             if (streamResource == null)
+            {
                 throw new ArgumentNullException("streamResource");
+            }
 
             return new ModbusSerialMaster(new ModbusAsciiTransport(streamResource));
         }
@@ -77,7 +88,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateRtu(SerialPort serialPort)
         {
             if (serialPort == null)
+            {
                 throw new ArgumentNullException("serialPort");
+            }
 
             return CreateRtu(new SerialPortAdapter(serialPort));
         }
@@ -88,7 +101,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateRtu(TcpClient tcpClient)
         {
             if (tcpClient == null)
+            {
                 throw new ArgumentNullException("tcpClient");
+            }
 
             return CreateRtu(new TcpClientAdapter(tcpClient));
         }
@@ -99,9 +114,14 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateRtu(UdpClient udpClient)
         {
             if (udpClient == null)
+            {
                 throw new ArgumentNullException("udpClient");
+            }
+
             if (!udpClient.Client.Connected)
+            {
                 throw new InvalidOperationException(Resources.UdpClientNotConnected);
+            }
 
             return CreateRtu(new UdpClientAdapter(udpClient));
         }
@@ -112,7 +132,9 @@ namespace Modbus.Device
         public static ModbusSerialMaster CreateRtu(IStreamResource streamResource)
         {
             if (streamResource == null)
+            {
                 throw new ArgumentNullException("streamResource");
+            }
 
             return new ModbusSerialMaster(new ModbusRtuTransport(streamResource));
         }

@@ -7,9 +7,14 @@
         public TcpConnectionEventArgs(string endPoint)
         {
             if (endPoint == null)
+            {
                 throw new ArgumentNullException("endPoint");
+            }
+
             if (endPoint == string.Empty)
+            {
                 throw new ArgumentException(Resources.EmptyEndPoint);
+            }
 
             EndPoint = endPoint;
         }

@@ -1,13 +1,13 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Net.Sockets;
-    using System.Diagnostics;
-    using System.IO;
     using System.Timers;
 
     using IO;
@@ -17,6 +17,7 @@ namespace Modbus.Device
     /// </summary>
     public class ModbusTcpSlave : ModbusSlave
     {
+        private const int TimeWaitResponse = 1000;
         private readonly object _serverLock = new object();
 
         private readonly ConcurrentDictionary<string, ModbusMasterTcpConnection> _masters =
@@ -24,13 +25,14 @@ namespace Modbus.Device
 
         private TcpListener _server;
         private Timer _timer;
-        private const int TimeWaitResponse = 1000;
 
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
+            {
                 throw new ArgumentNullException("tcpListener");
+            }
 
             _server = tcpListener;
         }
@@ -39,7 +41,9 @@ namespace Modbus.Device
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
+            {
                 throw new ArgumentNullException("tcpListener");
+            }
 
             _server = tcpListener;
             _timer = new Timer(timeInterval);
@@ -70,7 +74,9 @@ namespace Modbus.Device
             get
             {
                 if (_server == null)
+                {
                     throw new ObjectDisposedException("Server");
+                }
 
                 return _server;
             }
@@ -162,12 +168,16 @@ namespace Modbus.Device
                     Socket socket = null;
                     lock (slave._serverLock)
                     {
-                        if (slave._server == null) // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        if (slave._server == null) 
+                        {
                             return;
+                        }
+
                         socket = slave.Server.Server.EndAccept(ar);
                     }
 
-                    TcpClient client = new TcpClient {Client = socket};
+                    TcpClient client = new TcpClient { Client = socket };
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
                     masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
 

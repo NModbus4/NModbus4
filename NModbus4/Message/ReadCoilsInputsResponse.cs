@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Globalization;
@@ -57,7 +57,7 @@ namespace Modbus.Message
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "Read {0} {1} - {2}.",
                 Data.Count(),
                 FunctionCode == Modbus.ReadInputs ? "inputs" : "coils",
@@ -71,7 +71,9 @@ namespace Modbus.Message
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < 3 + frame[2])
+            {
                 throw new FormatException("Message frame data segment does not contain enough bytes.");
+            }
 
             ByteCount = frame[2];
             Data = new DiscreteCollection(frame.Slice(3, ByteCount).ToArray());

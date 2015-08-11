@@ -1,22 +1,22 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
-using Modbus.Message;
-
-namespace Modbus
+﻿namespace Modbus
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+    using System.Security.Permissions;
+    using Message;
+
     /// <summary>
     ///     Represents slave errors that occur during communication.
     /// </summary>
     [Serializable]
     public class SlaveException : Exception
     {
-        private readonly SlaveExceptionResponse _slaveExceptionResponse;
-
         private const string SlaveAddressPropertyName = "SlaveAdress";
         private const string FunctionCodePropertyName = "FunctionCode";
         private const string SlaveExceptionCodePropertyName = "SlaveExceptionCode";
+
+        private readonly SlaveExceptionResponse _slaveExceptionResponse;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SlaveException" /> class.
@@ -92,10 +92,10 @@ namespace Modbus
         {
             get
             {
-                return String.Concat(base.Message,
+                return string.Concat(base.Message,
                     _slaveExceptionResponse != null
-                        ? String.Concat(Environment.NewLine, _slaveExceptionResponse)
-                        : String.Empty);
+                        ? string.Concat(Environment.NewLine, _slaveExceptionResponse)
+                        : string.Empty);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Modbus
         /// <value>The function code.</value>
         public byte FunctionCode
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.FunctionCode : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.FunctionCode : (byte)0; }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Modbus
         /// <value>The slave exception code.</value>
         public byte SlaveExceptionCode
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveExceptionCode : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveExceptionCode : (byte)0; }
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Modbus
         /// <value>The slave address.</value>
         public byte SlaveAddress
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte)0; }
         }
 
         /// <summary>

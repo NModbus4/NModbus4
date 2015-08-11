@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Globalization;
@@ -32,8 +32,8 @@ namespace Modbus.Message
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
             StartAddress = startAddress;
-            NumberOfPoints = (ushort) data.Count;
-            ByteCount = (byte) ((data.Count + 7)/8);
+            NumberOfPoints = (ushort)data.Count;
+            ByteCount = (byte)((data.Count + 7) / 8);
             Data = data;
         }
 
@@ -55,9 +55,11 @@ namespace Modbus.Message
             set
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
+                {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
                             Modbus.MaximumDiscreteRequestResponseSize));
+                }
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -86,7 +88,7 @@ namespace Modbus.Message
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Write {0} coils starting at address {1}.",
+            return string.Format(CultureInfo.InvariantCulture, "Write {0} coils starting at address {1}.",
                 NumberOfPoints, StartAddress);
         }
 
@@ -96,11 +98,11 @@ namespace Modbus.Message
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
-            var typedResponse = (WriteMultipleCoilsResponse) response;
+            var typedResponse = (WriteMultipleCoilsResponse)response;
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected start address in response. Expected {0}, received {1}.",
                     StartAddress,
                     typedResponse.StartAddress));
@@ -108,7 +110,7 @@ namespace Modbus.Message
 
             if (NumberOfPoints != typedResponse.NumberOfPoints)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected number of points in response. Expected {0}, received {1}.",
                     NumberOfPoints,
                     typedResponse.NumberOfPoints));
@@ -122,10 +124,12 @@ namespace Modbus.Message
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[6])
+            {
                 throw new FormatException("Message frame does not contain enough bytes.");
+            }
 
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-            NumberOfPoints = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            NumberOfPoints = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
             ByteCount = frame[6];
             Data = new DiscreteCollection(frame.Slice(7, ByteCount).ToArray());
         }

@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Diagnostics;
@@ -42,13 +42,13 @@ namespace Modbus.Message
             Debug.Assert(SubFunctionCode == Modbus.DiagnosticsReturnQueryData,
                 "Need to add support for additional sub-function.");
 
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "Diagnostics message, sub-function return query data - {0}.", Data);
         }
 
         protected override void InitializeUnique(byte[] frame)
         {
-            SubFunctionCode = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            SubFunctionCode = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
             Data = new RegisterCollection(frame.Slice(4, 2).ToArray());
         }
     }

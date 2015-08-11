@@ -1,4 +1,4 @@
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
     using System;
     using System.Diagnostics;
@@ -37,13 +37,15 @@ namespace Modbus.IO
                 int bRead = streamResource.Read(mbapHeader, numBytesRead, 6 - numBytesRead);
 
                 if (bRead == 0)
+                {
                     throw new IOException("Read resulted in 0 bytes returned.");
+                }
 
                 numBytesRead += bRead;
             }
 
             Debug.WriteLine("MBAP header: {0}", string.Join(", ", mbapHeader));
-            var frameLength = (ushort) IPAddress.HostToNetworkOrder(BitConverter.ToInt16(mbapHeader, 4));
+            var frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(mbapHeader, 4));
             Debug.WriteLine("{0} bytes in PDU.", frameLength);
 
             // read message
@@ -55,7 +57,9 @@ namespace Modbus.IO
                 int bRead = streamResource.Read(messageFrame, numBytesRead, frameLength - numBytesRead);
 
                 if (bRead == 0)
+                {
                     throw new IOException("Read resulted in 0 bytes returned.");
+                }
 
                 numBytesRead += bRead;
             }
@@ -69,8 +73,8 @@ namespace Modbus.IO
 
         internal static byte[] GetMbapHeader(IModbusMessage message)
         {
-            byte[] transactionId = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) message.TransactionId));
-            byte[] length = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) (message.ProtocolDataUnit.Length + 1)));
+            byte[] transactionId = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)message.TransactionId));
+            byte[] length = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)(message.ProtocolDataUnit.Length + 1)));
 
             var stream = new MemoryStream(7);
             stream.Write(transactionId, 0, transactionId.Length);
@@ -88,7 +92,7 @@ namespace Modbus.IO
         internal virtual ushort GetNewTransactionId()
         {
             lock (_transactionIdLock)
-                _transactionId = _transactionId == UInt16.MaxValue ? (ushort) 1 : ++_transactionId;
+                _transactionId = _transactionId == ushort.MaxValue ? (ushort)1 : ++_transactionId;
 
             return _transactionId;
         }
@@ -100,7 +104,7 @@ namespace Modbus.IO
             byte[] messageFrame = fullFrame.Slice(6, fullFrame.Length - 6).ToArray();
 
             IModbusMessage response = CreateResponse<T>(messageFrame);
-            response.TransactionId = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(mbapHeader, 0));
+            response.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(mbapHeader, 0));
 
             return response;
         }
@@ -138,9 +142,11 @@ namespace Modbus.IO
         internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId != response.TransactionId)
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Response was not of expected transaction ID. Expected {0}, received {1}.", request.TransactionId,
                     response.TransactionId));
+            }
         }
 
         internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)

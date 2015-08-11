@@ -1,4 +1,4 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
 
@@ -46,7 +46,9 @@ namespace Modbus.Device
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 DisposableUtility.Dispose(ref _transport);
+            }
         }
     }
 }

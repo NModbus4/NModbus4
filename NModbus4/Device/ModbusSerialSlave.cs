@@ -1,4 +1,4 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
     using System.Diagnostics;
@@ -25,7 +25,9 @@ namespace Modbus.Device
             {
                 var transport = Transport as ModbusSerialTransport;
                 if (transport == null)
+                {
                     throw new ObjectDisposedException("SerialTransport");
+                }
 
                 return transport;
             }
@@ -37,7 +39,9 @@ namespace Modbus.Device
         public static ModbusSerialSlave CreateAscii(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
+            {
                 throw new ArgumentNullException("serialPort");
+            }
 
             return CreateAscii(unitId, new SerialPortAdapter(serialPort));
         }
@@ -48,7 +52,9 @@ namespace Modbus.Device
         public static ModbusSerialSlave CreateAscii(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)
+            {
                 throw new ArgumentNullException("streamResource");
+            }
 
             return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
         }
@@ -59,7 +65,9 @@ namespace Modbus.Device
         public static ModbusSerialSlave CreateRtu(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
+            {
                 throw new ArgumentNullException("serialPort");
+            }
 
             return CreateRtu(unitId, new SerialPortAdapter(serialPort));
         }
@@ -70,7 +78,9 @@ namespace Modbus.Device
         public static ModbusSerialSlave CreateRtu(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)
+            {
                 throw new ArgumentNullException("streamResource");
+            }
 
             return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
         }
@@ -92,7 +102,7 @@ namespace Modbus.Device
 
                         if (SerialTransport.CheckFrame && !SerialTransport.ChecksumsMatch(request, frame))
                         {
-                            string errorMessage = String.Format(CultureInfo.InvariantCulture,
+                            string errorMessage = string.Format(CultureInfo.InvariantCulture,
                                 "Checksums failed to match {0} != {1}", string.Join(", ", request.MessageFrame),
                                 string.Join(", ", frame));
                             Debug.WriteLine(errorMessage);

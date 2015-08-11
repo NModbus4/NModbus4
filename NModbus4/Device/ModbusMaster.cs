@@ -1,4 +1,4 @@
-namespace Modbus.Device
+﻿namespace Modbus.Device
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -330,7 +330,9 @@ namespace Modbus.Device
         private static void ValidateData<T>(string argumentName, T[] data, int maxDataLength)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException("data");
+            }
 
             if (data.Length == 0 || data.Length > maxDataLength)
             {

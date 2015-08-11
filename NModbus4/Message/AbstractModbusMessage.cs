@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Globalization;
@@ -80,8 +80,10 @@ namespace Modbus.Message
         public void Initialize(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize)
-                throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
                     "Message frame must contain at least {0} bytes of data.", MinimumFrameSize));
+            }
 
             _messageImpl.Initialize(frame);
             InitializeUnique(frame);

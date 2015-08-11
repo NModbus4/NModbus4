@@ -1,9 +1,9 @@
-namespace Modbus.Data
+﻿namespace Modbus.Data
 {
     using System;
-    using System.IO;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Net;
 
@@ -25,7 +25,7 @@ namespace Modbus.Data
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
         public RegisterCollection(byte[] bytes)
-            : this((IList<ushort>) ModbusUtility.NetworkBytesToHostUInt16(bytes))
+            : this((IList<ushort>)ModbusUtility.NetworkBytesToHostUInt16(bytes))
         {
         }
 
@@ -33,7 +33,7 @@ namespace Modbus.Data
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
         public RegisterCollection(params ushort[] registers)
-            : this((IList<ushort>) registers)
+            : this((IList<ushort>)registers)
         {
         }
 
@@ -69,7 +69,7 @@ namespace Modbus.Data
         /// </summary>
         public byte ByteCount
         {
-            get { return (byte) (Count*2); }
+            get { return (byte)(Count * 2); }
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Modbus.Data
         /// </returns>
         public override string ToString()
         {
-            return String.Concat("{", String.Join(", ", this.Select(v => v.ToString()).ToArray()), "}");
+            return string.Concat("{", string.Join(", ", this.Select(v => v.ToString()).ToArray()), "}");
         }
     }
 }

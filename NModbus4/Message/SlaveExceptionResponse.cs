@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Collections.Generic;
@@ -58,7 +58,7 @@ namespace Modbus.Message
             string message = _exceptionMessages.ContainsKey(SlaveExceptionCode)
                 ? _exceptionMessages[SlaveExceptionCode]
                 : Resources.Unknown;
-            return String.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
+            return string.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
                 Environment.NewLine, FunctionCode, SlaveExceptionCode, message);
         }
 
@@ -86,7 +86,9 @@ namespace Modbus.Message
         protected override void InitializeUnique(byte[] frame)
         {
             if (FunctionCode <= Modbus.ExceptionOffset)
+            {
                 throw new FormatException(Resources.SlaveExceptionResponseInvalidFunctionCode);
+            }
 
             SlaveExceptionCode = frame[2];
         }

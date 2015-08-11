@@ -1,4 +1,4 @@
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
     using System;
     using System.Diagnostics;
@@ -62,7 +62,9 @@ namespace Modbus.IO
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 DisposableUtility.Dispose(ref _tcpClient);
+            }
         }
     }
 }

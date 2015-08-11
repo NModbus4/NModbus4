@@ -39,11 +39,13 @@
             ModbusDataType modbusDataType, IEnumerable<T> data)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException("data");
+            }
 
             DataStoreEventArgs eventArgs;
 
-            if (typeof (T) == typeof (bool))
+            if (typeof(T) == typeof(bool))
             {
                 var a = new ReadOnlyCollection<bool>(data.Cast<bool>().ToArray());
                 eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)

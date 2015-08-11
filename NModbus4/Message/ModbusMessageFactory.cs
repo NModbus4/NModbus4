@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using System;
     using System.Globalization;
@@ -21,7 +21,7 @@ namespace Modbus.Message
             IModbusMessage message = new T();
             message.Initialize(frame);
 
-            return (T) message;
+            return (T)message;
         }
 
         /// <summary>
@@ -32,8 +32,10 @@ namespace Modbus.Message
         public static IModbusMessage CreateModbusRequest(byte[] frame)
         {
             if (frame.Length < MinRequestFrameLength)
-                throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
                     "Argument 'frame' must have a length of at least {0} bytes.", MinRequestFrameLength));
+            }
 
             IModbusMessage request;
             byte functionCode = frame[1];
@@ -68,7 +70,7 @@ namespace Modbus.Message
                     break;
                 default:
                     throw new ArgumentException(
-                        String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
+                        string.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
                         "frame");
             }
 

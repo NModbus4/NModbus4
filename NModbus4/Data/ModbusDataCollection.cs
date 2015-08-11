@@ -1,4 +1,4 @@
-namespace Modbus.Data
+﻿namespace Modbus.Data
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Modbus.Data
         /// </summary>
         /// <param name="data">The data.</param>
         public ModbusDataCollection(params TData[] data)
-            : this((IList<TData>) data)
+            : this((IList<TData>)data)
         {
         }
 
@@ -64,7 +64,9 @@ namespace Modbus.Data
         protected override void InsertItem(int index, TData item)
         {
             if (!_allowZeroElement && index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.InsertItem(index, item);
         }
@@ -81,7 +83,9 @@ namespace Modbus.Data
         protected override void SetItem(int index, TData item)
         {
             if (index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.SetItem(index, item);
         }
@@ -97,7 +101,9 @@ namespace Modbus.Data
         protected override void RemoveItem(int index)
         {
             if (index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.RemoveItem(index);
         }

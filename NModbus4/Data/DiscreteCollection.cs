@@ -1,4 +1,4 @@
-namespace Modbus.Data
+﻿namespace Modbus.Data
 {
     using System;
     using System.Collections.Generic;
@@ -37,7 +37,9 @@ namespace Modbus.Data
             : this()
         {
             if (bytes == null)
+            {
                 throw new ArgumentNullException("bytes");
+            }
 
             _discretes.Capacity = bytes.Length * BitsPerByte;
             foreach (byte b in bytes)
@@ -94,7 +96,7 @@ namespace Modbus.Data
         /// </summary>
         public byte ByteCount
         {
-            get { return (byte) ((Count + 7)/8); }
+            get { return (byte)((Count + 7) / 8); }
         }
 
         /// <summary>
@@ -105,7 +107,7 @@ namespace Modbus.Data
         /// </returns>
         public override string ToString()
         {
-            return String.Concat("{", String.Join(", ", this.Select(discrete => discrete ? "1" : "0").ToArray()), "}");
+            return string.Concat("{", string.Join(", ", this.Select(discrete => discrete ? "1" : "0").ToArray()), "}");
         }
     }
 }

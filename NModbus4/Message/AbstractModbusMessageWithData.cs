@@ -1,4 +1,4 @@
-namespace Modbus.Message
+﻿namespace Modbus.Message
 {
     using Data;
 
@@ -22,7 +22,7 @@ namespace Modbus.Message
         /// </summary>
         public TData Data
         {
-            get { return (TData) MessageImpl.Data; }
+            get { return (TData)MessageImpl.Data; }
             set { MessageImpl.Data = value; }
         }
     }
