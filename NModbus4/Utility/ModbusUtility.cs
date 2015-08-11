@@ -1,4 +1,4 @@
-namespace Modbus.Utility
+﻿namespace Modbus.Utility
 {
     using System;
     using System.Linq;

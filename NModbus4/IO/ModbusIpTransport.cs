@@ -1,4 +1,4 @@
-namespace Modbus.IO
+﻿namespace Modbus.IO
 {
     using System;
     using System.Diagnostics;

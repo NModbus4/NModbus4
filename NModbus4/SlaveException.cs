@@ -1,11 +1,11 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
-using Modbus.Message;
-
-namespace Modbus
+﻿namespace Modbus
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+    using System.Security.Permissions;
+    using Message;
+
     /// <summary>
     ///     Represents slave errors that occur during communication.
     /// </summary>

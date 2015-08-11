@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NModbus4")]
 [assembly: AssemblyProduct("NModbus4")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright � 2006 Scott Alexander, 2015 Dmitry Turin")]
+[assembly: AssemblyCopyright("Copyright © 2006 Scott Alexander, 2015 Dmitry Turin")]
 [assembly: AssemblyDescription("NModbus4 is a C# implementation of the Modbus protocol. " +
            "Provides connectivity to Modbus slave compatible devices and applications. " +
            "Supports ASCII, RTU, TCP, and UDP protocols. " +

@@ -1,4 +1,4 @@
-namespace Modbus.Data
+﻿namespace Modbus.Data
 {
     using System;
     using System.IO;
