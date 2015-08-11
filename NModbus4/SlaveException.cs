@@ -105,7 +105,7 @@
         /// <value>The function code.</value>
         public byte FunctionCode
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.FunctionCode : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.FunctionCode : (byte)0; }
         }
 
         /// <summary>
@@ -114,7 +114,7 @@
         /// <value>The slave exception code.</value>
         public byte SlaveExceptionCode
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveExceptionCode : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveExceptionCode : (byte)0; }
         }
 
         /// <summary>
@@ -123,7 +123,7 @@
         /// <value>The slave address.</value>
         public byte SlaveAddress
         {
-            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte) 0; }
+            get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte)0; }
         }
 
         /// <summary>

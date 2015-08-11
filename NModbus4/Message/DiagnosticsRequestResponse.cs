@@ -48,7 +48,7 @@
 
         protected override void InitializeUnique(byte[] frame)
         {
-            SubFunctionCode = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            SubFunctionCode = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
             Data = new RegisterCollection(frame.Slice(4, 2).ToArray());
         }
     }

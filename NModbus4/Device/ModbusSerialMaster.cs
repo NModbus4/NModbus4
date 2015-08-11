@@ -22,7 +22,7 @@
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ModbusSerialTransport IModbusSerialMaster.Transport
         {
-            get { return (ModbusSerialTransport) Transport; }
+            get { return (ModbusSerialTransport)Transport; }
         }
 
         /// <summary>

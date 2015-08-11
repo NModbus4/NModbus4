@@ -94,7 +94,7 @@
         /// </summary>
         public byte ByteCount
         {
-            get { return (byte) ((Count + 7)/8); }
+            get { return (byte)((Count + 7) / 8); }
         }
 
         /// <summary>

@@ -102,9 +102,9 @@
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
-            var typedResponse = (ReadHoldingInputRegistersResponse) response;
+            var typedResponse = (ReadHoldingInputRegistersResponse)response;
 
-            var expectedByteCount = ReadRequest.NumberOfPoints*2;
+            var expectedByteCount = ReadRequest.NumberOfPoints * 2;
             if (expectedByteCount != typedResponse.ByteCount)
             {
                 throw new IOException(String.Format(CultureInfo.InvariantCulture,

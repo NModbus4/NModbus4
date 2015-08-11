@@ -85,7 +85,7 @@
         {
             var typedResponse = response as ReadHoldingInputRegistersResponse;
             Debug.Assert(typedResponse != null, "Argument response should be of type ReadHoldingInputRegistersResponse.");
-            var expectedByteCount = NumberOfPoints*2;
+            var expectedByteCount = NumberOfPoints * 2;
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
@@ -102,8 +102,8 @@
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-            NumberOfPoints = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            NumberOfPoints = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
         }
     }
 }

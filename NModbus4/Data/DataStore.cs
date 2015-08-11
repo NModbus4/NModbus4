@@ -21,10 +21,10 @@
         /// </summary>
         public DataStore()
         {
-            CoilDiscretes = new ModbusDataCollection<bool> {ModbusDataType = ModbusDataType.Coil};
-            InputDiscretes = new ModbusDataCollection<bool> {ModbusDataType = ModbusDataType.Input};
-            HoldingRegisters = new ModbusDataCollection<ushort> {ModbusDataType = ModbusDataType.HoldingRegister};
-            InputRegisters = new ModbusDataCollection<ushort> {ModbusDataType = ModbusDataType.InputRegister};
+            CoilDiscretes = new ModbusDataCollection<bool> { ModbusDataType = ModbusDataType.Coil };
+            InputDiscretes = new ModbusDataCollection<bool> { ModbusDataType = ModbusDataType.Input };
+            HoldingRegisters = new ModbusDataCollection<ushort> { ModbusDataType = ModbusDataType.HoldingRegister };
+            InputRegisters = new ModbusDataCollection<ushort> { ModbusDataType = ModbusDataType.InputRegister };
         }
 
         internal DataStore(IList<bool> coilDiscretes, IList<bool> inputDiscretes, IList<ushort> holdingRegisters, IList<ushort> inputRegisters)

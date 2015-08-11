@@ -167,7 +167,7 @@
                         socket = slave.Server.Server.EndAccept(ar);
                     }
 
-                    TcpClient client = new TcpClient {Client = socket};
+                    TcpClient client = new TcpClient { Client = socket };
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
                     masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
 

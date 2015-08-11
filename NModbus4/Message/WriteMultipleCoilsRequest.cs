@@ -32,8 +32,8 @@
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
             StartAddress = startAddress;
-            NumberOfPoints = (ushort) data.Count;
-            ByteCount = (byte) ((data.Count + 7)/8);
+            NumberOfPoints = (ushort)data.Count;
+            ByteCount = (byte)((data.Count + 7) / 8);
             Data = data;
         }
 
@@ -96,7 +96,7 @@
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
-            var typedResponse = (WriteMultipleCoilsResponse) response;
+            var typedResponse = (WriteMultipleCoilsResponse)response;
 
             if (StartAddress != typedResponse.StartAddress)
             {
@@ -124,8 +124,8 @@
             if (frame.Length < MinimumFrameSize + frame[6])
                 throw new FormatException("Message frame does not contain enough bytes.");
 
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
-            NumberOfPoints = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            NumberOfPoints = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 4));
             ByteCount = frame[6];
             Data = new DiscreteCollection(frame.Slice(7, ByteCount).ToArray());
         }

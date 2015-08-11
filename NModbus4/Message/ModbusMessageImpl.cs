@@ -68,13 +68,13 @@
                     pdu.Add(ExceptionCode.Value);
 
                 if (SubFunctionCode.HasValue)
-                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) SubFunctionCode.Value)));
+                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)SubFunctionCode.Value)));
 
                 if (StartAddress.HasValue)
-                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) StartAddress.Value)));
+                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)StartAddress.Value)));
 
                 if (NumberOfPoints.HasValue)
-                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) NumberOfPoints.Value)));
+                    pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)NumberOfPoints.Value)));
 
                 if (ByteCount.HasValue)
                     pdu.Add(ByteCount.Value);

@@ -153,7 +153,7 @@
                 // thereby the process, depending on the process's configuration. Such a crash would cause all connections to be
                 // dropped, even if the slave were restarted.
                 // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize
-                //the frame, it can drop the connection.
+                // the frame, it can drop the connection.
                 if (!(ex is IOException || ex is FormatException || ex is ObjectDisposedException))
                     throw;
             }

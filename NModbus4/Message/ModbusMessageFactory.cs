@@ -21,7 +21,7 @@
             IModbusMessage message = new T();
             message.Initialize(frame);
 
-            return (T) message;
+            return (T)message;
         }
 
         /// <summary>

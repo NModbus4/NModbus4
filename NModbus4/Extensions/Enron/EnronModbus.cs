@@ -30,7 +30,7 @@
             ValidateNumberOfPoints(numberOfPoints, 62);
 
             // read 16 bit chunks and perform conversion
-            var rawRegisters = master.ReadHoldingRegisters(slaveAddress, startAddress, (ushort) (numberOfPoints*2));
+            var rawRegisters = master.ReadHoldingRegisters(slaveAddress, startAddress, (ushort)(numberOfPoints * 2));
 
             return Convert(rawRegisters).ToArray();
         }
@@ -50,7 +50,7 @@
                 throw new ArgumentNullException("master");
             ValidateNumberOfPoints(numberOfPoints, 62);
 
-            var rawRegisters = master.ReadInputRegisters(slaveAddress, startAddress, (ushort) (numberOfPoints*2));
+            var rawRegisters = master.ReadInputRegisters(slaveAddress, startAddress, (ushort)(numberOfPoints * 2));
 
             return Convert(rawRegisters).ToArray();
         }
@@ -68,7 +68,7 @@
             if (master == null)
                 throw new ArgumentNullException("master");
 
-            master.WriteMultipleRegisters32(slaveAddress, registerAddress, new[] {value});
+            master.WriteMultipleRegisters32(slaveAddress, registerAddress, new[] { value });
         }
 
         /// <summary>

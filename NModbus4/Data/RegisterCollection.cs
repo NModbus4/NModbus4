@@ -25,7 +25,7 @@
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
         public RegisterCollection(byte[] bytes)
-            : this((IList<ushort>) ModbusUtility.NetworkBytesToHostUInt16(bytes))
+            : this((IList<ushort>)ModbusUtility.NetworkBytesToHostUInt16(bytes))
         {
         }
 
@@ -33,7 +33,7 @@
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
         public RegisterCollection(params ushort[] registers)
-            : this((IList<ushort>) registers)
+            : this((IList<ushort>)registers)
         {
         }
 
@@ -69,7 +69,7 @@
         /// </summary>
         public byte ByteCount
         {
-            get { return (byte) (Count*2); }
+            get { return (byte)(Count * 2); }
         }
 
         /// <summary>

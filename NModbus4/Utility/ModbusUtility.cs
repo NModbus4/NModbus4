@@ -47,22 +47,22 @@
         };
 
         /// <summary>
- 		/// Converts four UInt16 values into a IEEE 64 floating point format.
- 		/// </summary>
- 		/// <param name="b3">Highest-order ushort value.</param>
- 		/// <param name="b2">Second-to-highest-order ushort value.</param>
- 		/// <param name="b1">Second-to-lowest-order ushort value.</param>
- 		/// <param name="b0">Lowest-order ushort value.</param>
- 		/// <returns>IEEE 64 floating point value.</returns>
- 		public static double GetDouble(ushort b3, ushort b2, ushort b1, ushort b0)
- 		{
- 			byte[] value = BitConverter.GetBytes(b0)
- 				.Concat(BitConverter.GetBytes(b1))
- 				.Concat(BitConverter.GetBytes(b2))
- 				.Concat(BitConverter.GetBytes(b3))
- 				.ToArray();
- 			return BitConverter.ToDouble(value, 0);
- 		}
+        /// Converts four UInt16 values into a IEEE 64 floating point format.
+        /// </summary>
+        /// <param name="b3">Highest-order ushort value.</param>
+        /// <param name="b2">Second-to-highest-order ushort value.</param>
+        /// <param name="b1">Second-to-lowest-order ushort value.</param>
+        /// <param name="b0">Lowest-order ushort value.</param>
+        /// <returns>IEEE 64 floating point value.</returns>
+        public static double GetDouble(ushort b3, ushort b2, ushort b1, ushort b0)
+        {
+            byte[] value = BitConverter.GetBytes(b0)
+                .Concat(BitConverter.GetBytes(b1))
+                .Concat(BitConverter.GetBytes(b2))
+                .Concat(BitConverter.GetBytes(b3))
+                .ToArray();
+            return BitConverter.ToDouble(value, 0);
+        }
 
         /// <summary>
         ///     Converts two UInt16 values into a IEEE 32 floating point format
@@ -117,13 +117,13 @@
             if (networkBytes == null)
                 throw new ArgumentNullException("networkBytes");
 
-            if (networkBytes.Length%2 != 0)
+            if (networkBytes.Length % 2 != 0)
                 throw new FormatException(Resources.NetworkBytesNotEven);
 
-            ushort[] result = new ushort[networkBytes.Length/2];
+            ushort[] result = new ushort[networkBytes.Length / 2];
 
             for (int i = 0; i < result.Length; i++)
-                result[i] = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(networkBytes, i*2));
+                result[i] = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(networkBytes, i * 2));
 
             return result;
         }
@@ -138,13 +138,13 @@
             if (hex == null)
                 throw new ArgumentNullException("hex");
 
-            if (hex.Length%2 != 0)
+            if (hex.Length % 2 != 0)
                 throw new FormatException(Resources.HexCharacterCountNotEven);
 
-            byte[] bytes = new byte[hex.Length/2];
+            byte[] bytes = new byte[hex.Length / 2];
 
             for (int i = 0; i < bytes.Length; i++)
-                bytes[i] = Convert.ToByte(hex.Substring(i*2, 2), 16);
+                bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
 
             return bytes;
         }
@@ -163,7 +163,7 @@
             foreach (byte b in data)
                 lrc += b;
 
-            lrc = (byte) ((lrc ^ 0xFF) + 1);
+            lrc = (byte)((lrc ^ 0xFF) + 1);
 
             return lrc;
         }
@@ -182,7 +182,7 @@
 
             foreach (byte b in data)
             {
-                byte tableIndex = (byte) (crc ^ b);
+                byte tableIndex = (byte)(crc ^ b);
                 crc >>= 8;
                 crc ^= crcTable[tableIndex];
             }

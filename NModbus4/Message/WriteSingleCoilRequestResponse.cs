@@ -74,7 +74,7 @@
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
-            var typedResponse = (WriteSingleCoilRequestResponse) response;
+            var typedResponse = (WriteSingleCoilRequestResponse)response;
 
             if (StartAddress != typedResponse.StartAddress)
             {
@@ -99,7 +99,7 @@
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
-            StartAddress = (ushort) IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
+            StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));
             Data = new RegisterCollection(frame.Slice(4, 2).ToArray());
         }
     }

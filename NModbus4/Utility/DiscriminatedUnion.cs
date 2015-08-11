@@ -80,7 +80,7 @@
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "0#a")]
         public static DiscriminatedUnion<TA, TB> CreateA(TA a)
         {
-            return new DiscriminatedUnion<TA, TB>() {option = DiscriminatedUnionOption.A, optionA = a};
+            return new DiscriminatedUnion<TA, TB>() { option = DiscriminatedUnionOption.A, optionA = a };
         }
 
         /// <summary>
@@ -91,7 +91,7 @@
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "0#b")]
         public static DiscriminatedUnion<TA, TB> CreateB(TB b)
         {
-            return new DiscriminatedUnion<TA, TB>() {option = DiscriminatedUnionOption.B, optionB = b};
+            return new DiscriminatedUnion<TA, TB>() { option = DiscriminatedUnionOption.B, optionB = b };
         }
 
         /// <summary>

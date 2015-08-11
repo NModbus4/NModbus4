@@ -22,7 +22,7 @@
         /// </summary>
         public TData Data
         {
-            get { return (TData) MessageImpl.Data; }
+            get { return (TData)MessageImpl.Data; }
             set { MessageImpl.Data = value; }
         }
     }

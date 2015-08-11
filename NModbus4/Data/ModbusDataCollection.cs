@@ -25,7 +25,7 @@
         /// </summary>
         /// <param name="data">The data.</param>
         public ModbusDataCollection(params TData[] data)
-            : this((IList<TData>) data)
+            : this((IList<TData>)data)
         {
         }
 
