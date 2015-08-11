@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using Modbus.IO;
@@ -9,13 +9,12 @@ using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
-
     public class ModbusAsciiTransportFixture : ModbusMessageFixture
     {
         [Fact]
         public void BuildMessageFrame()
         {
-            byte[] expected = {58, 48, 50, 48, 49, 48, 48, 48, 48, 48, 48, 48, 49, 70, 67, 13, 10};
+            byte[] expected = { 58, 48, 50, 48, 49, 48, 48, 48, 48, 48, 48, 48, 49, 70, 67, 13, 10 };
             ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 0, 1);
             var actual =
                 new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>()).BuildMessageFrame(request);
@@ -33,7 +32,7 @@ namespace Modbus.UnitTests.IO
 
             mocks.ReplayAll();
 
-            Assert.Equal(new byte[] {17, 1, 0, 19, 0, 37, 182}, transport.ReadRequestResponse());
+            Assert.Equal(new byte[] { 17, 1, 0, 19, 0, 37, 182 }, transport.ReadRequestResponse());
 
             mocks.VerifyAll();
         }
@@ -58,7 +57,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 17, 19, 37);
-            byte[] frame = {17, Modbus.ReadCoils, 0, 19, 0, 37, 182};
+            byte[] frame = { 17, Modbus.ReadCoils, 0, 19, 0, 37, 182 };
             Assert.True(transport.ChecksumsMatch(message, frame));
         }
 
@@ -67,7 +66,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 17, 19, 37);
-            byte[] frame = {17, Modbus.ReadCoils, 0, 19, 0, 37, 181};
+            byte[] frame = { 17, Modbus.ReadCoils, 0, 19, 0, 37, 181 };
             Assert.False(transport.ChecksumsMatch(message, frame));
         }
 
@@ -78,10 +77,10 @@ namespace Modbus.UnitTests.IO
             foreach (var b in frame)
             {
                 byte tempByte = b;
-                Expect.Call(stream.Read(new byte[] {lastByte}, 0, 1))
-                    .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+                Expect.Call(stream.Read(new byte[] { lastByte }, 0, 1))
+                    .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                    {
-                       Array.Copy(new byte[] {tempByte}, buf, 1);
+                       Array.Copy(new byte[] { tempByte }, buf, 1);
                        return 1;
                    }));
 

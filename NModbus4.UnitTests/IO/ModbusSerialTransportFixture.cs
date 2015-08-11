@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Modbus.Data;
 using Modbus.IO;
@@ -20,7 +20,7 @@ namespace Modbus.UnitTests.IO
                 new DiscreteCollection(true, false, false, false, false, false, false, true));
             byte lrc = ModbusUtility.CalculateLrc(expectedResponse.MessageFrame);
             ReadCoilsInputsResponse response =
-                transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {2, Modbus.ReadCoils, 1, 129, lrc}) as
+                transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 2, Modbus.ReadCoils, 1, 129, lrc }) as
                     ReadCoilsInputsResponse;
             Assert.NotNull(response);
             AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
@@ -31,7 +31,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             transport.CheckFrame = true;
-            Assert.Throws<IOException>(() => transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115}));
+            Assert.Throws<IOException>(() => transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 19, Modbus.ReadCoils, 0, 0, 0, 2, 115 }));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             transport.CheckFrame = false;
-            transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115});
+            transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 19, Modbus.ReadCoils, 0, 0, 0, 2, 115 });
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Modbus.UnitTests.IO
             LastCall.IgnoreArguments();
 
             // mangled response
-            Expect.Call(serialResource.Read(new byte[] {0, 0, 0, 0}, 0, 4)).Return(4);
+            Expect.Call(serialResource.Read(new byte[] { 0, 0, 0, 0 }, 0, 4)).Return(4);
 
             serialResource.DiscardInBuffer();
             serialResource.Write(null, 0, 0);
@@ -70,16 +70,16 @@ namespace Modbus.UnitTests.IO
                 new DiscreteCollection(true, false, true, false, false, false, false, false));
 
             // read header
-            Expect.Call(serialResource.Read(new byte[] {0, 0, 0, 0}, 0, 4))
-                .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+            Expect.Call(serialResource.Read(new byte[] { 0, 0, 0, 0 }, 0, 4))
+                .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                {
                    Array.Copy(response.MessageFrame, 0, buf, 0, 4);
                    return 4;
                }));
 
             // read remainder
-            Expect.Call(serialResource.Read(new byte[] {0, 0}, 0, 2))
-                .Do(((Func<byte[], int, int, int>) delegate(byte[] buf, int offset, int count)
+            Expect.Call(serialResource.Read(new byte[] { 0, 0 }, 0, 2))
+                .Do(((Func<byte[], int, int, int>)delegate(byte[] buf, int offset, int count)
                {
                    Array.Copy(ModbusUtility.CalculateCrc(response.MessageFrame), 0, buf, 0, 2);
                    return 2;

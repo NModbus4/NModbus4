@@ -15,7 +15,7 @@ namespace Modbus.UnitTests.Device
         [Fact]
         public void TcpConnectionEventArgs_EmptyEndPoint()
         {
-            Assert.Throws<ArgumentException>(() => new TcpConnectionEventArgs(String.Empty));
+            Assert.Throws<ArgumentException>(() => new TcpConnectionEventArgs(string.Empty));
         }
 
         [Fact]

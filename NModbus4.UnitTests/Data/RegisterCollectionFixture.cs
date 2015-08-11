@@ -1,4 +1,4 @@
-using Modbus.Data;
+﻿using Modbus.Data;
 using Xunit;
 
 namespace Modbus.UnitTests.Data
@@ -24,7 +24,7 @@ namespace Modbus.UnitTests.Data
         [Fact]
         public void NewRegisterCollectionFromBytes()
         {
-            RegisterCollection col = new RegisterCollection(new byte[] {0, 1, 0, 2, 0, 3});
+            RegisterCollection col = new RegisterCollection(new byte[] { 0, 1, 0, 2, 0, 3 });
             Assert.NotNull(col);
             Assert.Equal(3, col.Count);
             Assert.Equal(1, col[0]);
@@ -39,7 +39,7 @@ namespace Modbus.UnitTests.Data
             byte[] bytes = col.NetworkBytes;
             Assert.NotNull(bytes);
             Assert.Equal(8, bytes.Length);
-            Assert.Equal(new byte[] {0, 5, 0, 3, 0, 4, 0, 6}, bytes);
+            Assert.Equal(new byte[] { 0, 5, 0, 3, 0, 4, 0, 6 }, bytes);
         }
 
         [Fact]

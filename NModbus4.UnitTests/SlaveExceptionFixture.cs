@@ -1,8 +1,7 @@
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Xunit;
 using Modbus.Message;
+using Xunit;
 
 namespace Modbus.UnitTests
 {
@@ -37,7 +36,7 @@ namespace Modbus.UnitTests
             SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 1);
             SlaveException se = new SlaveException(response);
             Assert.Equal(
-                String.Format(
+                string.Format(
                     "Exception of type 'Modbus.SlaveException' was thrown.\r\nFunction Code: {0}\r\nException Code: {1} - {2}",
                     response.FunctionCode, response.SlaveExceptionCode, Resources.IllegalFunction), se.Message);
         }
@@ -48,7 +47,7 @@ namespace Modbus.UnitTests
             SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 2);
             string customMessage = "custom message";
             SlaveException se = new SlaveException(customMessage, response);
-            Assert.Equal(String.Format("{0}\r\nFunction Code: {1}\r\nException Code: {2} - {3}",
+            Assert.Equal(string.Format("{0}\r\nFunction Code: {1}\r\nException Code: {2} - {3}",
                 customMessage, response.FunctionCode, response.SlaveExceptionCode, Resources.IllegalDataAddress),
                 se.Message);
         }
