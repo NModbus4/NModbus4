@@ -58,7 +58,7 @@
             string message = _exceptionMessages.ContainsKey(SlaveExceptionCode)
                 ? _exceptionMessages[SlaveExceptionCode]
                 : Resources.Unknown;
-            return String.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
+            return string.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
                 Environment.NewLine, FunctionCode, SlaveExceptionCode, message);
         }
 
@@ -86,7 +86,9 @@
         protected override void InitializeUnique(byte[] frame)
         {
             if (FunctionCode <= Modbus.ExceptionOffset)
+            {
                 throw new FormatException(Resources.SlaveExceptionResponseInvalidFunctionCode);
+            }
 
             SlaveExceptionCode = frame[2];
         }

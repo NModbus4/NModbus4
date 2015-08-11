@@ -1,9 +1,9 @@
 ﻿namespace Modbus.Data
 {
     using System;
-    using System.IO;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Net;
 
@@ -80,7 +80,7 @@
         /// </returns>
         public override string ToString()
         {
-            return String.Concat("{", String.Join(", ", this.Select(v => v.ToString()).ToArray()), "}");
+            return string.Concat("{", string.Join(", ", this.Select(v => v.ToString()).ToArray()), "}");
         }
     }
 }

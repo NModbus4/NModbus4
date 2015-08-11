@@ -78,7 +78,9 @@
             {
                 // this hapens when slave stops
                 if (se.ErrorCode != Modbus.WSACancelBlockingCall)
+                {
                     throw;
+                }
             }
         }
     }

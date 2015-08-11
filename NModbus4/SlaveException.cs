@@ -12,11 +12,11 @@
     [Serializable]
     public class SlaveException : Exception
     {
-        private readonly SlaveExceptionResponse _slaveExceptionResponse;
-
         private const string SlaveAddressPropertyName = "SlaveAdress";
         private const string FunctionCodePropertyName = "FunctionCode";
         private const string SlaveExceptionCodePropertyName = "SlaveExceptionCode";
+
+        private readonly SlaveExceptionResponse _slaveExceptionResponse;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="SlaveException" /> class.
@@ -92,10 +92,10 @@
         {
             get
             {
-                return String.Concat(base.Message,
+                return string.Concat(base.Message,
                     _slaveExceptionResponse != null
-                        ? String.Concat(Environment.NewLine, _slaveExceptionResponse)
-                        : String.Empty);
+                        ? string.Concat(Environment.NewLine, _slaveExceptionResponse)
+                        : string.Empty);
             }
         }
 

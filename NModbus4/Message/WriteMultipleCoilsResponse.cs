@@ -38,9 +38,11 @@
             set
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
+                {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
                             Modbus.MaximumDiscreteRequestResponseSize));
+                }
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -69,7 +71,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Wrote {0} coils starting at address {1}.",
+            return string.Format(CultureInfo.InvariantCulture, "Wrote {0} coils starting at address {1}.",
                 NumberOfPoints, StartAddress);
         }
 

@@ -40,7 +40,7 @@
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
                 {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
                             Modbus.MaximumRegisterRequestResponseSize));
                 }
 
@@ -71,7 +71,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Wrote {0} holding registers starting at address {1}.",
+            return string.Format(CultureInfo.InvariantCulture, "Wrote {0} holding registers starting at address {1}.",
                 NumberOfPoints, StartAddress);
         }
 

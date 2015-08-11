@@ -46,7 +46,9 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 DisposableUtility.Dispose(ref _transport);
+            }
         }
     }
 }

@@ -164,14 +164,15 @@
                         response = ReadRegisters(readWriteRequest.ReadRequest, DataStore, DataStore.HoldingRegisters);
                         break;
                     default:
-                        string errorMessage = String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
+                        string errorMessage = string.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
                             request.FunctionCode);
                         Debug.WriteLine(errorMessage);
                         throw new InvalidModbusRequestException(Modbus.IllegalFunction);
                 }
             }
-            catch (InvalidModbusRequestException ex) // Catches the exception for an illegal function or a custom exception from the ModbusSlaveRequestReceived event.
+            catch (InvalidModbusRequestException ex)
             {
+                // Catches the exception for an illegal function or a custom exception from the ModbusSlaveRequestReceived event.
                 response = new SlaveExceptionResponse(request.SlaveAddress, (byte)(Modbus.ExceptionOffset + request.FunctionCode), ex.ExceptionCode);
             }
 

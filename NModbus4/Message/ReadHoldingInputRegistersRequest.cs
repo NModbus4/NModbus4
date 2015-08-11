@@ -59,9 +59,11 @@
             set
             {
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
+                {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
                             Modbus.MaximumRegisterRequestResponseSize));
+                }
 
                 MessageImpl.NumberOfPoints = value;
             }

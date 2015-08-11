@@ -60,7 +60,7 @@
             Debug.Assert(Data != null, "Argument Data cannot be null.");
             Debug.Assert(Data.Count() == 1, "Data should have a count of 1.");
 
-            return String.Format(CultureInfo.InvariantCulture, "Write single holding register {0} at address {1}.",
+            return string.Format(CultureInfo.InvariantCulture, "Write single holding register {0} at address {1}.",
                 Data[0], StartAddress);
         }
 
@@ -74,7 +74,7 @@
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected start address in response. Expected {0}, received {1}.",
                     StartAddress,
                     typedResponse.StartAddress));
@@ -82,7 +82,7 @@
 
             if (Data.First() != typedResponse.Data.First())
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected data in response. Expected {0}, received {1}.",
                     Data.First(),
                     typedResponse.Data.First()));

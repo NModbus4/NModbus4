@@ -57,9 +57,11 @@
             set
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
+                {
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
+                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
                             Modbus.MaximumDiscreteRequestResponseSize));
+                }
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -71,7 +73,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} starting at address {2}.", NumberOfPoints,
+            return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} starting at address {2}.", NumberOfPoints,
                 FunctionCode == Modbus.ReadCoils ? "coils" : "inputs", StartAddress);
         }
 
@@ -87,7 +89,7 @@
             var expectedByteCount = (NumberOfPoints + 7) / 8;
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected byte count. Expected {0}, received {1}.",
                     expectedByteCount,
                     typedResponse.ByteCount));

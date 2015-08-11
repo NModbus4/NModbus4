@@ -32,9 +32,14 @@
             : base(new ModbusIpTransport(new TcpClientAdapter(client)))
         {
             if (client == null)
+            {
                 throw new ArgumentNullException("client");
+            }
+
             if (slave == null)
+            {
                 throw new ArgumentNullException("slave");
+            }
 
             _client = client;
             _endPoint = client.Client.RemoteEndPoint.ToString();
@@ -135,11 +140,19 @@
         private void CatchExceptionAndRemoveMasterEndPoint(IAsyncResult ar, Action<ModbusMasterTcpConnection, IAsyncResult> action, string endPoint)
         {
             if (action == null)
+            {
                 throw new ArgumentNullException("action");
+            }
+
             if (endPoint == null)
+            {
                 throw new ArgumentNullException("endPoint");
+            }
+
             if (endPoint == string.Empty)
+            {
                 throw new ArgumentException(Resources.EmptyEndPoint);
+            }
 
             try
             {
@@ -155,7 +168,9 @@
                 // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize
                 // the frame, it can drop the connection.
                 if (!(ex is IOException || ex is FormatException || ex is ObjectDisposedException))
+                {
                     throw;
+                }
             }
         }
 
@@ -165,6 +180,7 @@
             {
                 _stream.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }

@@ -37,7 +37,9 @@
                 int bRead = streamResource.Read(mbapHeader, numBytesRead, 6 - numBytesRead);
 
                 if (bRead == 0)
+                {
                     throw new IOException("Read resulted in 0 bytes returned.");
+                }
 
                 numBytesRead += bRead;
             }
@@ -55,7 +57,9 @@
                 int bRead = streamResource.Read(messageFrame, numBytesRead, frameLength - numBytesRead);
 
                 if (bRead == 0)
+                {
                     throw new IOException("Read resulted in 0 bytes returned.");
+                }
 
                 numBytesRead += bRead;
             }
@@ -88,7 +92,7 @@
         internal virtual ushort GetNewTransactionId()
         {
             lock (_transactionIdLock)
-                _transactionId = _transactionId == UInt16.MaxValue ? (ushort)1 : ++_transactionId;
+                _transactionId = _transactionId == ushort.MaxValue ? (ushort)1 : ++_transactionId;
 
             return _transactionId;
         }
@@ -138,9 +142,11 @@
         internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId != response.TransactionId)
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Response was not of expected transaction ID. Expected {0}, received {1}.", request.TransactionId,
                     response.TransactionId));
+            }
         }
 
         internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)

@@ -64,7 +64,9 @@
         protected override void InsertItem(int index, TData item)
         {
             if (!_allowZeroElement && index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.InsertItem(index, item);
         }
@@ -81,7 +83,9 @@
         protected override void SetItem(int index, TData item)
         {
             if (index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.SetItem(index, item);
         }
@@ -97,7 +101,9 @@
         protected override void RemoveItem(int index)
         {
             if (index == 0)
+            {
                 throw new ArgumentOutOfRangeException("index", "0 is not a valid address for a Modbus data collection.");
+            }
 
             base.RemoveItem(index);
         }

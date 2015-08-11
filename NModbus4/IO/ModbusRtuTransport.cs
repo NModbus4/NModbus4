@@ -1,9 +1,9 @@
 ﻿namespace Modbus.IO
 {
     using System;
-    using System.IO;
     using System.Diagnostics;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
 
     using Message;
@@ -45,7 +45,7 @@
                     numBytes = byteCount + 2;
                     break;
                 default:
-                    string errorMessage = String.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
+                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
                         functionCode);
                     Debug.WriteLine(errorMessage);
                     throw new NotImplementedException(errorMessage);
@@ -60,7 +60,9 @@
 
             // exception response
             if (functionCode > Modbus.ExceptionOffset)
+            {
                 return 1;
+            }
 
             int numBytes;
             switch (functionCode)
@@ -79,7 +81,7 @@
                     numBytes = 4;
                     break;
                 default:
-                    string errorMessage = String.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
+                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
                         functionCode);
                     Debug.WriteLine(errorMessage);
                     throw new NotImplementedException(errorMessage);
@@ -94,7 +96,9 @@
             int numBytesRead = 0;
 
             while (numBytesRead != count)
+            {
                 numBytesRead += StreamResource.Read(frameBytes, numBytesRead, count - numBytesRead);
+            }
 
             return frameBytes;
         }

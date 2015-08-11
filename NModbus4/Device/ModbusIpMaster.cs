@@ -26,7 +26,9 @@
         public static ModbusIpMaster CreateIp(TcpClient tcpClient)
         {
             if (tcpClient == null)
+            {
                 throw new ArgumentNullException("tcpClient");
+            }
 
             return CreateIp(new TcpClientAdapter(tcpClient));
         }
@@ -38,9 +40,14 @@
         public static ModbusIpMaster CreateIp(UdpClient udpClient)
         {
             if (udpClient == null)
+            {
                 throw new ArgumentNullException("udpClient");
+            }
+
             if (!udpClient.Client.Connected)
+            {
                 throw new InvalidOperationException(Resources.UdpClientNotConnected);
+            }
 
             return CreateIp(new UdpClientAdapter(udpClient));
         }
@@ -52,7 +59,9 @@
         public static ModbusIpMaster CreateIp(SerialPort serialPort)
         {
             if (serialPort == null)
+            {
                 throw new ArgumentNullException("serialPort");
+            }
 
             return CreateIp(new SerialPortAdapter(serialPort));
         }
@@ -64,7 +73,9 @@
         public static ModbusIpMaster CreateIp(IStreamResource streamResource)
         {
             if (streamResource == null)
+            {
                 throw new ArgumentNullException("streamResource");
+            }
 
             return new ModbusIpMaster(new ModbusIpTransport(streamResource));
         }

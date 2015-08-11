@@ -67,7 +67,9 @@
             set
             {
                 if (value < 0)
+                {
                     throw new ArgumentException(Resources.WaitRetryGreaterThanZero);
+                }
 
                 _waitToRetryMilliseconds = value;
             }
@@ -149,7 +151,8 @@
                             {
                                 readAgain = true;
                             }
-                        } while (readAgain);
+                        }
+                        while (readAgain);
                     }
 
                     ValidateResponse(message, response);
@@ -158,10 +161,14 @@
                 catch (SlaveException se)
                 {
                     if (se.SlaveExceptionCode != Modbus.SlaveDeviceBusy)
+                    {
                         throw;
+                    }
 
                     if (SlaveBusyUsesRetryCount && attempt++ > _retries)
+                    {
                         throw;
+                    }
 
                     Debug.WriteLine(
                         "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
@@ -178,14 +185,17 @@
                         Debug.WriteLine("{0}, {1} retries remaining - {2}", e.GetType().Name, _retries - attempt + 1, e);
 
                         if (attempt++ > _retries)
+                        {
                             throw;
+                        }
                     }
                     else
                     {
                         throw;
                     }
                 }
-            } while (!success);
+            }
+            while (!success);
 
             return (T)response;
         }
@@ -197,9 +207,13 @@
 
             // check for slave exception response else create message from frame
             if (functionCode > Modbus.ExceptionOffset)
+            {
                 response = ModbusMessageFactory.CreateModbusMessage<SlaveExceptionResponse>(frame);
+            }
             else
+            {
                 response = ModbusMessageFactory.CreateModbusMessage<T>(frame);
+            }
 
             return response;
         }
@@ -208,14 +222,18 @@
         {
             // always check the function code and slave address, regardless of transport protocol
             if (request.FunctionCode != response.FunctionCode)
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Received response with unexpected Function Code. Expected {0}, received {1}.", request.FunctionCode,
                     response.FunctionCode));
+            }
 
             if (request.SlaveAddress != response.SlaveAddress)
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Response slave address does not match request. Expected {0}, received {1}.", response.SlaveAddress,
                     request.SlaveAddress));
+            }
 
             // message specific validation
             var req = request as IModbusRequest;
@@ -233,9 +251,17 @@
         internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             // These checks are enforced in ValidateRequest, we don't want to retry for these
-            if (request.FunctionCode != response.FunctionCode) { return false; }
-            if (request.SlaveAddress != response.SlaveAddress) { return false; }
-            return OnShouldRetryResponse(request, response); ;
+            if (request.FunctionCode != response.FunctionCode)
+            {
+                return false;
+            }
+
+            if (request.SlaveAddress != response.SlaveAddress)
+            {
+                return false;
+            }
+
+            return OnShouldRetryResponse(request, response);
         }
 
         /// <summary>
@@ -269,7 +295,9 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 DisposableUtility.Dispose(ref _streamResource);
+            }
         }
 
         private static void Sleep(int millisecondsTimeout)

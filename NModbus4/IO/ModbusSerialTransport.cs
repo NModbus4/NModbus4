@@ -51,7 +51,7 @@
             // compare checksum
             if (CheckFrame && !ChecksumsMatch(response, frame))
             {
-                string errorMessage = String.Format(CultureInfo.InvariantCulture, "Checksums failed to match {0} != {1}",
+                string errorMessage = string.Format(CultureInfo.InvariantCulture, "Checksums failed to match {0} != {1}",
                     string.Join(", ", response.MessageFrame), string.Join(", ", frame));
                 Debug.WriteLine(errorMessage);
                 throw new IOException(errorMessage);

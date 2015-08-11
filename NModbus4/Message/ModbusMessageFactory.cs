@@ -32,8 +32,10 @@
         public static IModbusMessage CreateModbusRequest(byte[] frame)
         {
             if (frame.Length < MinRequestFrameLength)
-                throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
                     "Argument 'frame' must have a length of at least {0} bytes.", MinRequestFrameLength));
+            }
 
             IModbusMessage request;
             byte functionCode = frame[1];
@@ -68,7 +70,7 @@
                     break;
                 default:
                     throw new ArgumentException(
-                        String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
+                        string.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
                         "frame");
             }
 

@@ -84,7 +84,9 @@
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || dataSource.Count < startIndex + count)
+            {
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+            }
 
             U[] dataToRetrieve;
             lock (syncRoot)
@@ -92,7 +94,9 @@
 
             T result = new T();
             for (int i = 0; i < count; i++)
+            {
                 result.Add(dataToRetrieve[i]);
+            }
 
             dataStore.DataStoreReadFrom.Raise(dataStore,
                 DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result));
@@ -110,7 +114,9 @@
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
+            {
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+            }
 
             lock (syncRoot)
                 Update(items, destination, startIndex);
@@ -125,7 +131,9 @@
         internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
+            {
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+            }
 
             int index = startIndex;
             foreach (T item in items)

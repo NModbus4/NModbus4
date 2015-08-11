@@ -42,7 +42,7 @@
             Debug.Assert(SubFunctionCode == Modbus.DiagnosticsReturnQueryData,
                 "Need to add support for additional sub-function.");
 
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "Diagnostics message, sub-function return query data - {0}.", Data);
         }
 

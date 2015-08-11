@@ -330,7 +330,9 @@
         private static void ValidateData<T>(string argumentName, T[] data, int maxDataLength)
         {
             if (data == null)
+            {
                 throw new ArgumentNullException("data");
+            }
 
             if (data.Length == 0 || data.Length > maxDataLength)
             {

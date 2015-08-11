@@ -1,9 +1,9 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.IO;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Net;
 
     using Data;
@@ -65,22 +65,34 @@
                 pdu.Add(FunctionCode);
 
                 if (ExceptionCode.HasValue)
+                {
                     pdu.Add(ExceptionCode.Value);
+                }
 
                 if (SubFunctionCode.HasValue)
+                {
                     pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)SubFunctionCode.Value)));
+                }
 
                 if (StartAddress.HasValue)
+                {
                     pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)StartAddress.Value)));
+                }
 
                 if (NumberOfPoints.HasValue)
+                {
                     pdu.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)NumberOfPoints.Value)));
+                }
 
                 if (ByteCount.HasValue)
+                {
                     pdu.Add(ByteCount.Value);
+                }
 
                 if (Data != null)
+                {
                     pdu.AddRange(Data.NetworkBytes);
+                }
 
                 return pdu.ToArray();
             }
@@ -89,11 +101,15 @@
         public void Initialize(byte[] frame)
         {
             if (frame == null)
+            {
                 throw new ArgumentNullException("frame", "Argument frame cannot be null.");
+            }
 
             if (frame.Length < Modbus.MinimumFrameSize)
-                throw new FormatException(String.Format(CultureInfo.InvariantCulture,
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
                     "Message frame must contain at least {0} bytes of data.", Modbus.MinimumFrameSize));
+            }
 
             SlaveAddress = frame[0];
             FunctionCode = frame[1];

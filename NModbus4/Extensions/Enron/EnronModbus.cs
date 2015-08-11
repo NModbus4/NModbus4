@@ -8,7 +8,6 @@
     using Device;
     using Utility;
 
-
     /// <summary>
     ///     Utility extensions for the Enron Modbus dialect.
     /// </summary>
@@ -26,7 +25,10 @@
             ushort numberOfPoints)
         {
             if (master == null)
+            {
                 throw new ArgumentNullException("master");
+            }
+
             ValidateNumberOfPoints(numberOfPoints, 62);
 
             // read 16 bit chunks and perform conversion
@@ -47,7 +49,10 @@
             ushort numberOfPoints)
         {
             if (master == null)
+            {
                 throw new ArgumentNullException("master");
+            }
+
             ValidateNumberOfPoints(numberOfPoints, 62);
 
             var rawRegisters = master.ReadInputRegisters(slaveAddress, startAddress, (ushort)(numberOfPoints * 2));
@@ -66,7 +71,9 @@
             uint value)
         {
             if (master == null)
+            {
                 throw new ArgumentNullException("master");
+            }
 
             master.WriteMultipleRegisters32(slaveAddress, registerAddress, new[] { value });
         }
@@ -82,13 +89,18 @@
             uint[] data)
         {
             if (master == null)
+            {
                 throw new ArgumentNullException("master");
+            }
+
             if (data == null)
+            {
                 throw new ArgumentNullException("data");
+            }
 
             if (data.Length == 0 || data.Length > 61)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture,
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture,
                     "The length of argument data must be between 1 and 61 inclusive."));
             }
 
@@ -126,7 +138,7 @@
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)
             {
-                throw new ArgumentException(String.Format(CultureInfo.InvariantCulture,
+                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture,
                     "Argument numberOfPoints must be between 1 and {0} inclusive.",
                     maxNumberOfPoints));
             }

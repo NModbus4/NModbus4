@@ -50,6 +50,7 @@
                 var stream = new MemoryStream(readPdu.Length + writePdu.Length);
 
                 stream.WriteByte(FunctionCode);
+
                 // read and write PDUs without function codes
                 stream.Write(readPdu, 1, readPdu.Length - 1);
                 stream.Write(writePdu, 1, writePdu.Length - 1);
@@ -88,7 +89,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format(CultureInfo.InvariantCulture,
+            return string.Format(CultureInfo.InvariantCulture,
                 "Write {0} holding registers starting at address {1}, and read {2} registers starting at address {3}.",
                 _writeRequest.NumberOfPoints,
                 _writeRequest.StartAddress,
@@ -107,7 +108,7 @@
             var expectedByteCount = ReadRequest.NumberOfPoints * 2;
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                throw new IOException(String.Format(CultureInfo.InvariantCulture,
+                throw new IOException(string.Format(CultureInfo.InvariantCulture,
                     "Unexpected byte count in response. Expected {0}, received {1}.",
                     expectedByteCount,
                     typedResponse.ByteCount));
@@ -121,7 +122,9 @@
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[10])
+            {
                 throw new FormatException("Message frame does not contain enough bytes.");
+            }
 
             byte[] readFrame = new byte[2 + 4];
             byte[] writeFrame = new byte[frame.Length - 6 + 2];

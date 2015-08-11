@@ -37,7 +37,9 @@
             : this()
         {
             if (bytes == null)
+            {
                 throw new ArgumentNullException("bytes");
+            }
 
             _discretes.Capacity = bytes.Length * BitsPerByte;
             foreach (byte b in bytes)
@@ -105,7 +107,7 @@
         /// </returns>
         public override string ToString()
         {
-            return String.Concat("{", String.Join(", ", this.Select(discrete => discrete ? "1" : "0").ToArray()), "}");
+            return string.Concat("{", string.Join(", ", this.Select(discrete => discrete ? "1" : "0").ToArray()), "}");
         }
     }
 }

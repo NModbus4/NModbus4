@@ -41,8 +41,10 @@
             get
             {
                 if (this.Option != DiscriminatedUnionOption.A)
-                    throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                         "{0} is not a valid option for this discriminated union instance.", DiscriminatedUnionOption.A));
+                }
 
                 return this.optionA;
             }
@@ -57,8 +59,10 @@
             get
             {
                 if (this.Option != DiscriminatedUnionOption.B)
-                    throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture,
+                {
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                         "{0} is not a valid option for this discriminated union instance.", DiscriminatedUnionOption.B));
+                }
 
                 return this.optionB;
             }

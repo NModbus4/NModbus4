@@ -3,6 +3,7 @@
     using System;
 
     using Message;
+
     /// <summary>
     ///     Empty placeholder.
     /// </summary>
