@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Modbus.Data;
 using Modbus.Device;
 using Modbus.IntegrationTests.CustomMessages;
@@ -31,7 +32,7 @@ namespace Modbus.IntegrationTests
 
         protected ModbusSlave Slave { get; set; }
 
-        private Thread SlaveThread { get; set; }
+        private Task SlaveTask { get; set; }
 
         protected SerialPort SlaveSerialPort { get; set; }
 
@@ -65,9 +66,12 @@ namespace Modbus.IntegrationTests
 
         public void StartSlave()
         {
-            SlaveThread = new Thread(Slave.Listen);
-            SlaveThread.IsBackground = true;
-            SlaveThread.Start();
+            SlaveTask = Task.Factory.StartNew(
+                x => ((ModbusSlave)x).Listen(),
+                Slave,
+                CancellationToken.None,
+                TaskCreationOptions.DenyChildAttach,
+                TaskScheduler.Default);
         }
 
         public void StartJamodSlave(string program)
@@ -82,11 +86,13 @@ namespace Modbus.IntegrationTests
             Assert.False(Jamod.HasExited, "Jamod Serial Ascii Slave did not start correctly.");
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
             Master?.Dispose();
 
             Slave?.Dispose();
+
+            await SlaveTask.ConfigureAwait(false);
 
             if (Jamod != null)
             {
