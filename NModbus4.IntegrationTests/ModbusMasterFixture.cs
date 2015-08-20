@@ -92,7 +92,13 @@ namespace Modbus.IntegrationTests
 
             Slave?.Dispose();
 
-            await SlaveTask.ConfigureAwait(false);
+            try
+            {
+                await SlaveTask.ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
 
             if (Jamod != null)
             {
