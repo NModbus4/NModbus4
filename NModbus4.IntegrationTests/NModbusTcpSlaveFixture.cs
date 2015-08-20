@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Modbus.Device;
 using Xunit;
 
@@ -45,14 +46,13 @@ namespace Modbus.IntegrationTests
         /// The goal is the test the exception in WriteCompleted when the slave attempts to read another request from an already closed master
         /// </summary>
         [Fact]
-        public void ModbusTcpSlave_ConnectionClosesGracefully()
+        public async Task ModbusTcpSlave_ConnectionClosesGracefully()
         {
             TcpListener slaveListener = new TcpListener(ModbusMasterFixture.TcpHost, ModbusMasterFixture.Port);
+            Task slaveTask;
             using (var slave = ModbusTcpSlave.CreateTcp(ModbusMasterFixture.SlaveAddress, slaveListener))
             {
-                Thread slaveThread = new Thread(slave.Listen);
-                slaveThread.IsBackground = true;
-                slaveThread.Start();
+                slaveTask = Task.Run((Action)slave.Listen);
 
                 var masterClient = new TcpClient(ModbusMasterFixture.TcpHost.ToString(), ModbusMasterFixture.Port);
                 using (var master = ModbusIpMaster.CreateIp(masterClient))
@@ -66,24 +66,25 @@ namespace Modbus.IntegrationTests
                 }
 
                 // give the slave some time to remove the master
-                Thread.Sleep(50);
+                await Task.Delay(50).ConfigureAwait(false);
 
                 Assert.Equal(0, slave.Masters.Count);
             }
+
+            await slaveTask.ConfigureAwait(false);
         }
 
         /// <summary>
         /// Tests possible exception when master closes gracefully and the ReadHeaderCompleted EndRead call returns 0 bytes;
         /// </summary>
         [Fact]
-        public void ModbusTcpSlave_ConnectionSlowlyClosesGracefully()
+        public async Task ModbusTcpSlave_ConnectionSlowlyClosesGracefully()
         {
             TcpListener slaveListener = new TcpListener(ModbusMasterFixture.TcpHost, ModbusMasterFixture.Port);
+            Task slaveTask;
             using (var slave = ModbusTcpSlave.CreateTcp(ModbusMasterFixture.SlaveAddress, slaveListener))
             {
-                Thread slaveThread = new Thread(slave.Listen);
-                slaveThread.IsBackground = true;
-                slaveThread.Start();
+                slaveTask = Task.Run((Action)slave.Listen);
 
                 var masterClient = new TcpClient(ModbusMasterFixture.TcpHost.ToString(), ModbusMasterFixture.Port);
                 using (var master = ModbusIpMaster.CreateIp(masterClient))
@@ -96,36 +97,37 @@ namespace Modbus.IntegrationTests
                     Assert.Equal(1, slave.Masters.Count);
 
                     // wait a bit to let slave move on to read header
-                    Thread.Sleep(50);
+                    await Task.Delay(50).ConfigureAwait(false);
                 }
 
                 // give the slave some time to remove the master
-                Thread.Sleep(50);
+                await Task.Delay(50).ConfigureAwait(false);
                 Assert.Equal(0, slave.Masters.Count);
             }
+
+            await slaveTask.ConfigureAwait(false);
         }
 
         [Fact]
-        public void ModbusTcpSlave_MultiThreaded()
+        public async Task ModbusTcpSlave_MultiThreaded()
         {
             var slaveListener = new TcpListener(ModbusMasterFixture.TcpHost, ModbusMasterFixture.Port);
+            Task slaveTask;
             using (var slave = ModbusTcpSlave.CreateTcp(ModbusMasterFixture.SlaveAddress, slaveListener))
             {
-                Thread slaveThread = new Thread(slave.Listen);
-                slaveThread.IsBackground = true;
-                slaveThread.Start();
+                slaveTask = Task.Run((Action)slave.Listen);
 
-                var workerThread1 = new Thread(Read);
-                var workerThread2 = new Thread(Read);
-                workerThread1.Start();
-                workerThread2.Start();
+                var workerThread1 = Task.Run((Func<Task>)Read);
+                var workerThread2 = Task.Run((Func<Task>)Read);
 
-                workerThread1.Join();
-                workerThread2.Join();
+                await workerThread1.ConfigureAwait(false);
+                await workerThread2.ConfigureAwait(false);
             }
+
+            await slaveTask;
         }
 
-        private static void Read(object state)
+        private static async Task Read()
         {
             var masterClient = new TcpClient(ModbusMasterFixture.TcpHost.ToString(), ModbusMasterFixture.Port);
             using (var master = ModbusIpMaster.CreateIp(masterClient))
@@ -138,7 +140,7 @@ namespace Modbus.IntegrationTests
                     bool[] coils = master.ReadCoils(1, 1);
                     Assert.Equal(1, coils.Length);
                     Debug.WriteLine($"{Thread.CurrentThread.ManagedThreadId}: Reading coil value");
-                    Thread.Sleep(random.Next(100));
+                    await Task.Delay(random.Next(100));
                 }
             }
         }
