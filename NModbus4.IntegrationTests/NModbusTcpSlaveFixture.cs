@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Modbus.IntegrationTests
 {
-    public class NModbusTcpSlaveFixture
+    internal class NModbusTcpSlaveFixture
     {
         /// <summary>
         /// Tests the scenario when a slave is closed unexpectedly, causing a ConnectionResetByPeer SocketException

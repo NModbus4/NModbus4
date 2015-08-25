@@ -3,7 +3,7 @@ using Modbus.Device;
 
 namespace Modbus.IntegrationTests
 {
-    public class NModbusTcpMasterNModbusTcpSlaveFixture : ModbusMasterFixture
+    internal class NModbusTcpMasterNModbusTcpSlaveFixture : ModbusMasterFixture
     {
         public NModbusTcpMasterNModbusTcpSlaveFixture()
         {
