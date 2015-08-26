@@ -1,4 +1,7 @@
-version: '{branch}-{build}'
+version: 3.0.{build}
+branches:
+  only:
+  - portable-3.0
 os: Visual Studio 2015
 platform: Any CPU
 shallow_clone: true
@@ -7,6 +10,11 @@ init:
 before_build:
 - nuget restore
 build:
+  project: NModbus4.sln
   verbosity: minimal
 cache:
 - packages -> **\packages.config
+test_script:
+- ps: "./run-tests-and-coverage.ps1"
+artifacts:
+- path: ./codecoverage

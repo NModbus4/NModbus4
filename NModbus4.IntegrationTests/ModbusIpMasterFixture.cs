@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Modbus.IntegrationTests
 {
-    public class ModbusIpMasterFixture
+    internal class ModbusIpMasterFixture
     {
         [Fact]
         public void OverrideTimeoutOnTcpClient()
