@@ -175,3 +175,8 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+# code coverage
+xunit_report.xml
+opencover_report.xml
+/codecoverage
