@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Modbus.IntegrationTests
 {
-    public class NModbusUdpSlaveFixture
+    internal class NModbusUdpSlaveFixture
     {
         [Fact]
         public void ModbusUdpSlave_EnsureTheSlaveShutsDownCleanly()
