@@ -1,4 +1,6 @@
 language: csharp
+mono:
+  - alpha
 solution: NModbus4.sln
 script:
   - xbuild /p:Configuration=Debug NModbus4.sln
