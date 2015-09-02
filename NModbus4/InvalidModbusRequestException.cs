@@ -61,6 +61,7 @@
         protected InvalidModbusRequestException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+            _exceptionCode = info.GetByte(nameof(ExceptionCode));
         }
 
         /// <summary>
