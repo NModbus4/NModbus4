@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
-    public class ModbusAsciiTransportFixture : ModbusMessageFixture
+    public class ModbusAsciiTransportFixture
     {
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 

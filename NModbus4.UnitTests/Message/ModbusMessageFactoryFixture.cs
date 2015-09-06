@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    public class ModbusMessageFactoryFixture : ModbusMessageFixture
+    public class ModbusMessageFactoryFixture
     {
         [Fact]
         public void CreateModbusMessageReadCoilsRequest()
@@ -15,7 +15,7 @@ namespace Modbus.UnitTests.Message
                 ModbusMessageFactory.CreateModbusMessage<ReadCoilsInputsRequest>(new byte[]
                 { 11, Modbus.ReadCoils, 0, 19, 0, 37 });
             ReadCoilsInputsRequest expectedRequest = new ReadCoilsInputsRequest(Modbus.ReadCoils, 11, 19, 37);
-            AssertModbusMessagePropertiesAreEqual(request, expectedRequest);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(request, expectedRequest);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.NumberOfPoints, request.NumberOfPoints);
         }
@@ -35,7 +35,7 @@ namespace Modbus.UnitTests.Message
                 { 11, Modbus.ReadCoils, 1, 1 });
             ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(Modbus.ReadCoils, 11, 1,
                 new DiscreteCollection(true, false, false, false));
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.Data.NetworkBytes, response.Data.NetworkBytes);
         }
 
@@ -61,7 +61,7 @@ namespace Modbus.UnitTests.Message
                 { 17, Modbus.ReadHoldingRegisters, 0, 107, 0, 3 });
             ReadHoldingInputRegistersRequest expectedRequest =
                 new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 17, 107, 3);
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.NumberOfPoints, request.NumberOfPoints);
         }
@@ -82,7 +82,7 @@ namespace Modbus.UnitTests.Message
                 { 11, Modbus.ReadHoldingRegisters, 4, 0, 3, 0, 4 });
             ReadHoldingInputRegistersResponse expectedResponse =
                 new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 11, new RegisterCollection(3, 4));
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace Modbus.UnitTests.Message
                 ModbusMessageFactory.CreateModbusMessage<WriteSingleCoilRequestResponse>(new byte[]
                 { 17, Modbus.WriteSingleCoil, 0, 172, byte.MaxValue, 0 });
             WriteSingleCoilRequestResponse expectedRequest = new WriteSingleCoilRequestResponse(17, 172, true);
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.Data.NetworkBytes, request.Data.NetworkBytes);
         }
@@ -145,7 +145,7 @@ namespace Modbus.UnitTests.Message
                 ModbusMessageFactory.CreateModbusMessage<WriteSingleRegisterRequestResponse>(new byte[]
                 { 17, Modbus.WriteSingleRegister, 0, 1, 0, 3 });
             WriteSingleRegisterRequestResponse expectedRequest = new WriteSingleRegisterRequestResponse(17, 1, 3);
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.Data.NetworkBytes, request.Data.NetworkBytes);
         }
@@ -166,7 +166,7 @@ namespace Modbus.UnitTests.Message
                 { 11, Modbus.WriteMultipleRegisters, 0, 5, 0, 1, 2, 255, 255 });
             WriteMultipleRegistersRequest expectedRequest = new WriteMultipleRegistersRequest(11, 5,
                 new RegisterCollection(ushort.MaxValue));
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.NumberOfPoints, request.NumberOfPoints);
             Assert.Equal(expectedRequest.ByteCount, request.ByteCount);
@@ -188,7 +188,7 @@ namespace Modbus.UnitTests.Message
                 ModbusMessageFactory.CreateModbusMessage<WriteMultipleRegistersResponse>(new byte[]
                 { 17, Modbus.WriteMultipleRegisters, 0, 1, 0, 2 });
             WriteMultipleRegistersResponse expectedResponse = new WriteMultipleRegistersResponse(17, 1, 2);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.StartAddress, response.StartAddress);
             Assert.Equal(expectedResponse.NumberOfPoints, response.NumberOfPoints);
         }
@@ -201,7 +201,7 @@ namespace Modbus.UnitTests.Message
                 { 17, Modbus.WriteMultipleCoils, 0, 19, 0, 10, 2, 205, 1 });
             WriteMultipleCoilsRequest expectedRequest = new WriteMultipleCoilsRequest(17, 19,
                 new DiscreteCollection(true, false, true, true, false, false, true, true, true, false));
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
             Assert.Equal(expectedRequest.StartAddress, request.StartAddress);
             Assert.Equal(expectedRequest.NumberOfPoints, request.NumberOfPoints);
             Assert.Equal(expectedRequest.ByteCount, request.ByteCount);
@@ -223,7 +223,7 @@ namespace Modbus.UnitTests.Message
                 ModbusMessageFactory.CreateModbusMessage<WriteMultipleCoilsResponse>(new byte[]
                 { 17, Modbus.WriteMultipleCoils, 0, 19, 0, 10 });
             WriteMultipleCoilsResponse expectedResponse = new WriteMultipleCoilsResponse(17, 19, 10);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.StartAddress, response.StartAddress);
             Assert.Equal(expectedResponse.NumberOfPoints, response.NumberOfPoints);
         }
@@ -245,7 +245,7 @@ namespace Modbus.UnitTests.Message
             RegisterCollection writeCollection = new RegisterCollection(255, 255, 255);
             ReadWriteMultipleRegistersRequest expectedRequest = new ReadWriteMultipleRegistersRequest(5, 3, 6, 14,
                 writeCollection);
-            AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedRequest, request);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace Modbus.UnitTests.Message
                 new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData, slaveAddress, data);
 
             Assert.Equal(expectedMessage.SubFunctionCode, message.SubFunctionCode);
-            AssertModbusMessagePropertiesAreEqual(expectedMessage, message);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedMessage, message);
         }
 
         [Fact]
