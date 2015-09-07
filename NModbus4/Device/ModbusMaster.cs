@@ -331,7 +331,7 @@
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             if (data.Length == 0 || data.Length > maxDataLength)

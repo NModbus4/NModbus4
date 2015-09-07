@@ -32,7 +32,7 @@
         {
             if (serialPort == null)
             {
-                throw new ArgumentNullException("serialPort");
+                throw new ArgumentNullException(nameof(serialPort));
             }
 
             return CreateAscii(new SerialPortAdapter(serialPort));
@@ -45,7 +45,7 @@
         {
             if (tcpClient == null)
             {
-                throw new ArgumentNullException("tcpClient");
+                throw new ArgumentNullException(nameof(tcpClient));
             }
 
             return CreateAscii(new TcpClientAdapter(tcpClient));
@@ -58,7 +58,7 @@
         {
             if (udpClient == null)
             {
-                throw new ArgumentNullException("udpClient");
+                throw new ArgumentNullException(nameof(udpClient));
             }
 
             if (!udpClient.Client.Connected)
@@ -76,7 +76,7 @@
         {
             if (streamResource == null)
             {
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
             }
 
             return new ModbusSerialMaster(new ModbusAsciiTransport(streamResource));
@@ -89,7 +89,7 @@
         {
             if (serialPort == null)
             {
-                throw new ArgumentNullException("serialPort");
+                throw new ArgumentNullException(nameof(serialPort));
             }
 
             return CreateRtu(new SerialPortAdapter(serialPort));
@@ -102,7 +102,7 @@
         {
             if (tcpClient == null)
             {
-                throw new ArgumentNullException("tcpClient");
+                throw new ArgumentNullException(nameof(tcpClient));
             }
 
             return CreateRtu(new TcpClientAdapter(tcpClient));
@@ -115,7 +115,7 @@
         {
             if (udpClient == null)
             {
-                throw new ArgumentNullException("udpClient");
+                throw new ArgumentNullException(nameof(udpClient));
             }
 
             if (!udpClient.Client.Connected)
@@ -133,7 +133,7 @@
         {
             if (streamResource == null)
             {
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
             }
 
             return new ModbusSerialMaster(new ModbusRtuTransport(streamResource));

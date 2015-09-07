@@ -40,7 +40,7 @@
         {
             if (serialPort == null)
             {
-                throw new ArgumentNullException("serialPort");
+                throw new ArgumentNullException(nameof(serialPort));
             }
 
             return CreateAscii(unitId, new SerialPortAdapter(serialPort));
@@ -53,7 +53,7 @@
         {
             if (streamResource == null)
             {
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
             }
 
             return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
@@ -66,7 +66,7 @@
         {
             if (serialPort == null)
             {
-                throw new ArgumentNullException("serialPort");
+                throw new ArgumentNullException(nameof(serialPort));
             }
 
             return CreateRtu(unitId, new SerialPortAdapter(serialPort));
@@ -79,7 +79,7 @@
         {
             if (streamResource == null)
             {
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
             }
 
             return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));

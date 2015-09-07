@@ -31,7 +31,7 @@
         {
             if (tcpListener == null)
             {
-                throw new ArgumentNullException("tcpListener");
+                throw new ArgumentNullException(nameof(tcpListener));
             }
 
             _server = tcpListener;
@@ -42,7 +42,7 @@
         {
             if (tcpListener == null)
             {
-                throw new ArgumentNullException("tcpListener");
+                throw new ArgumentNullException(nameof(tcpListener));
             }
 
             _server = tcpListener;

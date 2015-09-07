@@ -8,7 +8,7 @@
         {
             if (endPoint == null)
             {
-                throw new ArgumentNullException("endPoint");
+                throw new ArgumentNullException(nameof(endPoint));
             }
 
             if (endPoint == string.Empty)

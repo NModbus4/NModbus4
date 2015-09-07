@@ -33,12 +33,12 @@
         {
             if (client == null)
             {
-                throw new ArgumentNullException("client");
+                throw new ArgumentNullException(nameof(client));
             }
 
             if (slave == null)
             {
-                throw new ArgumentNullException("slave");
+                throw new ArgumentNullException(nameof(slave));
             }
 
             _client = client;
@@ -141,12 +141,12 @@
         {
             if (action == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             if (endPoint == null)
             {
-                throw new ArgumentNullException("endPoint");
+                throw new ArgumentNullException(nameof(endPoint));
             }
 
             if (endPoint == string.Empty)

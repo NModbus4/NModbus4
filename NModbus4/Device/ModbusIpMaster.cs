@@ -27,7 +27,7 @@
         {
             if (tcpClient == null)
             {
-                throw new ArgumentNullException("tcpClient");
+                throw new ArgumentNullException(nameof(tcpClient));
             }
 
             return CreateIp(new TcpClientAdapter(tcpClient));
@@ -41,7 +41,7 @@
         {
             if (udpClient == null)
             {
-                throw new ArgumentNullException("udpClient");
+                throw new ArgumentNullException(nameof(udpClient));
             }
 
             if (!udpClient.Client.Connected)
@@ -60,7 +60,7 @@
         {
             if (serialPort == null)
             {
-                throw new ArgumentNullException("serialPort");
+                throw new ArgumentNullException(nameof(serialPort));
             }
 
             return CreateIp(new SerialPortAdapter(serialPort));
@@ -74,7 +74,7 @@
         {
             if (streamResource == null)
             {
-                throw new ArgumentNullException("streamResource");
+                throw new ArgumentNullException(nameof(streamResource));
             }
 
             return new ModbusIpMaster(new ModbusIpTransport(streamResource));

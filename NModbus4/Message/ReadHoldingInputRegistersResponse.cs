@@ -31,7 +31,7 @@
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             ByteCount = data.ByteCount;

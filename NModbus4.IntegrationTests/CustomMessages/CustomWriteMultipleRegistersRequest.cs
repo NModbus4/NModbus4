@@ -101,7 +101,7 @@ namespace Modbus.IntegrationTests.CustomMessages
         {
             if (frame == null)
             {
-                throw new ArgumentNullException("frame");
+                throw new ArgumentNullException(nameof(frame));
             }
 
             if (frame.Length < 7 || frame.Length < 7 + frame[6])

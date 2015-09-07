@@ -38,7 +38,7 @@
         {
             if (bytes == null)
             {
-                throw new ArgumentNullException("bytes");
+                throw new ArgumentNullException(nameof(bytes));
             }
 
             _discretes.Capacity = bytes.Length * BitsPerByte;

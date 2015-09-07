@@ -10,19 +10,19 @@
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             var enumerable = source as T[] ?? source.ToArray();
             int num = enumerable.Count();
             if (startIndex < 0 || num < startIndex)
             {
-                throw new ArgumentOutOfRangeException("startIndex");
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (size < 0 || startIndex + size > num)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             return enumerable.Skip(startIndex).Take(size);

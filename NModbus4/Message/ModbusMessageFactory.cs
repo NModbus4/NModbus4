@@ -71,7 +71,7 @@
                 default:
                     throw new ArgumentException(
                         string.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
-                        "frame");
+nameof(frame));
             }
 
             return request;
