@@ -116,7 +116,7 @@
         {
             if (networkBytes == null)
             {
-                throw new ArgumentNullException("networkBytes");
+                throw new ArgumentNullException(nameof(networkBytes));
             }
 
             if (networkBytes.Length % 2 != 0)
@@ -143,7 +143,7 @@
         {
             if (hex == null)
             {
-                throw new ArgumentNullException("hex");
+                throw new ArgumentNullException(nameof(hex));
             }
 
             if (hex.Length % 2 != 0)
@@ -170,7 +170,7 @@
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             byte lrc = 0;
@@ -193,7 +193,7 @@
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             ushort crc = ushort.MaxValue;

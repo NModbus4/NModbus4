@@ -102,7 +102,7 @@
         {
             if (frame == null)
             {
-                throw new ArgumentNullException("frame", "Argument frame cannot be null.");
+                throw new ArgumentNullException(nameof(frame), "Argument frame cannot be null.");
             }
 
             if (frame.Length < Modbus.MinimumFrameSize)

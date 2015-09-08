@@ -40,7 +40,7 @@
         {
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             DataStoreEventArgs eventArgs;

@@ -26,7 +26,7 @@
         {
             if (master == null)
             {
-                throw new ArgumentNullException("master");
+                throw new ArgumentNullException(nameof(master));
             }
 
             ValidateNumberOfPoints(numberOfPoints, 62);
@@ -50,7 +50,7 @@
         {
             if (master == null)
             {
-                throw new ArgumentNullException("master");
+                throw new ArgumentNullException(nameof(master));
             }
 
             ValidateNumberOfPoints(numberOfPoints, 62);
@@ -72,7 +72,7 @@
         {
             if (master == null)
             {
-                throw new ArgumentNullException("master");
+                throw new ArgumentNullException(nameof(master));
             }
 
             master.WriteMultipleRegisters32(slaveAddress, registerAddress, new[] { value });
@@ -90,12 +90,12 @@
         {
             if (master == null)
             {
-                throw new ArgumentNullException("master");
+                throw new ArgumentNullException(nameof(master));
             }
 
             if (data == null)
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(data));
             }
 
             if (data.Length == 0 || data.Length > 61)
