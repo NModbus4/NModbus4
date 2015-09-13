@@ -13,6 +13,62 @@ namespace Modbus.UnitTests.IO
     public class ModbusTransportFixture
     {
         [Fact]
+        public void Dispose_MultipleTimes_ShouldNotThrow()
+        {
+            var streamMock = new Mock<IStreamResource>(MockBehavior.Strict);
+            streamMock.Setup(s => s.Dispose());
+
+            var mock = new Mock<ModbusTransport>(streamMock.Object) { CallBase = true };
+
+            using (var transport = mock.Object)
+            {
+                Assert.NotNull(transport.StreamResource);
+                transport.Dispose();
+                Assert.Null(transport.StreamResource);
+            }
+        }
+
+        [Fact]
+        public void ReadWriteTimeouts()
+        {
+            const int expectedReadTimeout = 42;
+            const int expectedWriteTimeout = 33;
+            var mock = new Mock<IStreamResource>(MockBehavior.Strict);
+
+            mock.SetupProperty(s => s.ReadTimeout, expectedReadTimeout);
+            mock.SetupProperty(s => s.WriteTimeout, expectedWriteTimeout);
+
+            var transport = new Mock<ModbusTransport>(MockBehavior.Strict, mock.Object) { CallBase = true }.Object;
+
+            Assert.Equal(expectedReadTimeout, transport.ReadTimeout);
+            Assert.Equal(expectedWriteTimeout, transport.WriteTimeout);
+
+            // Swapping
+            transport.ReadTimeout = expectedWriteTimeout;
+            transport.WriteTimeout = expectedReadTimeout;
+
+            Assert.Equal(expectedWriteTimeout, transport.ReadTimeout);
+            Assert.Equal(expectedReadTimeout, transport.WriteTimeout);
+
+            mock.VerifyAll();
+        }
+
+        [Fact]
+        public void WaitToRetryMilliseconds()
+        {
+            var mock = new Mock<ModbusTransport>(MockBehavior.Strict) { CallBase = true };
+            var transport = mock.Object;
+
+            Assert.Equal(Modbus.DefaultWaitToRetryMilliseconds, transport.WaitToRetryMilliseconds);
+
+            Assert.Throws<ArgumentException>(() => transport.WaitToRetryMilliseconds = -1);
+
+            const int expectedWaitToRetryMilliseconds = 42;
+            transport.WaitToRetryMilliseconds = expectedWaitToRetryMilliseconds;
+            Assert.Equal(expectedWaitToRetryMilliseconds, transport.WaitToRetryMilliseconds);
+        }
+
+        [Fact]
         public void UnicastMessage()
         {
             var data = new DiscreteCollection(true, false, true, false, false, false, false, false);
@@ -366,6 +422,18 @@ namespace Modbus.UnitTests.IO
 
             IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 1);
             IModbusMessage response = new ReadHoldingInputRegistersResponse(Modbus.ReadHoldingRegisters, 1, new RegisterCollection());
+
+            Assert.Throws<IOException>(() => transport.ValidateResponse(request, response));
+        }
+
+        [Fact]
+        public void ValidateResponse_MismatchingSlaveAddress()
+        {
+            var mock = new Mock<ModbusTransport>(MockBehavior.Strict) { CallBase = true };
+            var transport = mock.Object;
+
+            IModbusMessage request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 42, 1, 1);
+            IModbusMessage response = new ReadHoldingInputRegistersResponse(Modbus.ReadCoils, 33, new RegisterCollection());
 
             Assert.Throws<IOException>(() => transport.ValidateResponse(request, response));
         }

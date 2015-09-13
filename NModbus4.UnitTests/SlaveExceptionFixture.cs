@@ -8,108 +8,92 @@ namespace Modbus.UnitTests
     public class SlaveExceptionFixture
     {
         [Fact]
-        public void CreateSlaveException_EmptyConstructor()
+        public void EmptyConstructor()
         {
-            SlaveException se = new SlaveException();
-            Assert.Equal("Exception of type 'Modbus.SlaveException' was thrown.", se.Message);
+            var e = new SlaveException();
+            Assert.Equal($"Exception of type '{typeof(SlaveException).FullName}' was thrown.", e.Message);
+            Assert.Equal(0, e.SlaveAddress);
+            Assert.Equal(0, e.FunctionCode);
+            Assert.Equal(0, e.SlaveExceptionCode);
+            Assert.Null(e.InnerException);
         }
 
         [Fact]
-        public void CreateSlaveException_Message()
+        public void ConstructorWithMessage()
         {
-            SlaveException se = new SlaveException("Hello World");
-            Assert.Equal("Hello World", se.Message);
+            var e = new SlaveException("Hello World");
+            Assert.Equal("Hello World", e.Message);
+            Assert.Equal(0, e.SlaveAddress);
+            Assert.Equal(0, e.FunctionCode);
+            Assert.Equal(0, e.SlaveExceptionCode);
+            Assert.Null(e.InnerException);
         }
 
         [Fact]
-        public void CreateSlaveException_MessageAndInnerException()
+        public void ConstructorWithMessageAndInnerException()
         {
-            SlaveException se = new SlaveException("Foo", new IOException("Bar"));
-            Assert.Equal("Foo", se.Message);
-            Assert.NotNull(se.InnerException);
-            Assert.Equal("Bar", se.InnerException.Message);
+            var inner = new IOException("Bar");
+            var e = new SlaveException("Foo", inner);
+            Assert.Equal("Foo", e.Message);
+            Assert.Same(inner, e.InnerException);
+            Assert.Equal(0, e.SlaveAddress);
+            Assert.Equal(0, e.FunctionCode);
+            Assert.Equal(0, e.SlaveExceptionCode);
         }
 
         [Fact]
-        public void CreateSlaveException_SlaveExceptionResponse()
+        public void ConstructorWithSlaveExceptionResponse()
         {
-            SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 1);
-            SlaveException se = new SlaveException(response);
+            var response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 1);
+            var e = new SlaveException(response);
+
+            Assert.Equal(12, e.SlaveAddress);
+            Assert.Equal(Modbus.ReadCoils, e.FunctionCode);
+            Assert.Equal(1, e.SlaveExceptionCode);
+            Assert.Null(e.InnerException);
+
             Assert.Equal(
-                string.Format(
-                    "Exception of type 'Modbus.SlaveException' was thrown.\r\nFunction Code: {0}\r\nException Code: {1} - {2}",
-                    response.FunctionCode, response.SlaveExceptionCode, Resources.IllegalFunction), se.Message);
+                $@"Exception of type '{typeof(SlaveException).FullName}' was thrown.
+Function Code: {response.FunctionCode}
+Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalFunction}",
+                e.Message);
         }
 
         [Fact]
-        public void CreateSlaveException_CustomMessageAndSlaveExceptionResponse()
+        public void ConstructorWithCustomMessageAndSlaveExceptionResponse()
         {
-            SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 2);
+            var response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 2);
             string customMessage = "custom message";
-            SlaveException se = new SlaveException(customMessage, response);
-            Assert.Equal(string.Format("{0}\r\nFunction Code: {1}\r\nException Code: {2} - {3}",
-                customMessage, response.FunctionCode, response.SlaveExceptionCode, Resources.IllegalDataAddress),
-                se.Message);
+            var e = new SlaveException(customMessage, response);
+
+            Assert.Equal(12, e.SlaveAddress);
+            Assert.Equal(Modbus.ReadCoils, e.FunctionCode);
+            Assert.Equal(2, e.SlaveExceptionCode);
+            Assert.Null(e.InnerException);
+
+            Assert.Equal(
+                $@"{customMessage}
+Function Code: {response.FunctionCode}
+Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalDataAddress}",
+                e.Message);
         }
 
         [Fact]
-        public void FunctionCode_SlaveExceptionInitialized()
+        public void Serializable()
         {
-            SlaveException se = new SlaveException(new SlaveExceptionResponse(1, 2, 3));
-            Assert.Equal(2, se.FunctionCode);
-        }
+            var formatter = new BinaryFormatter();
+            var e = new SlaveException(new SlaveExceptionResponse(1, 2, 3));
 
-        [Fact]
-        public void FunctionCode_SlaveExceptionNotInitialized()
-        {
-            SlaveException se = new SlaveException();
-            Assert.Equal(0, se.FunctionCode);
-        }
-
-        [Fact]
-        public void SlaveException_SlaveExceptionInitialized()
-        {
-            SlaveException se = new SlaveException(new SlaveExceptionResponse(1, 2, 3));
-            Assert.Equal(3, se.SlaveExceptionCode);
-        }
-
-        [Fact]
-        public void SlaveExceptionCode_SlaveExceptionNotInitialized()
-        {
-            SlaveException se = new SlaveException();
-            Assert.Equal(0, se.SlaveExceptionCode);
-        }
-
-        [Fact]
-        public void SlaveAddress_SlaveExceptionInitialized()
-        {
-            SlaveException se = new SlaveException(new SlaveExceptionResponse(1, 2, 3));
-            Assert.Equal(1, se.SlaveAddress);
-        }
-
-        [Fact]
-        public void SlaveAddress_SlaveExceptionNotInitialized()
-        {
-            SlaveException se = new SlaveException();
-            Assert.Equal(0, se.SlaveAddress);
-        }
-
-        [Fact]
-        public void SlaveException_Serializable()
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            SlaveException slaveException = new SlaveException(new SlaveExceptionResponse(1, 2, 3));
-
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
-                formatter.Serialize(stream, slaveException);
+                formatter.Serialize(stream, e);
                 stream.Position = 0;
 
-                SlaveException slaveException2 = formatter.Deserialize(stream) as SlaveException;
-                Assert.NotNull(slaveException2);
-                Assert.Equal(1, slaveException2.SlaveAddress);
-                Assert.Equal(2, slaveException2.FunctionCode);
-                Assert.Equal(3, slaveException2.SlaveExceptionCode);
+                var e2 = (SlaveException)formatter.Deserialize(stream);
+                Assert.NotNull(e2);
+                Assert.Equal(1, e2.SlaveAddress);
+                Assert.Equal(2, e2.FunctionCode);
+                Assert.Equal(3, e2.SlaveExceptionCode);
             }
         }
     }

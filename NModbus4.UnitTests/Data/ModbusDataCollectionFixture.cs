@@ -1,83 +1,119 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Modbus.Data;
 using Xunit;
 
 namespace Modbus.UnitTests.Data
 {
-    public class ModbusDataCollectionFixture
+    public abstract class ModbusDataCollectionFixture<TData>
     {
-        [Fact]
-        public void FromReadOnlyList()
+        protected abstract TData[] GetArray();
+
+        protected abstract TData GetNonExistentElement();
+
+        protected List<TData> GetList()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(new bool[] { true, false });
-            Assert.Equal(3, col.Count);
+            return new List<TData>(GetArray());
         }
 
         [Fact]
-        public void ModbusDataCollection_FromParams()
+        public void DefaultContstructor()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, false);
-            Assert.Equal(3, col.Count);
-        }
-
-        [Fact]
-        public void Empty()
-        {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>();
+            var col = new ModbusDataCollection<TData>();
+            Assert.NotEmpty(col);
             Assert.Equal(1, col.Count);
+
+            col.Add(default(TData));
+            Assert.Equal(2, col.Count);
         }
 
         [Fact]
-        public void AddDefaultBool()
+        public void ContstructorWithParams()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, true);
-            Assert.Equal(3, col.Count);
-            Assert.Equal(new bool[] { false, true, true }, col.ToArray());
+            TData[] source = GetArray();
+            var col = new ModbusDataCollection<TData>(source);
+            Assert.Equal(source.Length + 1, col.Count);
+            Assert.NotEmpty(col);
+
+            col.Add(default(TData));
+            Assert.Equal(source.Length + 2, col.Count);
         }
 
         [Fact]
-        public void AddDefaultUshort()
+        public void ContstructorWithIList()
         {
-            ModbusDataCollection<ushort> col = new ModbusDataCollection<ushort>(1, 1);
-            Assert.Equal(3, col.Count);
-            Assert.Equal(new ushort[] { 0, 1, 1 }, col.ToArray());
+            List<TData> source = GetList();
+            int expectedCount = source.Count;
+
+            var col = new ModbusDataCollection<TData>(source);
+
+            Assert.Equal(expectedCount + 1, source.Count);
+            Assert.Equal(expectedCount + 1, col.Count);
+
+            source.Insert(0, default(TData));
+            Assert.Equal(source, col);
+        }
+
+        [Fact]
+        public void ContstructorWithIList_FromReadOnlyList()
+        {
+            List<TData> source = GetList();
+            var readOnly = new ReadOnlyCollection<TData>(source);
+            int expectedCount = source.Count;
+
+            var col = new ModbusDataCollection<TData>(readOnly);
+
+            Assert.Equal(expectedCount, source.Count);
+            Assert.Equal(expectedCount + 1, col.Count);
+
+            source.Insert(0, default(TData));
+            Assert.Equal(source, col);
         }
 
         [Fact]
         public void SetZeroElementUsingItem()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, false);
-            Assert.Throws<ArgumentOutOfRangeException>(() => col[0] = true);
+            var source = GetArray();
+            var col = new ModbusDataCollection<TData>(source);
+            Assert.Throws<ArgumentOutOfRangeException>(() => col[0] = source[3]);
         }
 
         [Fact]
-        public void InsertZeroElement()
+        public void ZeroElementUsingItem_Negative()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, false);
-            Assert.Throws<ArgumentOutOfRangeException>(() => col.Insert(0, true));
+            var source = GetArray();
+            var col = new ModbusDataCollection<TData>(source);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => col[0] = source[3]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => col.Insert(0, source[3]));
+            Assert.Throws<ArgumentOutOfRangeException>(() => col.RemoveAt(0));
+
+            // Remove forst zero/false
+            Assert.Throws<ArgumentOutOfRangeException>(() => col.Remove(default(TData)));
         }
 
         [Fact]
         public void Clear()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, false);
+            var col = new ModbusDataCollection<TData>(GetArray());
             col.Clear();
+
             Assert.Equal(1, col.Count);
         }
 
         [Fact]
-        public void RemoveAtZeroElement()
+        public void Remove()
         {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>(true, false);
-            Assert.Throws<ArgumentOutOfRangeException>(() => col.RemoveAt(0));
-        }
+            List<TData> source = GetList();
+            var col = new ModbusDataCollection<TData>(source);
+            int expectedCount = source.Count - 1;
 
-        [Fact]
-        public void RemoveZeroElement()
-        {
-            ModbusDataCollection<bool> col = new ModbusDataCollection<bool>();
-            Assert.Throws<ArgumentOutOfRangeException>(() => col.Remove(default(bool)));
+            Assert.True(col.Remove(source[3]));
+
+            Assert.Equal(expectedCount, col.Count);
+            Assert.Equal(expectedCount, source.Count);
+            Assert.Equal(source, col);
         }
     }
 }

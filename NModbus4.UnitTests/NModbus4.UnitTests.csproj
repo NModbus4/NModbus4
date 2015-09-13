@@ -58,15 +58,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\BoolModbusDataCollectionFixture.cs" />
     <Compile Include="Data\DataStoreEventArgsFixture.cs" />
     <Compile Include="Data\DataStoreFixture.cs" />
     <Compile Include="Data\DiscreteCollectionFixture.cs" />
     <Compile Include="Data\ModbusDataCollectionFixture.cs" />
     <Compile Include="Data\RegisterCollectionFixture.cs" />
+    <Compile Include="Data\UshortModbusDataCollectionFixture.cs" />
     <Compile Include="Device\ModbusMasterFixture.cs" />
     <Compile Include="Device\ModbusSlaveFixture.cs" />
     <Compile Include="Device\TcpConnectionEventArgsFixture.cs" />
     <Compile Include="IO\ModbusAsciiTransportFixture.cs" />
+    <Compile Include="IO\EmptyTransportFixture.cs" />
     <Compile Include="IO\ModbusRtuTransportFixture.cs" />
     <Compile Include="IO\ModbusSerialTransportFixture.cs" />
     <Compile Include="IO\ModbusTcpTransportFixture.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Message\WriteSingleCoilRequestResponseFixture.cs" />
     <Compile Include="Message\WriteSingleRegisterRequestResponseFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="InvalidModbusRequestExceptionFixture.cs" />
     <Compile Include="SlaveExceptionFixture.cs" />
     <Compile Include="Utility\CollectionUtilityFixture.cs" />
     <Compile Include="Utility\DiscriminatedUnionFixture.cs" />

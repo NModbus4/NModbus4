@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
-    public class ModbusSerialTransportFixture : ModbusMessageFixture
+    public class ModbusSerialTransportFixture
     {
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
@@ -23,7 +23,7 @@ namespace Modbus.UnitTests.IO
             var response = transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 2, Modbus.ReadCoils, 1, 129, lrc });
 
             Assert.IsType<ReadCoilsInputsResponse>(response);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Modbus.UnitTests.IO
             var request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 3, 4);
             var actualResponse = transport.UnicastMessage<ReadCoilsInputsResponse>(request);
 
-            AssertModbusMessagePropertiesAreEqual(response, actualResponse);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(response, actualResponse);
             mock.VerifyAll();
         }
     }

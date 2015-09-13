@@ -9,9 +9,9 @@ using Xunit;
 
 namespace Modbus.UnitTests.Device
 {
-    public class ModbusSlaveFixture : ModbusMessageFixture
+    public class ModbusSlaveFixture
     {
-        private DataStore _testDataStore;
+        private readonly DataStore _testDataStore;
 
         public ModbusSlaveFixture()
         {
@@ -26,7 +26,7 @@ namespace Modbus.UnitTests.Device
             ReadCoilsInputsResponse response =
                 ModbusSlave.ReadDiscretes(new ReadCoilsInputsRequest(Modbus.ReadCoils, 1, 1, 9), _testDataStore,
                     _testDataStore.CoilDiscretes);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
         }
 
@@ -38,7 +38,7 @@ namespace Modbus.UnitTests.Device
             ReadCoilsInputsResponse response =
                 ModbusSlave.ReadDiscretes(new ReadCoilsInputsRequest(Modbus.ReadInputs, 1, 1, 9), _testDataStore,
                     _testDataStore.InputDiscretes);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
         }
 
@@ -51,7 +51,7 @@ namespace Modbus.UnitTests.Device
             ReadHoldingInputRegistersResponse response =
                 ModbusSlave.ReadRegisters(new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, 1, 0, 6),
                     _testDataStore, _testDataStore.HoldingRegisters);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
         }
 
@@ -64,7 +64,7 @@ namespace Modbus.UnitTests.Device
             ReadHoldingInputRegistersResponse response =
                 ModbusSlave.ReadRegisters(new ReadHoldingInputRegistersRequest(Modbus.ReadInputRegisters, 1, 0, 6),
                     _testDataStore, _testDataStore.InputRegisters);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(expectedResponse.ByteCount, response.ByteCount);
         }
 
@@ -78,7 +78,7 @@ namespace Modbus.UnitTests.Device
             WriteSingleCoilRequestResponse response =
                 ModbusSlave.WriteSingleCoil(new WriteSingleCoilRequestResponse(1, addressToWrite, valueToWrite),
                     _testDataStore, _testDataStore.CoilDiscretes);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(valueToWrite, _testDataStore.CoilDiscretes[addressToWrite + 1]);
         }
 
@@ -94,7 +94,7 @@ namespace Modbus.UnitTests.Device
                     new WriteMultipleCoilsRequest(1, startAddress,
                         new DiscreteCollection(val, val, val, val, val, val, val, val, val, val)), _testDataStore,
                     _testDataStore.CoilDiscretes);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
             Assert.Equal(new bool[] { val, val, val, val, val, val, val, val, val, val },
                 _testDataStore.CoilDiscretes.Slice(startAddress + 1, numberOfPoints).ToArray());
         }
@@ -110,7 +110,7 @@ namespace Modbus.UnitTests.Device
             WriteSingleRegisterRequestResponse response =
                 ModbusSlave.WriteSingleRegister(new WriteSingleRegisterRequestResponse(1, startAddress, value),
                     _testDataStore, _testDataStore.HoldingRegisters);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Modbus.UnitTests.Device
                 ModbusSlave.WriteMultipleRegisters(
                     new WriteMultipleRegistersRequest(1, startAddress, new RegisterCollection(valuesToWrite)),
                     _testDataStore, _testDataStore.HoldingRegisters);
-            AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
+            ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
         [Fact]
