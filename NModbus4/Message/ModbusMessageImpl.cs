@@ -14,34 +14,73 @@
     /// </summary>
     internal class ModbusMessageImpl
     {
+        /// <summary>
+        ///
+        /// </summary>
         public ModbusMessageImpl()
         {
         }
 
-        public ModbusMessageImpl(byte slaveAddress, byte functionCode)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="slaveAddress"></param>
+        /// <param name="functionCode"></param>
+        public ModbusMessageImpl(byte slaveAddress,
+                                 byte functionCode)
         {
             SlaveAddress = slaveAddress;
             FunctionCode = functionCode;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte? ByteCount { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte? ExceptionCode { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public ushort TransactionId { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte FunctionCode { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public ushort? NumberOfPoints { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte SlaveAddress { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public ushort? StartAddress { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public ushort? SubFunctionCode { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public IModbusMessageDataCollection Data { get; set; }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte[] MessageFrame
         {
             get
@@ -56,6 +95,9 @@
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         public byte[] ProtocolDataUnit
         {
             get
@@ -98,6 +140,10 @@
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="frame"></param>
         public void Initialize(byte[] frame)
         {
             if (frame == null)
@@ -107,8 +153,11 @@
 
             if (frame.Length < Modbus.MinimumFrameSize)
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
-                    "Message frame must contain at least {0} bytes of data.", Modbus.MinimumFrameSize));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Message frame must contain at least {0} bytes of data.",
+                                           Modbus.MinimumFrameSize);
+
+                throw new FormatException(msg);
             }
 
             SlaveAddress = frame[0];

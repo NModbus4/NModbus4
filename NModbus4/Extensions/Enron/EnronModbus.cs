@@ -21,8 +21,10 @@
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
         /// <returns>Holding registers status</returns>
-        public static uint[] ReadHoldingRegisters32(this ModbusMaster master, byte slaveAddress, ushort startAddress,
-            ushort numberOfPoints)
+        public static uint[] ReadHoldingRegisters32(this ModbusMaster master,
+                                                    byte slaveAddress,
+                                                    ushort startAddress,
+                                                    ushort numberOfPoints)
         {
             if (master == null)
             {
@@ -32,7 +34,9 @@
             ValidateNumberOfPoints(numberOfPoints, 62);
 
             // read 16 bit chunks and perform conversion
-            var rawRegisters = master.ReadHoldingRegisters(slaveAddress, startAddress, (ushort)(numberOfPoints * 2));
+            var rawRegisters = master.ReadHoldingRegisters(slaveAddress,
+                                                           startAddress,
+                                                           (ushort)(numberOfPoints * 2));
 
             return Convert(rawRegisters).ToArray();
         }
@@ -45,8 +49,10 @@
         /// <param name="startAddress">Address to begin reading.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
         /// <returns>Input registers status</returns>
-        public static uint[] ReadInputRegisters32(this ModbusMaster master, byte slaveAddress, ushort startAddress,
-            ushort numberOfPoints)
+        public static uint[] ReadInputRegisters32(this ModbusMaster master,
+                                                  byte slaveAddress,
+                                                  ushort startAddress,
+                                                  ushort numberOfPoints)
         {
             if (master == null)
             {
@@ -55,7 +61,9 @@
 
             ValidateNumberOfPoints(numberOfPoints, 62);
 
-            var rawRegisters = master.ReadInputRegisters(slaveAddress, startAddress, (ushort)(numberOfPoints * 2));
+            var rawRegisters = master.ReadInputRegisters(slaveAddress,
+                                                         startAddress,
+                                                         (ushort)(numberOfPoints * 2));
 
             return Convert(rawRegisters).ToArray();
         }
@@ -67,15 +75,19 @@
         /// <param name="slaveAddress">Address of the device to write to.</param>
         /// <param name="registerAddress">Address to write.</param>
         /// <param name="value">Value to write.</param>
-        public static void WriteSingleRegister32(this ModbusMaster master, byte slaveAddress, ushort registerAddress,
-            uint value)
+        public static void WriteSingleRegister32(this ModbusMaster master,
+                                                 byte slaveAddress,
+                                                 ushort registerAddress,
+                                                 uint value)
         {
             if (master == null)
             {
                 throw new ArgumentNullException(nameof(master));
             }
 
-            master.WriteMultipleRegisters32(slaveAddress, registerAddress, new[] { value });
+            master.WriteMultipleRegisters32(slaveAddress,
+                                            registerAddress,
+                                            new[] { value });
         }
 
         /// <summary>
@@ -85,8 +97,10 @@
         /// <param name="slaveAddress">Address of the device to write to.</param>
         /// <param name="startAddress">Address to begin writing values.</param>
         /// <param name="data">Values to write.</param>
-        public static void WriteMultipleRegisters32(this ModbusMaster master, byte slaveAddress, ushort startAddress,
-            uint[] data)
+        public static void WriteMultipleRegisters32(this ModbusMaster master,
+                                                    byte slaveAddress,
+                                                    ushort startAddress,
+                                                    uint[] data)
         {
             if (master == null)
             {
@@ -104,12 +118,16 @@
                     "The length of argument data must be between 1 and 61 inclusive."));
             }
 
-            master.WriteMultipleRegisters(slaveAddress, startAddress, Convert(data).ToArray());
+            master.WriteMultipleRegisters(slaveAddress,
+                                          startAddress,
+                                          Convert(data).ToArray());
         }
 
         /// <summary>
         ///     Convert the 32 bit registers to two 16 bit values.
         /// </summary>
+        /// <param name="registers"></param>
+        /// <returns></returns>
         private static IEnumerable<ushort> Convert(uint[] registers)
         {
             foreach (var register in registers)
@@ -125,6 +143,8 @@
         /// <summary>
         ///     Convert the 16 bit registers to 32 bit registers.
         /// </summary>
+        /// <param name="registers"></param>
+        /// <returns></returns>
         private static IEnumerable<uint> Convert(ushort[] registers)
         {
             for (int i = 0; i < registers.Length; i++)
@@ -134,13 +154,21 @@
             }
         }
 
-        private static void ValidateNumberOfPoints(ushort numberOfPoints, ushort maxNumberOfPoints)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="numberOfPoints"></param>
+        /// <param name="maxNumberOfPoints"></param>
+        private static void ValidateNumberOfPoints(ushort numberOfPoints,
+                                                   ushort maxNumberOfPoints)
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)
             {
-                throw new ArgumentException(string.Format(CultureInfo.InvariantCulture,
-                    "Argument numberOfPoints must be between 1 and {0} inclusive.",
-                    maxNumberOfPoints));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Argument numberOfPoints must be between 1 and {0} inclusive.",
+                                           maxNumberOfPoints);
+
+                throw new ArgumentException(msg);
             }
         }
     }

@@ -9,25 +9,28 @@
     using Unme.Common;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ReadCoilsInputsResponse : AbstractModbusMessageWithData<DiscreteCollection>, IModbusMessage
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ReadCoilsInputsResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="functionCode"></param>
         /// <param name="slaveAddress"></param>
         /// <param name="byteCount"></param>
         /// <param name="data"></param>
-        public ReadCoilsInputsResponse(byte functionCode, byte slaveAddress, byte byteCount, DiscreteCollection data)
+        public ReadCoilsInputsResponse(byte functionCode,
+                                       byte slaveAddress,
+                                       byte byteCount,
+                                       DiscreteCollection data)
             : base(slaveAddress, functionCode)
         {
             ByteCount = byteCount;
@@ -35,7 +38,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte ByteCount
         {
@@ -44,7 +47,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -52,20 +55,22 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "Read {0} {1} - {2}.",
-                Data.Count(),
-                FunctionCode == Modbus.ReadInputs ? "inputs" : "coils",
-                Data);
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Read {0} {1} - {2}.",
+                                       Data.Count(),
+                                       FunctionCode == Modbus.ReadInputs ? "inputs" : "coils",
+                                       Data);
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

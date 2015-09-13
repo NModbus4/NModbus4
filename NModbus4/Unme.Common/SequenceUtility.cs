@@ -4,8 +4,19 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    ///
+    /// </summary>
     internal static class SequenceUtility
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int startIndex, int size)
         {
             if (source == null)

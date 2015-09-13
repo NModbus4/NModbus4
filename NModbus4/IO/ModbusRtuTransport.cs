@@ -14,15 +14,31 @@
     /// </summary>
     internal class ModbusRtuTransport : ModbusSerialTransport
     {
+        /// <summary>
+        ///
+        /// </summary>
         public const int RequestFrameStartLength = 7;
+
+        /// <summary>
+        ///
+        /// </summary>
         public const int ResponseFrameStartLength = 4;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="streamResource"></param>
         internal ModbusRtuTransport(IStreamResource streamResource)
             : base(streamResource)
         {
             Debug.Assert(streamResource != null, "Argument streamResource cannot be null.");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="frameStart"></param>
+        /// <returns></returns>
         public static int RequestBytesToRead(byte[] frameStart)
         {
             byte functionCode = frameStart[1];
@@ -45,8 +61,9 @@
                     numBytes = byteCount + 2;
                     break;
                 default:
-                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
-                        functionCode);
+                    string errorMessage = string.Format(CultureInfo.InvariantCulture,
+                                                        "Function code {0} not supported.",
+                                                        functionCode);
                     Debug.WriteLine(errorMessage);
                     throw new NotImplementedException(errorMessage);
             }
@@ -54,6 +71,11 @@
             return numBytes;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="frameStart"></param>
+        /// <returns></returns>
         public static int ResponseBytesToRead(byte[] frameStart)
         {
             byte functionCode = frameStart[1];
@@ -81,8 +103,9 @@
                     numBytes = 4;
                     break;
                 default:
-                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
-                        functionCode);
+                    string errorMessage = string.Format(CultureInfo.InvariantCulture,
+                                                        "Function code {0} not supported.",
+                                                        functionCode);
                     Debug.WriteLine(errorMessage);
                     throw new NotImplementedException(errorMessage);
             }
@@ -90,6 +113,11 @@
             return numBytes;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public virtual byte[] Read(int count)
         {
             byte[] frameBytes = new byte[count];
@@ -97,30 +125,54 @@
 
             while (numBytesRead != count)
             {
-                numBytesRead += StreamResource.Read(frameBytes, numBytesRead, count - numBytesRead);
+                numBytesRead += StreamResource.Read(frameBytes,
+                                                    numBytesRead,
+                                                    count - numBytesRead);
             }
 
             return frameBytes;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
             var messageFrame = message.MessageFrame;
             var crc = ModbusUtility.CalculateCrc(messageFrame);
             var messageBody = new MemoryStream(messageFrame.Length + crc.Length);
 
-            messageBody.Write(messageFrame, 0, messageFrame.Length);
-            messageBody.Write(crc, 0, crc.Length);
+            messageBody.Write(messageFrame,
+                              0,
+                              messageFrame.Length);
+
+            messageBody.Write(crc,
+                              0,
+                              crc.Length);
 
             return messageBody.ToArray();
         }
 
-        internal override bool ChecksumsMatch(IModbusMessage message, byte[] messageFrame)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="messageFrame"></param>
+        /// <returns></returns>
+        internal override bool ChecksumsMatch(IModbusMessage message,
+                                              byte[] messageFrame)
         {
             return BitConverter.ToUInt16(messageFrame, messageFrame.Length - 2) ==
                    BitConverter.ToUInt16(ModbusUtility.CalculateCrc(message.MessageFrame), 0);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         internal override IModbusMessage ReadResponse<T>()
         {
             byte[] frameStart = Read(ResponseFrameStartLength);
@@ -131,6 +183,10 @@
             return CreateResponse<T>(frame);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         internal override byte[] ReadRequest()
         {
             byte[] frameStart = Read(RequestFrameStartLength);

@@ -14,11 +14,20 @@
     /// </summary>
     public class ModbusSerialSlave : ModbusSlave
     {
-        private ModbusSerialSlave(byte unitId, ModbusTransport transport)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <param name="transport"></param>
+        private ModbusSerialSlave(byte unitId,
+                                  ModbusTransport transport)
             : base(unitId, transport)
         {
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         private ModbusSerialTransport SerialTransport
         {
             get
@@ -36,53 +45,73 @@
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
-        public static ModbusSerialSlave CreateAscii(byte unitId, SerialPort serialPort)
+        /// <param name="unitId"></param>
+        /// <param name="serialPort"></param>
+        /// <returns></returns>
+        public static ModbusSerialSlave CreateAscii(byte unitId,
+                                                    SerialPort serialPort)
         {
             if (serialPort == null)
             {
                 throw new ArgumentNullException(nameof(serialPort));
             }
 
-            return CreateAscii(unitId, new SerialPortAdapter(serialPort));
+            return CreateAscii(unitId,
+                               new SerialPortAdapter(serialPort));
         }
 
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
-        public static ModbusSerialSlave CreateAscii(byte unitId, IStreamResource streamResource)
+        /// <param name="unitId"></param>
+        /// <param name="streamResource"></param>
+        /// <returns></returns>
+        public static ModbusSerialSlave CreateAscii(byte unitId,
+                                                    IStreamResource streamResource)
         {
             if (streamResource == null)
             {
                 throw new ArgumentNullException(nameof(streamResource));
             }
 
-            return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
+            return new ModbusSerialSlave(unitId,
+                                         new ModbusAsciiTransport(streamResource));
         }
 
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
-        public static ModbusSerialSlave CreateRtu(byte unitId, SerialPort serialPort)
+        /// <param name="unitId"></param>
+        /// <param name="serialPort"></param>
+        /// <returns></returns>
+        public static ModbusSerialSlave CreateRtu(byte unitId,
+                                                  SerialPort serialPort)
         {
             if (serialPort == null)
             {
                 throw new ArgumentNullException(nameof(serialPort));
             }
 
-            return CreateRtu(unitId, new SerialPortAdapter(serialPort));
+            return CreateRtu(unitId,
+                             new SerialPortAdapter(serialPort));
         }
 
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
-        public static ModbusSerialSlave CreateRtu(byte unitId, IStreamResource streamResource)
+        /// <param name="unitId"></param>
+        /// <param name="streamResource"></param>
+        /// <returns></returns>
+        public static ModbusSerialSlave CreateRtu(byte unitId,
+                                                  IStreamResource streamResource)
         {
             if (streamResource == null)
             {
                 throw new ArgumentNullException(nameof(streamResource));
             }
 
-            return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
+            return new ModbusSerialSlave(unitId,
+                                         new ModbusRtuTransport(streamResource));
         }
 
         /// <summary>

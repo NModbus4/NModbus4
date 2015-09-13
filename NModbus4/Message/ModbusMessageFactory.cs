@@ -4,14 +4,17 @@
     using System.Globalization;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static class ModbusMessageFactory
     {
+        /// <summary>
+        ///
+        /// </summary>
         private const int MinRequestFrameLength = 3;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="frame"></param>
@@ -25,7 +28,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         /// <returns></returns>
@@ -33,8 +36,11 @@
         {
             if (frame.Length < MinRequestFrameLength)
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
-                    "Argument 'frame' must have a length of at least {0} bytes.", MinRequestFrameLength));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Argument 'frame' must have a length of at least {0} bytes.",
+                                           MinRequestFrameLength);
+
+                throw new FormatException(msg);
             }
 
             IModbusMessage request;
@@ -69,9 +75,11 @@
                     request = CreateModbusMessage<ReadWriteMultipleRegistersRequest>(frame);
                     break;
                 default:
-                    throw new ArgumentException(
-                        string.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}", functionCode),
-nameof(frame));
+                    string msg = string.Format(CultureInfo.InvariantCulture,
+                                               "Unsupported function code {0}",
+                                               functionCode);
+
+                    throw new ArgumentException(msg, nameof(frame));
             }
 
             return request;

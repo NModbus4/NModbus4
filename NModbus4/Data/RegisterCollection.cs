@@ -24,6 +24,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
+        /// <param name="bytes">Array for register collection.</param>
         public RegisterCollection(byte[] bytes)
             : this((IList<ushort>)ModbusUtility.NetworkBytesToHostUInt16(bytes))
         {
@@ -32,6 +33,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
+        /// <param name="registers">Array for register collection.</param>
         public RegisterCollection(params ushort[] registers)
             : this((IList<ushort>)registers)
         {
@@ -40,6 +42,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="RegisterCollection" /> class.
         /// </summary>
+        /// <param name="registers">List for register collection.</param>
         public RegisterCollection(IList<ushort> registers)
             : base(registers.IsReadOnly ? new List<ushort>(registers) : registers)
         {

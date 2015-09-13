@@ -5,17 +5,17 @@
     using System.Globalization;
 
     /// <summary>
-    ///     Possible options for DiscriminatedUnion type
+    ///     Possible options for DiscriminatedUnion type.
     /// </summary>
     public enum DiscriminatedUnionOption
     {
         /// <summary>
-        ///     Option A
+        ///     Option A.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "A")] A,
 
         /// <summary>
-        ///     Option B
+        ///     Option B.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "B")] B
     }
@@ -25,7 +25,6 @@
     /// </summary>
     /// <typeparam name="TA">The type of option A.</typeparam>
     /// <typeparam name="TB">The type of option B.</typeparam>
-    /// '
     public class DiscriminatedUnion<TA, TB>
     {
         private TA optionA;
@@ -79,9 +78,14 @@
         /// <summary>
         ///     Factory method for creating DiscriminatedUnion with option A set.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
-            Justification = "Factory method.")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "0#a")]
+        /// <param name="a"></param>
+        /// <returns></returns>
+        [SuppressMessage("Microsoft.Design",
+                         "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
+                         Justification = "Factory method.")]
+        [SuppressMessage("Microsoft.Naming",
+                         "CA1704:IdentifiersShouldBeSpelledCorrectly",
+                         MessageId = "0#a")]
         public static DiscriminatedUnion<TA, TB> CreateA(TA a)
         {
             return new DiscriminatedUnion<TA, TB>() { option = DiscriminatedUnionOption.A, optionA = a };
@@ -90,9 +94,14 @@
         /// <summary>
         ///     Factory method for creating DiscriminatedUnion with option B set.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
-            Justification = "Factory method.")]
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "0#b")]
+        /// <param name="b"></param>
+        /// <returns></returns>
+        [SuppressMessage("Microsoft.Design",
+                         "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
+                         Justification = "Factory method.")]
+        [SuppressMessage("Microsoft.Naming",
+                         "CA1704:IdentifiersShouldBeSpelledCorrectly",
+                         MessageId = "0#b")]
         public static DiscriminatedUnion<TA, TB> CreateB(TB b)
         {
             return new DiscriminatedUnion<TA, TB>() { option = DiscriminatedUnionOption.B, optionB = b };
@@ -107,6 +116,7 @@
         public override string ToString()
         {
             string value = null;
+
             switch (Option)
             {
                 case DiscriminatedUnionOption.A:

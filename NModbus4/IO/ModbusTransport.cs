@@ -28,6 +28,10 @@
         {
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="streamResource"></param>
         internal ModbusTransport(IStreamResource streamResource)
         {
             Debug.Assert(streamResource != null, "Argument streamResource cannot be null.");
@@ -63,7 +67,10 @@
         /// </summary>
         public int WaitToRetryMilliseconds
         {
-            get { return _waitToRetryMilliseconds; }
+            get
+            {
+                return _waitToRetryMilliseconds;
+            }
             set
             {
                 if (value < 0)
@@ -110,6 +117,12 @@
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal virtual T UnicastMessage<T>(IModbusMessage message) where T : IModbusMessage, new()
         {
             IModbusMessage response = null;
@@ -135,11 +148,11 @@
                             {
                                 // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
                                 readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge;
+
                                 if (readAgain)
                                 {
-                                    Debug.WriteLine(
-                                        "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
-                                        _waitToRetryMilliseconds);
+                                    Debug.WriteLine("Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
+                                                    _waitToRetryMilliseconds);
                                     Sleep(WaitToRetryMilliseconds);
                                 }
                                 else
@@ -170,9 +183,9 @@
                         throw;
                     }
 
-                    Debug.WriteLine(
-                        "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
-                        _waitToRetryMilliseconds);
+                    Debug.WriteLine("Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
+                                    _waitToRetryMilliseconds);
+
                     Sleep(WaitToRetryMilliseconds);
                 }
                 catch (Exception e)
@@ -200,6 +213,12 @@
             return (T)response;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="frame"></param>
+        /// <returns></returns>
         internal virtual IModbusMessage CreateResponse<T>(byte[] frame) where T : IModbusMessage, new()
         {
             byte functionCode = frame[1];
@@ -218,37 +237,55 @@
             return response;
         }
 
-        internal void ValidateResponse(IModbusMessage request, IModbusMessage response)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        internal void ValidateResponse(IModbusMessage request,
+                                       IModbusMessage response)
         {
             // always check the function code and slave address, regardless of transport protocol
             if (request.FunctionCode != response.FunctionCode)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Received response with unexpected Function Code. Expected {0}, received {1}.", request.FunctionCode,
-                    response.FunctionCode));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Received response with unexpected Function Code. Expected {0}, received {1}.",
+                                           request.FunctionCode,
+                                           response.FunctionCode);
+
+                throw new IOException(msg);
             }
 
             if (request.SlaveAddress != response.SlaveAddress)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Response slave address does not match request. Expected {0}, received {1}.", response.SlaveAddress,
-                    request.SlaveAddress));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Response slave address does not match request. Expected {0}, received {1}.",
+                                           response.SlaveAddress,
+                                           request.SlaveAddress);
+
+                throw new IOException(msg);
             }
 
             // message specific validation
             var req = request as IModbusRequest;
+
             if (req != null)
             {
                 req.ValidateResponse(response);
             }
 
-            OnValidateResponse(request, response);
+            OnValidateResponse(request,
+                               response);
         }
 
         /// <summary>
-        /// Check whether we need to attempt to read another response before processing it (e.g. response was from previous request)
+        ///     Check whether we need to attempt to read another response before processing it (e.g. response was from previous request)
         /// </summary>
-        internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        internal bool ShouldRetryResponse(IModbusMessage request,
+                                          IModbusMessage response)
         {
             // These checks are enforced in ValidateRequest, we don't want to retry for these
             if (request.FunctionCode != response.FunctionCode)
@@ -265,9 +302,13 @@
         }
 
         /// <summary>
-        /// Provide hook to check whether receiving a response should be retried
+        ///     Provide hook to check whether receiving a response should be retried
         /// </summary>
-        internal virtual bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        internal virtual bool OnShouldRetryResponse(IModbusMessage request,
+                                                    IModbusMessage response)
         {
             return false;
         }
@@ -275,14 +316,35 @@
         /// <summary>
         ///     Provide hook to do transport level message validation.
         /// </summary>
-        internal abstract void OnValidateResponse(IModbusMessage request, IModbusMessage response);
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        internal abstract void OnValidateResponse(IModbusMessage request,
+                                                  IModbusMessage response);
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         internal abstract byte[] ReadRequest();
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         internal abstract IModbusMessage ReadResponse<T>() where T : IModbusMessage, new();
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal abstract byte[] BuildMessageFrame(IModbusMessage message);
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
         internal abstract void Write(IModbusMessage message);
 
         /// <summary>
@@ -300,6 +362,10 @@
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="millisecondsTimeout"></param>
         private static void Sleep(int millisecondsTimeout)
         {
             Thread.Sleep(millisecondsTimeout);

@@ -14,11 +14,18 @@
     /// </summary>
     public class ModbusSerialMaster : ModbusMaster, IModbusSerialMaster
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="transport">Transport used by this device.</param>>
         private ModbusSerialMaster(ModbusTransport transport)
             : base(transport)
         {
         }
 
+        /// <summary>
+        ///     Gets the Modbus Transport.
+        /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ModbusSerialTransport IModbusSerialMaster.Transport
         {
@@ -28,6 +35,8 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
+        /// <param name="serialPort"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(SerialPort serialPort)
         {
             if (serialPort == null)
@@ -41,6 +50,8 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
+        /// <param name="tcpClient"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(TcpClient tcpClient)
         {
             if (tcpClient == null)
@@ -54,6 +65,8 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
+        /// <param name="udpClient"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -72,6 +85,8 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
+        /// <param name="streamResource"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(IStreamResource streamResource)
         {
             if (streamResource == null)
@@ -85,6 +100,8 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
+        /// <param name="serialPort"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(SerialPort serialPort)
         {
             if (serialPort == null)
@@ -98,6 +115,8 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
+        /// <param name="tcpClient"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(TcpClient tcpClient)
         {
             if (tcpClient == null)
@@ -111,6 +130,8 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
+        /// <param name="udpClient"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -129,6 +150,8 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
+        /// <param name="streamResource"></param>
+        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(IStreamResource streamResource)
         {
             if (streamResource == null)
@@ -148,11 +171,17 @@
         /// <param name="slaveAddress">Address of device to test.</param>
         /// <param name="data">Data to return.</param>
         /// <returns>Return true if slave device echoed data.</returns>
-        public bool ReturnQueryData(byte slaveAddress, ushort data)
+        public bool ReturnQueryData(byte slaveAddress,
+                                    ushort data)
         {
-            DiagnosticsRequestResponse request = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData,
-                slaveAddress, new RegisterCollection(data));
-            DiagnosticsRequestResponse response = Transport.UnicastMessage<DiagnosticsRequestResponse>(request);
+            DiagnosticsRequestResponse request;
+            DiagnosticsRequestResponse response;
+
+            request = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData,
+                                                     slaveAddress,
+                                                     new RegisterCollection(data));
+
+            response = Transport.UnicastMessage<DiagnosticsRequestResponse>(request);
 
             return response.Data[0] == data;
         }

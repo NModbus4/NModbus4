@@ -68,10 +68,7 @@ namespace Modbus.IntegrationTests.CustomMessages
 
         public byte ByteCount
         {
-            get
-            {
-                return _byteCount;
-            }
+            get { return _byteCount; }
             set { _byteCount = value; }
         }
 

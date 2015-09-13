@@ -5,24 +5,26 @@
     using System.Net;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class WriteMultipleCoilsResponse : AbstractModbusMessage, IModbusMessage
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public WriteMultipleCoilsResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
-        public WriteMultipleCoilsResponse(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
+        public WriteMultipleCoilsResponse(byte slaveAddress,
+                                          ushort startAddress,
+                                          ushort numberOfPoints)
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
             StartAddress = startAddress;
@@ -30,18 +32,24 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort NumberOfPoints
         {
-            get { return MessageImpl.NumberOfPoints.Value; }
+            get
+            {
+                return MessageImpl.NumberOfPoints.Value;
+            }
             set
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
                 {
+                    string msg = string.Format(CultureInfo.InvariantCulture,
+                                               "Maximum amount of data {0} coils.",
+                                               Modbus.MaximumDiscreteRequestResponseSize);
+
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
-                            Modbus.MaximumDiscreteRequestResponseSize));
+                                                          msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -49,7 +57,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort StartAddress
         {
@@ -58,7 +66,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -66,17 +74,21 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Wrote {0} coils starting at address {1}.",
-                NumberOfPoints, StartAddress);
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Wrote {0} coils starting at address {1}.",
+                                       NumberOfPoints,
+                                       StartAddress);
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

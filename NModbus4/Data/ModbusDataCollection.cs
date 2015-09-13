@@ -7,6 +7,7 @@
     /// <summary>
     ///     A 1 origin collection represetative of the Modbus Data Model.
     /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class ModbusDataCollection<TData> : Collection<TData>
     {
         private bool _allowZeroElement = true;
@@ -40,16 +41,6 @@
         }
 
         internal ModbusDataType ModbusDataType { get; set; }
-
-        /// <summary>
-        ///     Adds a default element to the collection.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        private static IList<TData> AddDefault(IList<TData> data)
-        {
-            data.Insert(0, default(TData));
-            return data;
-        }
 
         /// <summary>
         ///     Inserts an element into the <see cref="T:System.Collections.ObjectModel.Collection`1"></see> at the specified
@@ -117,6 +108,16 @@
             base.ClearItems();
             AddDefault(this);
             _allowZeroElement = false;
+        }
+
+        /// <summary>
+        ///     Adds a default element to the collection.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        private static IList<TData> AddDefault(IList<TData> data)
+        {
+            data.Insert(0, default(TData));
+            return data;
         }
     }
 }

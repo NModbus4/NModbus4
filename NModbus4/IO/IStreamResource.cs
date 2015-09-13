@@ -35,7 +35,9 @@
         /// <param name="offset">The offset in the buffer array to begin writing.</param>
         /// <param name="count">The number of bytes to read.</param>
         /// <returns>The number of bytes read.</returns>
-        int Read(byte[] buffer, int offset, int count);
+        int Read(byte[] buffer,
+                 int offset,
+                 int count);
 
         /// <summary>
         ///     Writes a specified number of bytes to the port from an output buffer, starting at the specified offset.
@@ -43,6 +45,8 @@
         /// <param name="buffer">The byte array that contains the data to write to the port.</param>
         /// <param name="offset">The offset in the buffer array to begin writing.</param>
         /// <param name="count">The number of bytes to write.</param>
-        void Write(byte[] buffer, int offset, int count);
+        void Write(byte[] buffer,
+                   int offset,
+                   int count);
     }
 }

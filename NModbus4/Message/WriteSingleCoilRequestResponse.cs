@@ -12,24 +12,26 @@
     using Unme.Common;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class WriteSingleCoilRequestResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusRequest
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public WriteSingleCoilRequestResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="coilState"></param>
-        public WriteSingleCoilRequestResponse(byte slaveAddress, ushort startAddress, bool coilState)
+        public WriteSingleCoilRequestResponse(byte slaveAddress,
+                                              ushort startAddress,
+                                              bool coilState)
             : base(slaveAddress, Modbus.WriteSingleCoil)
         {
             StartAddress = startAddress;
@@ -37,7 +39,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -45,7 +47,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort StartAddress
         {
@@ -54,7 +56,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -62,14 +64,16 @@
             Debug.Assert(Data != null, "Argument Data cannot be null.");
             Debug.Assert(Data.Count() == 1, "Data should have a count of 1.");
 
-            return string.Format(CultureInfo.InvariantCulture,
-                "Write single coil {0} at address {1}.",
-                Data.First() == Modbus.CoilOn ? 1 : 0,
-                StartAddress);
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Write single coil {0} at address {1}.",
+                                       Data.First() == Modbus.CoilOn ? 1 : 0,
+                                       StartAddress);
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
@@ -78,23 +82,27 @@
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected start address in response. Expected {0}, received {1}.",
-                    StartAddress,
-                    typedResponse.StartAddress));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Unexpected start address in response. Expected {0}, received {1}.",
+                                           StartAddress,
+                                           typedResponse.StartAddress);
+
+                throw new IOException(msg);
             }
 
             if (Data.First() != typedResponse.Data.First())
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected data in response. Expected {0}, received {1}.",
-                    Data.First(),
-                    typedResponse.Data.First()));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Unexpected data in response. Expected {0}, received {1}.",
+                                           Data.First(),
+                                           typedResponse.Data.First());
+
+                throw new IOException(msg);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

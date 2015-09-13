@@ -9,24 +9,26 @@
     using Unme.Common;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ReadHoldingInputRegistersResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusMessage
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ReadHoldingInputRegistersResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="functionCode"></param>
         /// <param name="slaveAddress"></param>
         /// <param name="data"></param>
-        public ReadHoldingInputRegistersResponse(byte functionCode, byte slaveAddress, RegisterCollection data)
+        public ReadHoldingInputRegistersResponse(byte functionCode,
+                                                 byte slaveAddress,
+                                                 RegisterCollection data)
             : base(slaveAddress, functionCode)
         {
             if (data == null)
@@ -39,7 +41,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte ByteCount
         {
@@ -48,7 +50,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -56,17 +58,21 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers.", Data.Count,
-                FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input");
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Read {0} {1} registers.",
+                                       Data.Count,
+                                       FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input");
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

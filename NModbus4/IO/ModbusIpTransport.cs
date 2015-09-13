@@ -6,9 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    
+
     using Message;
-    
+
     using Unme.Common;
 
     /// <summary>
@@ -20,12 +20,21 @@
         private static readonly object _transactionIdLock = new object();
         private ushort _transactionId;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="streamResource"></param>
         internal ModbusIpTransport(IStreamResource streamResource)
             : base(streamResource)
         {
             Debug.Assert(streamResource != null, "Argument streamResource cannot be null.");
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="streamResource"></param>
+        /// <returns></returns>
         internal static byte[] ReadRequestResponse(IStreamResource streamResource)
         {
             // read header
@@ -54,7 +63,9 @@
 
             while (numBytesRead != frameLength)
             {
-                int bRead = streamResource.Read(messageFrame, numBytesRead, frameLength - numBytesRead);
+                int bRead = streamResource.Read(messageFrame,
+                                                numBytesRead,
+                                                frameLength - numBytesRead);
 
                 if (bRead == 0)
                 {
@@ -71,6 +82,11 @@
             return frame;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal static byte[] GetMbapHeader(IModbusMessage message)
         {
             byte[] transactionId = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)message.TransactionId));
@@ -92,11 +108,19 @@
         internal virtual ushort GetNewTransactionId()
         {
             lock (_transactionIdLock)
+            {
                 _transactionId = _transactionId == ushort.MaxValue ? (ushort)1 : ++_transactionId;
+            }
 
             return _transactionId;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="fullFrame"></param>
+        /// <returns></returns>
         internal IModbusMessage CreateMessageAndInitializeTransactionId<T>(byte[] fullFrame)
             where T : IModbusMessage, new()
         {
@@ -109,6 +133,11 @@
             return response;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
             byte[] header = GetMbapHeader(message);
@@ -121,6 +150,10 @@
             return messageBody.ToArray();
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
         internal override void Write(IModbusMessage message)
         {
             message.TransactionId = GetNewTransactionId();
@@ -129,27 +162,52 @@
             StreamResource.Write(frame, 0, frame.Length);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         internal override byte[] ReadRequest()
         {
             return ReadRequestResponse(StreamResource);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         internal override IModbusMessage ReadResponse<T>()
         {
             return CreateMessageAndInitializeTransactionId<T>(ReadRequestResponse(StreamResource));
         }
 
-        internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        internal override void OnValidateResponse(IModbusMessage request,
+                                                  IModbusMessage response)
         {
             if (request.TransactionId != response.TransactionId)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Response was not of expected transaction ID. Expected {0}, received {1}.", request.TransactionId,
-                    response.TransactionId));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Response was not of expected transaction ID. Expected {0}, received {1}.",
+                                           request.TransactionId,
+                                           response.TransactionId);
+
+                throw new IOException(msg);
             }
         }
 
-        internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        internal override bool OnShouldRetryResponse(IModbusMessage request,
+                                                     IModbusMessage response)
         {
             if (request.TransactionId > response.TransactionId && request.TransactionId - response.TransactionId < RetryOnOldResponseThreshold)
             {
@@ -157,7 +215,8 @@
                 return true;
             }
 
-            return base.OnShouldRetryResponse(request, response);
+            return base.OnShouldRetryResponse(request,
+                                              response);
         }
     }
 }

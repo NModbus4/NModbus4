@@ -5,33 +5,35 @@
     using System.Globalization;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
     {
         private static readonly Dictionary<byte, string> _exceptionMessages = CreateExceptionMessages();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public SlaveExceptionResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="functionCode"></param>
         /// <param name="exceptionCode"></param>
-        public SlaveExceptionResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
+        public SlaveExceptionResponse(byte slaveAddress,
+                                      byte functionCode,
+                                      byte exceptionCode)
             : base(slaveAddress, functionCode)
         {
             SlaveExceptionCode = exceptionCode;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -39,7 +41,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte SlaveExceptionCode
         {
@@ -58,10 +60,19 @@
             string message = _exceptionMessages.ContainsKey(SlaveExceptionCode)
                 ? _exceptionMessages[SlaveExceptionCode]
                 : Resources.Unknown;
-            return string.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
-                Environment.NewLine, FunctionCode, SlaveExceptionCode, message);
+
+            return string.Format(CultureInfo.InvariantCulture,
+                                 Resources.SlaveExceptionResponseFormat,
+                                 Environment.NewLine,
+                                 FunctionCode,
+                                 SlaveExceptionCode,
+                                 message);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         internal static Dictionary<byte, string> CreateExceptionMessages()
         {
             Dictionary<byte, string> messages = new Dictionary<byte, string>(9);
@@ -80,7 +91,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

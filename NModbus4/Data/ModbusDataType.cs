@@ -6,22 +6,22 @@
     public enum ModbusDataType
     {
         /// <summary>
-        ///     read/write register
+        ///     Read/write register.
         /// </summary>
         HoldingRegister,
 
         /// <summary>
-        ///     readonly register
+        ///     Readonly register.
         /// </summary>
         InputRegister,
 
         /// <summary>
-        ///     read/write discrete
+        ///     Read/write discrete.
         /// </summary>
         Coil,
 
         /// <summary>
-        ///     readonly discrete
+        ///     Readonly discrete.
         /// </summary>
         Input
     }

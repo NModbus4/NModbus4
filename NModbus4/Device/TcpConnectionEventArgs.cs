@@ -2,8 +2,15 @@
 {
     using System;
 
+    /// <summary>
+    ///
+    /// </summary>
     internal class TcpConnectionEventArgs : EventArgs
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="endPoint"></param>
         public TcpConnectionEventArgs(string endPoint)
         {
             if (endPoint == null)

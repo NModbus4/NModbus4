@@ -13,7 +13,13 @@
     /// </summary>
     public class DataStoreEventArgs : EventArgs
     {
-        private DataStoreEventArgs(ushort startAddress, ModbusDataType modbusDataType)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="startAddress"></param>
+        /// <param name="modbusDataType"></param>
+        private DataStoreEventArgs(ushort startAddress,
+                                   ModbusDataType modbusDataType)
         {
             this.StartAddress = startAddress;
             this.ModbusDataType = modbusDataType;
@@ -22,12 +28,12 @@
         /// <summary>
         ///     Type of Modbus data (e.g. Holding register).
         /// </summary>
-        public ModbusDataType ModbusDataType { get; private set; }
+        public ModbusDataType ModbusDataType { get; }
 
         /// <summary>
         ///     Start address of data.
         /// </summary>
-        public ushort StartAddress { get; private set; }
+        public ushort StartAddress { get; }
 
         /// <summary>
         ///     Data that was read or written.
@@ -35,8 +41,17 @@
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> Data { get; private set; }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="startAddress"></param>
+        /// <param name="modbusDataType"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         internal static DataStoreEventArgs CreateDataStoreEventArgs<T>(ushort startAddress,
-            ModbusDataType modbusDataType, IEnumerable<T> data)
+                                                                       ModbusDataType modbusDataType,
+                                                                       IEnumerable<T> data)
         {
             if (data == null)
             {

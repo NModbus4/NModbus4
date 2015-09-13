@@ -5,24 +5,26 @@
     using System.Net;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class WriteMultipleRegistersResponse : AbstractModbusMessage, IModbusMessage
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public WriteMultipleRegistersResponse()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
-        public WriteMultipleRegistersResponse(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
+        public WriteMultipleRegistersResponse(byte slaveAddress,
+                                              ushort startAddress,
+                                              ushort numberOfPoints)
             : base(slaveAddress, Modbus.WriteMultipleRegisters)
         {
             StartAddress = startAddress;
@@ -30,18 +32,24 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort NumberOfPoints
         {
-            get { return MessageImpl.NumberOfPoints.Value; }
+            get
+            {
+                return MessageImpl.NumberOfPoints.Value;
+            }
             set
             {
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
                 {
+                    string msg = string.Format(CultureInfo.InvariantCulture,
+                                               "Maximum amount of data {0} registers.",
+                                               Modbus.MaximumRegisterRequestResponseSize);
+
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
-                            Modbus.MaximumRegisterRequestResponseSize));
+                                                          msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -49,7 +57,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort StartAddress
         {
@@ -58,7 +66,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -66,17 +74,20 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Wrote {0} holding registers starting at address {1}.",
-                NumberOfPoints, StartAddress);
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Wrote {0} holding registers starting at address {1}.",
+                                       NumberOfPoints, StartAddress);
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

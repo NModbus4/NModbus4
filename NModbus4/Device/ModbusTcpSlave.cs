@@ -26,7 +26,13 @@
         private TcpListener _server;
         private Timer _timer;
 
-        private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <param name="tcpListener"></param>
+        private ModbusTcpSlave(byte unitId,
+                               TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
@@ -37,7 +43,15 @@
             _server = tcpListener;
         }
 
-        private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <param name="tcpListener"></param>
+        /// <param name="timeInterval"></param>
+        private ModbusTcpSlave(byte unitId,
+                               TcpListener tcpListener,
+                               double timeInterval)
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
@@ -85,25 +99,31 @@
         /// <summary>
         ///     Modbus TCP slave factory method.
         /// </summary>
-        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
+        /// <param name="unitId"></param>
+        /// <param name="tcpListener"></param>
+        /// <returns></returns>
+        public static ModbusTcpSlave CreateTcp(byte unitId,
+                                               TcpListener tcpListener)
         {
-            return new ModbusTcpSlave(unitId, tcpListener);
+            return new ModbusTcpSlave(unitId,
+                                      tcpListener);
         }
 
         /// <summary>
-        ///     Creates ModbusTcpSlave with timer which polls connected clients every <paramref name="pollInterval"/>
-        /// milliseconds on that they are connected.
+        ///     Creates ModbusTcpSlave with timer which polls connected clients every
+        ///     <paramref name="pollInterval"/> milliseconds on that they are connected.
         /// </summary>
-        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double pollInterval)
+        /// <param name="unitId"></param>
+        /// <param name="tcpListener"></param>
+        /// <param name="pollInterval"></param>
+        /// <returns></returns>
+        public static ModbusTcpSlave CreateTcp(byte unitId,
+                                               TcpListener tcpListener,
+                                               double pollInterval)
         {
-            return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
-        }
-
-        private static bool IsSocketConnected(Socket socket)
-        {
-            bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
-            bool available = (socket.Available == 0);
-            return poll && available;
+            return new ModbusTcpSlave(unitId,
+                                      tcpListener,
+                                      pollInterval);
         }
 
         /// <summary>
@@ -126,81 +146,6 @@
                 {
                     // this happens when the server stops
                 }
-            }
-        }
-
-        private void OnTimer(object sender, ElapsedEventArgs e)
-        {
-            foreach (var master in _masters.ToList())
-            {
-                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
-                {
-                    master.Value.Dispose();
-                }
-            }
-        }
-
-        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
-        {
-            ModbusMasterTcpConnection connection;
-            if (!_masters.TryRemove(e.EndPoint, out connection))
-            {
-                var msg = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "EndPoint {0} cannot be removed, it does not exist.",
-                    e.EndPoint);
-
-                throw new ArgumentException(msg);
-            }
-
-            Debug.WriteLine("Removed Master {0}", e.EndPoint);
-        }
-
-        private static void AcceptCompleted(IAsyncResult ar)
-        {
-            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
-
-            try
-            {
-                try
-                {
-                    // use Socket async API for compact framework compat
-                    Socket socket = null;
-                    lock (slave._serverLock)
-                    {
-                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
-                        if (slave._server == null) 
-                        {
-                            return;
-                        }
-
-                        socket = slave.Server.Server.EndAccept(ar);
-                    }
-
-                    TcpClient client = new TcpClient { Client = socket };
-                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
-
-                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
-
-                    Debug.WriteLine("Accept completed.");
-                }
-                catch (IOException ex)
-                {
-                    // Abandon the connection attempt and continue to accepting the next connection.
-                    Debug.WriteLine("Accept failed: " + ex.Message);
-                }
-
-                // Accept another client
-                // use Socket async API for compact framework compat
-                lock (slave._serverLock)
-                {
-                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                // this happens when the server stops
             }
         }
 
@@ -245,6 +190,105 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <returns></returns>
+        private static bool IsSocketConnected(Socket socket)
+        {
+            bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
+            bool available = (socket.Available == 0);
+            return poll && available;
+        }
+
+        private static void AcceptCompleted(IAsyncResult ar)
+        {
+            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
+
+            try
+            {
+                try
+                {
+                    // use Socket async API for compact framework compat
+                    Socket socket = null;
+                    lock (slave._serverLock)
+                    {
+                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        if (slave._server == null)
+                        {
+                            return;
+                        }
+
+                        socket = slave.Server.Server.EndAccept(ar);
+                    }
+
+                    TcpClient client = new TcpClient { Client = socket };
+                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
+                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
+
+                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
+
+                    Debug.WriteLine("Accept completed.");
+                }
+                catch (IOException ex)
+                {
+                    // Abandon the connection attempt and continue to accepting the next connection.
+                    Debug.WriteLine("Accept failed: " + ex.Message);
+                }
+
+                // Accept another client
+                // use Socket async API for compact framework compat
+                lock (slave._serverLock)
+                {
+                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // this happens when the server stops
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTimer(object sender,
+                             ElapsedEventArgs e)
+        {
+            foreach (var master in _masters.ToList())
+            {
+                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
+                {
+                    master.Value.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMasterConnectionClosedHandler(object sender,
+                                                     TcpConnectionEventArgs e)
+        {
+            ModbusMasterTcpConnection connection;
+
+            if (!_masters.TryRemove(e.EndPoint, out connection))
+            {
+                var msg = string.Format(CultureInfo.InvariantCulture,
+                                        "EndPoint {0} cannot be removed, it does not exist.",
+                                        e.EndPoint);
+
+                throw new ArgumentException(msg);
+            }
+
+            Debug.WriteLine("Removed Master {0}", e.EndPoint);
         }
     }
 }

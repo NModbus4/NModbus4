@@ -11,6 +11,10 @@
     {
         private readonly IModbusMessage _message;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="message"></param>
         internal ModbusSlaveRequestEventArgs(IModbusMessage message)
         {
             _message = message;
@@ -19,7 +23,6 @@
         /// <summary>
         ///     Gets the message.
         /// </summary>
-        /// <value>The message.</value>
         public IModbusMessage Message
         {
             get { return _message; }

@@ -7,26 +7,28 @@
     using System.Net;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class ReadHoldingInputRegistersRequest : AbstractModbusMessage, IModbusRequest
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ReadHoldingInputRegistersRequest()
         {
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="functionCode"></param>
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
-        public ReadHoldingInputRegistersRequest(byte functionCode, byte slaveAddress, ushort startAddress,
-            ushort numberOfPoints)
+        public ReadHoldingInputRegistersRequest(byte functionCode,
+                                                byte slaveAddress,
+                                                ushort startAddress,
+                                                ushort numberOfPoints)
             : base(slaveAddress, functionCode)
         {
             StartAddress = startAddress;
@@ -34,7 +36,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort StartAddress
         {
@@ -43,7 +45,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public override int MinimumFrameSize
         {
@@ -51,18 +53,24 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ushort NumberOfPoints
         {
-            get { return MessageImpl.NumberOfPoints.Value; }
+            get
+            {
+                return MessageImpl.NumberOfPoints.Value;
+            }
             set
             {
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
                 {
+                    string msg = string.Format(CultureInfo.InvariantCulture,
+                                               "Maximum amount of data {0} registers.",
+                                               Modbus.MaximumRegisterRequestResponseSize);
+
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
-                            Modbus.MaximumRegisterRequestResponseSize));
+                                                          msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -70,17 +78,22 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers starting at address {2}.",
-                NumberOfPoints, FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input", StartAddress);
+            string msg = string.Format(CultureInfo.InvariantCulture,
+                                       "Read {0} {1} registers starting at address {2}.",
+                                       NumberOfPoints,
+                                       FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input",
+                                       StartAddress);
+
+            return msg;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
@@ -91,15 +104,17 @@
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected byte count. Expected {0}, received {1}.",
-                    expectedByteCount,
-                    typedResponse.ByteCount));
+                string msg = string.Format(CultureInfo.InvariantCulture,
+                                           "Unexpected byte count. Expected {0}, received {1}.",
+                                           expectedByteCount,
+                                           typedResponse.ByteCount);
+
+                throw new IOException(msg);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)

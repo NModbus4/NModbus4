@@ -31,14 +31,14 @@ namespace Modbus.IntegrationTests
 
         protected ModbusSlave Slave { get; set; }
 
-        private Thread SlaveThread { get; set; }
-
         protected SerialPort SlaveSerialPort { get; set; }
 
         protected TcpListener SlaveTcp { get; set; }
 
         protected UdpClient SlaveUdp { get; set; }
 
+        private Thread SlaveThread { get; set; }
+        
         public static IPAddress TcpHost { get; } = new IPAddress(new byte[] { 127, 0, 0, 1 });
 
         public static IPEndPoint DefaultModbusIPEndPoint { get; } = new IPEndPoint(TcpHost, Port);

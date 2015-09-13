@@ -18,7 +18,13 @@
     {
         private readonly UdpClient _udpClient;
 
-        private ModbusUdpSlave(byte unitId, UdpClient udpClient)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <param name="udpClient"></param>
+        private ModbusUdpSlave(byte unitId,
+                               UdpClient udpClient)
             : base(unitId, new ModbusIpTransport(new UdpClientAdapter(udpClient)))
         {
             _udpClient = udpClient;
@@ -28,17 +34,25 @@
         ///     Modbus UDP slave factory method.
         ///     Creates NModbus UDP slave with default
         /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
         public static ModbusUdpSlave CreateUdp(UdpClient client)
         {
-            return new ModbusUdpSlave(Modbus.DefaultIpSlaveUnitId, client);
+            return new ModbusUdpSlave(Modbus.DefaultIpSlaveUnitId,
+                                      client);
         }
 
         /// <summary>
         ///     Modbus UDP slave factory method.
         /// </summary>
-        public static ModbusUdpSlave CreateUdp(byte unitId, UdpClient client)
+        /// <param name="unitId"></param>
+        /// <param name="client"></param>
+        /// <returns></returns>
+        public static ModbusUdpSlave CreateUdp(byte unitId,
+                                               UdpClient client)
         {
-            return new ModbusUdpSlave(unitId, client);
+            return new ModbusUdpSlave(unitId,
+                                      client);
         }
 
         /// <summary>
@@ -71,7 +85,9 @@
                     // write response
                     byte[] responseFrame = Transport.BuildMessageFrame(response);
                     Debug.WriteLine("TX: {0}", string.Join(", ", responseFrame));
-                    _udpClient.Send(responseFrame, responseFrame.Length, masterEndPoint);
+                    _udpClient.Send(responseFrame,
+                                    responseFrame.Length,
+                                    masterEndPoint);
                 }
             }
             catch (SocketException se)
