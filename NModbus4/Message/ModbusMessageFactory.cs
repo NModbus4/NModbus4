@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
 
     /// <summary>
     ///
@@ -36,10 +35,7 @@
         {
             if (frame.Length < MinRequestFrameLength)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Argument 'frame' must have a length of at least {0} bytes.",
-                                           MinRequestFrameLength);
-
+                string msg = $"Argument 'frame' must have a length of at least {MinRequestFrameLength} bytes.";
                 throw new FormatException(msg);
             }
 
@@ -75,10 +71,7 @@
                     request = CreateModbusMessage<ReadWriteMultipleRegistersRequest>(frame);
                     break;
                 default:
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                                               "Unsupported function code {0}",
-                                               functionCode);
-
+                    string msg = $"Unsupported function code {functionCode}";
                     throw new ArgumentException(msg, nameof(frame));
             }
 

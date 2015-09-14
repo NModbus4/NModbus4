@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.IO;
     using System.Net;
 
@@ -24,10 +23,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
-        public ReadCoilsInputsRequest(byte functionCode,
-                                      byte slaveAddress,
-                                      ushort startAddress,
-                                      ushort numberOfPoints)
+        public ReadCoilsInputsRequest(byte functionCode, byte slaveAddress, ushort startAddress, ushort numberOfPoints)
             : base(slaveAddress, functionCode)
         {
             StartAddress = startAddress;
@@ -64,12 +60,8 @@
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
                 {
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                                               "Maximum amount of data {0} coils.",
-                                               Modbus.MaximumDiscreteRequestResponseSize);
-
-                    throw new ArgumentOutOfRangeException("NumberOfPoints",
-                                                          msg);
+                    string msg = $"Maximum amount of data {Modbus.MaximumDiscreteRequestResponseSize} coils.";
+                    throw new ArgumentOutOfRangeException("NumberOfPoints", msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -82,12 +74,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Read {0} {1} starting at address {2}.",
-                                       NumberOfPoints,
-                                       FunctionCode == Modbus.ReadCoils ? "coils" : "inputs",
-                                       StartAddress);
-
+            string msg = $"Read {NumberOfPoints} {(FunctionCode == Modbus.ReadCoils ? "coils" : "inputs")} starting at address {StartAddress}.";
             return msg;
         }
 
@@ -104,11 +91,7 @@
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected byte count. Expected {0}, received {1}.",
-                                           expectedByteCount,
-                                           typedResponse.ByteCount);
-
+                string msg = $"Unexpected byte count. Expected {expectedByteCount}, received {typedResponse.ByteCount}.";
                 throw new IOException(msg);
             }
         }

@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -28,9 +27,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="data"></param>
-        public WriteMultipleCoilsRequest(byte slaveAddress,
-                                         ushort startAddress,
-                                         DiscreteCollection data)
+        public WriteMultipleCoilsRequest(byte slaveAddress, ushort startAddress, DiscreteCollection data)
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
             StartAddress = startAddress;
@@ -61,12 +58,8 @@
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
                 {
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                                               "Maximum amount of data {0} coils.",
-                                               Modbus.MaximumDiscreteRequestResponseSize);
-
-                    throw new ArgumentOutOfRangeException("NumberOfPoints",
-                                                          msg);
+                    string msg = $"Maximum amount of data {Modbus.MaximumDiscreteRequestResponseSize} coils.";
+                    throw new ArgumentOutOfRangeException("NumberOfPoints", msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -96,10 +89,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Write {0} coils starting at address {1}.",
-                                       NumberOfPoints, StartAddress);
-
+            string msg = $"Write {NumberOfPoints} coils starting at address {StartAddress}.";
             return msg;
         }
 
@@ -113,21 +103,13 @@
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected start address in response. Expected {0}, received {1}.",
-                                           StartAddress,
-                                           typedResponse.StartAddress);
-
+                string msg = $"Unexpected start address in response. Expected {StartAddress}, received {typedResponse.StartAddress}.";
                 throw new IOException(msg);
             }
 
             if (NumberOfPoints != typedResponse.NumberOfPoints)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected number of points in response. Expected {0}, received {1}.",
-                                           NumberOfPoints,
-                                           typedResponse.NumberOfPoints);
-
+                string msg = $"Unexpected number of points in response. Expected {NumberOfPoints}, received {typedResponse.NumberOfPoints}.";
                 throw new IOException(msg);
             }
         }

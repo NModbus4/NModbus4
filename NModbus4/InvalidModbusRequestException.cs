@@ -1,7 +1,6 @@
 ﻿namespace Modbus
 {
     using System;
-    using System.Globalization;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -26,8 +25,7 @@
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="exceptionCode">The Modbus exception code to provide to the slave.</param>
-        public InvalidModbusRequestException(string message,
-                                             byte exceptionCode)
+        public InvalidModbusRequestException(string message, byte exceptionCode)
             : this(message, exceptionCode, null)
         {
         }
@@ -37,8 +35,7 @@
         /// </summary>
         /// <param name="exceptionCode">The Modbus exception code to provide to the slave.</param>
         /// <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.</param>
-        public InvalidModbusRequestException(byte exceptionCode,
-                                             Exception innerException)
+        public InvalidModbusRequestException(byte exceptionCode, Exception innerException)
             : this(GetMessage(exceptionCode), exceptionCode, innerException)
         {
         }
@@ -49,9 +46,7 @@
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="exceptionCode">The Modbus exception code to provide to the slave.</param>
         /// <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not a null reference, the current exception is raised in a catch block that handles the inner exception.</param>
-        public InvalidModbusRequestException(string message,
-                                             byte exceptionCode,
-                                             Exception innerException)
+        public InvalidModbusRequestException(string message, byte exceptionCode, Exception innerException)
             : base(message, innerException)
         {
             _exceptionCode = exceptionCode;
@@ -62,8 +57,7 @@
         /// </summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>
-        protected InvalidModbusRequestException(SerializationInfo info,
-                                                StreamingContext context)
+        protected InvalidModbusRequestException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _exceptionCode = info.GetByte(nameof(ExceptionCode));
@@ -80,8 +74,7 @@
         /// <summary>Sets the <see cref="SerializationInfo" /> object with the Modbus exception code and additional exception information.</summary>
         /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info,
-                                           StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue("ExceptionCode", this._exceptionCode, typeof(byte));
@@ -89,10 +82,7 @@
 
         private static string GetMessage(byte exceptionCode)
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Modbus exception code {0}.",
-                                       (int)exceptionCode);
-
+            string msg = $"Modbus exception code {exceptionCode}.";
             return msg;
         }
     }

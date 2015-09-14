@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Threading;
 
@@ -142,8 +141,8 @@
                         {
                             readAgain = false;
                             response = ReadResponse<T>();
-
                             var exceptionResponse = response as SlaveExceptionResponse;
+
                             if (exceptionResponse != null)
                             {
                                 // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
@@ -151,8 +150,7 @@
 
                                 if (readAgain)
                                 {
-                                    Debug.WriteLine("Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
-                                                    _waitToRetryMilliseconds);
+                                    Debug.WriteLine($"Received ACKNOWLEDGE slave exception response, waiting {_waitToRetryMilliseconds} milliseconds and retrying to read response.");
                                     Sleep(WaitToRetryMilliseconds);
                                 }
                                 else
@@ -183,9 +181,7 @@
                         throw;
                     }
 
-                    Debug.WriteLine("Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
-                                    _waitToRetryMilliseconds);
-
+                    Debug.WriteLine($"Received SLAVE_DEVICE_BUSY exception response, waiting {_waitToRetryMilliseconds} milliseconds and resubmitting request.");
                     Sleep(WaitToRetryMilliseconds);
                 }
                 catch (Exception e)
@@ -195,7 +191,7 @@
                         e is TimeoutException ||
                         e is IOException)
                     {
-                        Debug.WriteLine("{0}, {1} retries remaining - {2}", e.GetType().Name, _retries - attempt + 1, e);
+                        Debug.WriteLine($"{e.GetType().Name}, {(_retries - attempt + 1)} retries remaining - {e}");
 
                         if (attempt++ > _retries)
                         {
@@ -242,27 +238,18 @@
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        internal void ValidateResponse(IModbusMessage request,
-                                       IModbusMessage response)
+        internal void ValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             // always check the function code and slave address, regardless of transport protocol
             if (request.FunctionCode != response.FunctionCode)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Received response with unexpected Function Code. Expected {0}, received {1}.",
-                                           request.FunctionCode,
-                                           response.FunctionCode);
-
+                string msg = $"Received response with unexpected Function Code. Expected {request.FunctionCode}, received {response.FunctionCode}.";
                 throw new IOException(msg);
             }
 
             if (request.SlaveAddress != response.SlaveAddress)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Response slave address does not match request. Expected {0}, received {1}.",
-                                           response.SlaveAddress,
-                                           request.SlaveAddress);
-
+                string msg = $"Response slave address does not match request. Expected {response.SlaveAddress}, received {request.SlaveAddress}.";
                 throw new IOException(msg);
             }
 
@@ -274,8 +261,7 @@
                 req.ValidateResponse(response);
             }
 
-            OnValidateResponse(request,
-                               response);
+            OnValidateResponse(request, response);
         }
 
         /// <summary>
@@ -284,8 +270,7 @@
         /// <param name="request"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        internal bool ShouldRetryResponse(IModbusMessage request,
-                                          IModbusMessage response)
+        internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             // These checks are enforced in ValidateRequest, we don't want to retry for these
             if (request.FunctionCode != response.FunctionCode)
@@ -307,8 +292,7 @@
         /// <param name="request"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        internal virtual bool OnShouldRetryResponse(IModbusMessage request,
-                                                    IModbusMessage response)
+        internal virtual bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             return false;
         }
@@ -318,8 +302,7 @@
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        internal abstract void OnValidateResponse(IModbusMessage request,
-                                                  IModbusMessage response);
+        internal abstract void OnValidateResponse(IModbusMessage request, IModbusMessage response);
 
         /// <summary>
         ///

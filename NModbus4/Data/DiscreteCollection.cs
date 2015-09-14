@@ -47,6 +47,7 @@
             }
 
             _discretes.Capacity = bytes.Length * BitsPerByte;
+
             foreach (byte b in bytes)
             {
                 _discretes.Add((b & 1) == 1);

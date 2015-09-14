@@ -10,10 +10,7 @@
         /// </summary>
         public static DataStore CreateDefaultDataStore()
         {
-            return CreateDefaultDataStore(ushort.MaxValue,
-                                          ushort.MaxValue,
-                                          ushort.MaxValue,
-                                          ushort.MaxValue);
+            return CreateDefaultDataStore(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue, ushort.MaxValue);
         }
 
         /// <summary>
@@ -24,10 +21,7 @@
         /// <param name="holdingRegistersCount">Number of holding registers.</param>
         /// <param name="inputRegistersCount">Number of input registers.</param>
         /// <returns>New instance of Data store with defined inputs/outputs.</returns>
-        public static DataStore CreateDefaultDataStore(ushort coilsCount,
-                                                       ushort inputsCount,
-                                                       ushort holdingRegistersCount,
-                                                       ushort inputRegistersCount)
+        public static DataStore CreateDefaultDataStore(ushort coilsCount, ushort inputsCount, ushort holdingRegistersCount, ushort inputRegistersCount)
         {
             var coils = new bool[coilsCount];
             var inputs = new bool[inputsCount];

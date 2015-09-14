@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.Net;
 
     /// <summary>
@@ -22,9 +21,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
-        public WriteMultipleCoilsResponse(byte slaveAddress,
-                                          ushort startAddress,
-                                          ushort numberOfPoints)
+        public WriteMultipleCoilsResponse(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
             : base(slaveAddress, Modbus.WriteMultipleCoils)
         {
             StartAddress = startAddress;
@@ -44,12 +41,8 @@
             {
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
                 {
-                    string msg = string.Format(CultureInfo.InvariantCulture,
-                                               "Maximum amount of data {0} coils.",
-                                               Modbus.MaximumDiscreteRequestResponseSize);
-
-                    throw new ArgumentOutOfRangeException("NumberOfPoints",
-                                                          msg);
+                    string msg = $"Maximum amount of data {Modbus.MaximumDiscreteRequestResponseSize} coils.";
+                    throw new ArgumentOutOfRangeException("NumberOfPoints", msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
@@ -79,11 +72,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Wrote {0} coils starting at address {1}.",
-                                       NumberOfPoints,
-                                       StartAddress);
-
+            string msg = $"Wrote {NumberOfPoints} coils starting at address {StartAddress}.";
             return msg;
         }
 

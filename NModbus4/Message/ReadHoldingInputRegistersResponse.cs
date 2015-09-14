@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.Linq;
 
     using Data;
@@ -26,9 +25,7 @@
         /// <param name="functionCode"></param>
         /// <param name="slaveAddress"></param>
         /// <param name="data"></param>
-        public ReadHoldingInputRegistersResponse(byte functionCode,
-                                                 byte slaveAddress,
-                                                 RegisterCollection data)
+        public ReadHoldingInputRegistersResponse(byte functionCode, byte slaveAddress, RegisterCollection data)
             : base(slaveAddress, functionCode)
         {
             if (data == null)
@@ -63,11 +60,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Read {0} {1} registers.",
-                                       Data.Count,
-                                       FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input");
-
+            string msg = $"Read {Data.Count} {(FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input")} registers.";
             return msg;
         }
 

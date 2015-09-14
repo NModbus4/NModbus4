@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.IO;
 
     using Data;
@@ -29,21 +28,24 @@
         /// <param name="numberOfPointsToRead"></param>
         /// <param name="startWriteAddress"></param>
         /// <param name="writeData"></param>
-        public ReadWriteMultipleRegistersRequest(byte slaveAddress,
-                                                 ushort startReadAddress,
-                                                 ushort numberOfPointsToRead,
-                                                 ushort startWriteAddress,
-                                                 RegisterCollection writeData)
+        public ReadWriteMultipleRegistersRequest(
+            byte slaveAddress,
+            ushort startReadAddress,
+            ushort numberOfPointsToRead,
+            ushort startWriteAddress,
+            RegisterCollection writeData)
             : base(slaveAddress, Modbus.ReadWriteMultipleRegisters)
         {
-            _readRequest = new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters,
-                                                                slaveAddress,
-                                                                startReadAddress,
-                                                                numberOfPointsToRead);
+            _readRequest = new ReadHoldingInputRegistersRequest(
+                Modbus.ReadHoldingRegisters,
+                slaveAddress,
+                startReadAddress,
+                numberOfPointsToRead);
 
-            _writeRequest = new WriteMultipleRegistersRequest(slaveAddress,
-                                                              startWriteAddress,
-                                                              writeData);
+            _writeRequest = new WriteMultipleRegistersRequest(
+                slaveAddress,
+                startWriteAddress,
+                writeData);
         }
 
         /// <summary>
@@ -97,13 +99,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Write {0} holding registers starting at address {1}, and read {2} registers starting at address {3}.",
-                                       _writeRequest.NumberOfPoints,
-                                       _writeRequest.StartAddress,
-                                       _readRequest.NumberOfPoints,
-                                       _readRequest.StartAddress);
-
+            string msg = $"Write {_writeRequest.NumberOfPoints} holding registers starting at address {_writeRequest.StartAddress}, and read {_readRequest.NumberOfPoints} registers starting at address {_readRequest.StartAddress}.";
             return msg;
         }
 
@@ -118,11 +114,7 @@
 
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected byte count in response. Expected {0}, received {1}.",
-                                           expectedByteCount,
-                                           typedResponse.ByteCount);
-
+                string msg = $"Unexpected byte count in response. Expected {expectedByteCount}, received {typedResponse.ByteCount}.";
                 throw new IOException(msg);
             }
         }

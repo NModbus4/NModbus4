@@ -18,11 +18,10 @@
         /// </summary>
         /// <param name="startAddress"></param>
         /// <param name="modbusDataType"></param>
-        private DataStoreEventArgs(ushort startAddress,
-                                   ModbusDataType modbusDataType)
+        private DataStoreEventArgs(ushort startAddress, ModbusDataType modbusDataType)
         {
-            this.StartAddress = startAddress;
-            this.ModbusDataType = modbusDataType;
+            StartAddress = startAddress;
+            ModbusDataType = modbusDataType;
         }
 
         /// <summary>
@@ -49,9 +48,7 @@
         /// <param name="modbusDataType"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        internal static DataStoreEventArgs CreateDataStoreEventArgs<T>(ushort startAddress,
-                                                                       ModbusDataType modbusDataType,
-                                                                       IEnumerable<T> data)
+        internal static DataStoreEventArgs CreateDataStoreEventArgs<T>(ushort startAddress, ModbusDataType modbusDataType, IEnumerable<T> data)
         {
             if (data == null)
             {
@@ -63,6 +60,7 @@
             if (typeof(T) == typeof(bool))
             {
                 var a = new ReadOnlyCollection<bool>(data.Cast<bool>().ToArray());
+
                 eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
                 {
                     Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateA(a)
@@ -71,6 +69,7 @@
             else if (typeof(T) == typeof(ushort))
             {
                 var b = new ReadOnlyCollection<ushort>(data.Cast<ushort>().ToArray());
+
                 eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
                 {
                     Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateB(b)

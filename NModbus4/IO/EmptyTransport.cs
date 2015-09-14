@@ -52,8 +52,7 @@
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        internal override void OnValidateResponse(IModbusMessage request,
-                                                  IModbusMessage response)
+        internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             throw new NotImplementedException();
         }

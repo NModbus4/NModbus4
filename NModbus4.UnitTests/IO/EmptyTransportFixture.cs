@@ -19,4 +19,3 @@ namespace Modbus.UnitTests.IO
         }
     }
 }
-

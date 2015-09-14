@@ -66,13 +66,9 @@
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public int Read(byte[] buffer,
-                        int offset,
-                        int count)
+        public int Read(byte[] buffer, int offset, int count)
         {
-            return _serialPort.Read(buffer,
-                                    offset,
-                                    count);
+            return _serialPort.Read(buffer, offset, count);
         }
 
         /// <summary>
@@ -81,13 +77,9 @@
         /// <param name="buffer"></param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        public void Write(byte[] buffer,
-                          int offset,
-                          int count)
+        public void Write(byte[] buffer, int offset, int count)
         {
-            _serialPort.Write(buffer,
-                              offset,
-                              count);
+            _serialPort.Write(buffer, offset, count);
         }
 
         /// <summary>

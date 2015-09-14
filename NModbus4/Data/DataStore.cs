@@ -28,16 +28,17 @@
         }
 
         /// <summary>
-        ///     Initialize a new instance of the <see cref="DataStore" /> class.
+        ///     Initializes a new instance of the <see cref="DataStore"/> class.
         /// </summary>
         /// <param name="coilDiscretes">List of discrete coil values.</param>
         /// <param name="inputDiscretes">List of discrete input values</param>
         /// <param name="holdingRegisters">List of holding register values.</param>
         /// <param name="inputRegisters">List of input register values.</param>
-        internal DataStore(IList<bool> coilDiscretes,
-                           IList<bool> inputDiscretes,
-                           IList<ushort> holdingRegisters,
-                           IList<ushort> inputRegisters)
+        internal DataStore(
+            IList<bool> coilDiscretes,
+            IList<bool> inputDiscretes,
+            IList<ushort> holdingRegisters,
+            IList<ushort> inputRegisters)
         {
             CoilDiscretes = new ModbusDataCollection<bool>(coilDiscretes) { ModbusDataType = ModbusDataType.Coil };
             InputDiscretes = new ModbusDataCollection<bool>(inputDiscretes) { ModbusDataType = ModbusDataType.Input };
@@ -94,11 +95,12 @@
         /// <param name="count"></param>
         /// <param name="syncRoot"></param>
         /// <returns></returns>
-        internal static T ReadData<T, U>(DataStore dataStore,
-                                         ModbusDataCollection<U> dataSource,
-                                         ushort startAddress,
-                                         ushort count,
-                                         object syncRoot) where T : Collection<U>, new()
+        internal static T ReadData<T, U>(
+            DataStore dataStore,
+            ModbusDataCollection<U> dataSource,
+            ushort startAddress,
+            ushort count,
+            object syncRoot) where T : Collection<U>, new()
         {
             DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
@@ -120,13 +122,8 @@
                 result.Add(dataToRetrieve[i]);
             }
 
-            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress,
-                                                                             dataSource.ModbusDataType,
-                                                                             result);
-
-            dataStore.DataStoreReadFrom.Raise(dataStore,
-                                              dataStoreEventArgs);
-
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result);
+            dataStore.DataStoreReadFrom?.Invoke(dataStore, dataStoreEventArgs);
             return result;
         }
 
@@ -139,11 +136,12 @@
         /// <param name="destination"></param>
         /// <param name="startAddress"></param>
         /// <param name="syncRoot"></param>
-        internal static void WriteData<TData>(DataStore dataStore,
-                                              IEnumerable<TData> items,
-                                              ModbusDataCollection<TData> destination,
-                                              ushort startAddress,
-                                              object syncRoot)
+        internal static void WriteData<TData>(
+            DataStore dataStore,
+            IEnumerable<TData> items,
+            ModbusDataCollection<TData> destination,
+            ushort startAddress,
+            object syncRoot)
         {
             DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
@@ -158,12 +156,12 @@
                 Update(items, destination, startIndex);
             }
 
-            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress,
-                                                                             destination.ModbusDataType,
-                                                                             items);
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(
+                startAddress,
+                destination.ModbusDataType,
+                items);
 
-            dataStore.DataStoreWrittenTo.Raise(dataStore,
-                                               dataStoreEventArgs);
+            dataStore.DataStoreWrittenTo?.Invoke(dataStore, dataStoreEventArgs);
         }
 
         /// <summary>
@@ -173,9 +171,7 @@
         /// <param name="items"></param>
         /// <param name="destination"></param>
         /// <param name="startIndex"></param>
-        internal static void Update<T>(IEnumerable<T> items,
-                                       IList<T> destination,
-                                       int startIndex)
+        internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
             {
@@ -183,6 +179,7 @@
             }
 
             int index = startIndex;
+
             foreach (T item in items)
             {
                 destination[index] = item;

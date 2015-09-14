@@ -26,6 +26,7 @@
 
             var enumerable = source as T[] ?? source.ToArray();
             int num = enumerable.Count();
+
             if (startIndex < 0 || num < startIndex)
             {
                 throw new ArgumentOutOfRangeException(nameof(startIndex));

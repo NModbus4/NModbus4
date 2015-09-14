@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -29,9 +28,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="startAddress"></param>
         /// <param name="coilState"></param>
-        public WriteSingleCoilRequestResponse(byte slaveAddress,
-                                              ushort startAddress,
-                                              bool coilState)
+        public WriteSingleCoilRequestResponse(byte slaveAddress, ushort startAddress, bool coilState)
             : base(slaveAddress, Modbus.WriteSingleCoil)
         {
             StartAddress = startAddress;
@@ -64,11 +61,7 @@
             Debug.Assert(Data != null, "Argument Data cannot be null.");
             Debug.Assert(Data.Count() == 1, "Data should have a count of 1.");
 
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Write single coil {0} at address {1}.",
-                                       Data.First() == Modbus.CoilOn ? 1 : 0,
-                                       StartAddress);
-
+            string msg = $"Write single coil {(Data.First() == Modbus.CoilOn ? 1 : 0)} at address {StartAddress}.";
             return msg;
         }
 
@@ -82,21 +75,13 @@
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected start address in response. Expected {0}, received {1}.",
-                                           StartAddress,
-                                           typedResponse.StartAddress);
-
+                string msg = $"Unexpected start address in response. Expected {StartAddress}, received {typedResponse.StartAddress}.";
                 throw new IOException(msg);
             }
 
             if (Data.First() != typedResponse.Data.First())
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Unexpected data in response. Expected {0}, received {1}.",
-                                           Data.First(),
-                                           typedResponse.Data.First());
-
+                string msg = $"Unexpected data in response. Expected {Data.First()}, received {typedResponse.Data.First()}.";
                 throw new IOException(msg);
             }
         }

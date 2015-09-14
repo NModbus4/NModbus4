@@ -2,7 +2,6 @@
 using System.Text;
 using Modbus.IO;
 using Modbus.Message;
-using Modbus.UnitTests.Message;
 using Moq;
 using Xunit;
 

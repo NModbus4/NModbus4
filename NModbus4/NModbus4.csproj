@@ -108,7 +108,6 @@
     </Compile>
     <Compile Include="SlaveException.cs" />
     <Compile Include="Unme.Common\DisposableUtility.cs" />
-    <Compile Include="Unme.Common\EventUtility.cs" />
     <Compile Include="Unme.Common\SequenceUtility.cs" />
     <Compile Include="Utility\DiscriminatedUnion.cs" />
     <Compile Include="Utility\ModbusUtility.cs" />

@@ -39,8 +39,7 @@
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public SlaveException(string message,
-                              Exception innerException)
+        public SlaveException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
@@ -59,10 +58,8 @@
         /// </summary>
         /// <param name="message"></param>
         /// <param name="slaveExceptionResponse"></param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        internal SlaveException(string message,
-                                SlaveExceptionResponse slaveExceptionResponse)
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
+        internal SlaveException(string message, SlaveExceptionResponse slaveExceptionResponse)
             : base(message)
         {
             _slaveExceptionResponse = slaveExceptionResponse;
@@ -84,15 +81,15 @@
         ///     <see cref="P:System.Exception.HResult"></see> is zero (0).
         /// </exception>
         /// <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
-        protected SlaveException(SerializationInfo info,
-                                 StreamingContext context)
+        protected SlaveException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             if (info != null)
             {
-                _slaveExceptionResponse = new SlaveExceptionResponse(info.GetByte(SlaveAddressPropertyName),
-                                                                     info.GetByte(FunctionCodePropertyName),
-                                                                     info.GetByte(SlaveExceptionCodePropertyName));
+                _slaveExceptionResponse = new SlaveExceptionResponse(
+                    info.GetByte(SlaveAddressPropertyName),
+                    info.GetByte(FunctionCodePropertyName),
+                    info.GetByte(SlaveExceptionCodePropertyName));
             }
         }
 
@@ -106,8 +103,7 @@
                 string responseString;
                 responseString = _slaveExceptionResponse != null ? string.Concat(Environment.NewLine, _slaveExceptionResponse) : string.Empty;
 
-                return string.Concat(base.Message,
-                                     responseString);
+                return string.Concat(base.Message, responseString);
             }
         }
 
@@ -160,10 +156,8 @@
         ///         version="1" Flags="SerializationFormatter" />
         /// </PermissionSet>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods",
-            Justification = "Argument info is validated, rule does not understand AND condition.")]
-        public override void GetObjectData(SerializationInfo info,
-                                           StreamingContext context)
+        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Argument info is validated, rule does not understand AND condition.")]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
 

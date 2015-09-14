@@ -20,8 +20,7 @@
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="functionCode"></param>
-        internal AbstractModbusMessageWithData(byte slaveAddress,
-                                               byte functionCode)
+        internal AbstractModbusMessageWithData(byte slaveAddress, byte functionCode)
             : base(slaveAddress, functionCode)
         {
         }

@@ -50,8 +50,7 @@
         /// <param name="message"></param>
         /// <param name="messageFrame"></param>
         /// <returns></returns>
-        internal override bool ChecksumsMatch(IModbusMessage message,
-                                              byte[] messageFrame)
+        internal override bool ChecksumsMatch(IModbusMessage message, byte[] messageFrame)
         {
             return ModbusUtility.CalculateLrc(message.MessageFrame) == messageFrame[messageFrame.Length - 1];
         }
@@ -86,7 +85,7 @@
 
             // convert hex to bytes
             byte[] frame = ModbusUtility.HexToBytes(frameHex);
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
             if (frame.Length < 3)
             {

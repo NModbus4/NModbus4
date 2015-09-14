@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -53,9 +52,9 @@
                 numBytesRead += bRead;
             }
 
-            Debug.WriteLine("MBAP header: {0}", string.Join(", ", mbapHeader));
+            Debug.WriteLine($"MBAP header: {string.Join(", ", mbapHeader)}");
             var frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(mbapHeader, 4));
-            Debug.WriteLine("{0} bytes in PDU.", frameLength);
+            Debug.WriteLine($"{frameLength} bytes in PDU.");
 
             // read message
             var messageFrame = new byte[frameLength];
@@ -63,9 +62,7 @@
 
             while (numBytesRead != frameLength)
             {
-                int bRead = streamResource.Read(messageFrame,
-                                                numBytesRead,
-                                                frameLength - numBytesRead);
+                int bRead = streamResource.Read(messageFrame, numBytesRead, frameLength - numBytesRead);
 
                 if (bRead == 0)
                 {
@@ -75,9 +72,9 @@
                 numBytesRead += bRead;
             }
 
-            Debug.WriteLine("PDU: {0}", frameLength);
+            Debug.WriteLine($"PDU: {frameLength}");
             var frame = mbapHeader.Concat(messageFrame).ToArray();
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
             return frame;
         }
@@ -158,7 +155,7 @@
         {
             message.TransactionId = GetNewTransactionId();
             byte[] frame = BuildMessageFrame(message);
-            Debug.WriteLine("TX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"TX: {string.Join(", ", frame)}");
             StreamResource.Write(frame, 0, frame.Length);
         }
 
@@ -186,16 +183,11 @@
         /// </summary>
         /// <param name="request"></param>
         /// <param name="response"></param>
-        internal override void OnValidateResponse(IModbusMessage request,
-                                                  IModbusMessage response)
+        internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId != response.TransactionId)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Response was not of expected transaction ID. Expected {0}, received {1}.",
-                                           request.TransactionId,
-                                           response.TransactionId);
-
+                string msg = $"Response was not of expected transaction ID. Expected {request.TransactionId}, received {response.TransactionId}.";
                 throw new IOException(msg);
             }
         }
@@ -206,8 +198,7 @@
         /// <param name="request"></param>
         /// <param name="response"></param>
         /// <returns></returns>
-        internal override bool OnShouldRetryResponse(IModbusMessage request,
-                                                     IModbusMessage response)
+        internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId > response.TransactionId && request.TransactionId - response.TransactionId < RetryOnOldResponseThreshold)
             {
@@ -215,8 +206,7 @@
                 return true;
             }
 
-            return base.OnShouldRetryResponse(request,
-                                              response);
+            return base.OnShouldRetryResponse(request, response);
         }
     }
 }

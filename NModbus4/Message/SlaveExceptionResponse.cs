@@ -24,9 +24,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="functionCode"></param>
         /// <param name="exceptionCode"></param>
-        public SlaveExceptionResponse(byte slaveAddress,
-                                      byte functionCode,
-                                      byte exceptionCode)
+        public SlaveExceptionResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
             : base(slaveAddress, functionCode)
         {
             SlaveExceptionCode = exceptionCode;
@@ -57,16 +55,17 @@
         /// </returns>
         public override string ToString()
         {
-            string message = _exceptionMessages.ContainsKey(SlaveExceptionCode)
+            string msg = _exceptionMessages.ContainsKey(SlaveExceptionCode)
                 ? _exceptionMessages[SlaveExceptionCode]
                 : Resources.Unknown;
 
-            return string.Format(CultureInfo.InvariantCulture,
-                                 Resources.SlaveExceptionResponseFormat,
-                                 Environment.NewLine,
-                                 FunctionCode,
-                                 SlaveExceptionCode,
-                                 message);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                Resources.SlaveExceptionResponseFormat,
+                Environment.NewLine,
+                FunctionCode,
+                SlaveExceptionCode,
+                msg);
         }
 
         /// <summary>

@@ -4,7 +4,6 @@
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net.Sockets;
@@ -31,8 +30,7 @@
         /// </summary>
         /// <param name="unitId"></param>
         /// <param name="tcpListener"></param>
-        private ModbusTcpSlave(byte unitId,
-                               TcpListener tcpListener)
+        private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
@@ -49,9 +47,7 @@
         /// <param name="unitId"></param>
         /// <param name="tcpListener"></param>
         /// <param name="timeInterval"></param>
-        private ModbusTcpSlave(byte unitId,
-                               TcpListener tcpListener,
-                               double timeInterval)
+        private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
             : base(unitId, new EmptyTransport())
         {
             if (tcpListener == null)
@@ -102,11 +98,9 @@
         /// <param name="unitId"></param>
         /// <param name="tcpListener"></param>
         /// <returns></returns>
-        public static ModbusTcpSlave CreateTcp(byte unitId,
-                                               TcpListener tcpListener)
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
         {
-            return new ModbusTcpSlave(unitId,
-                                      tcpListener);
+            return new ModbusTcpSlave(unitId, tcpListener);
         }
 
         /// <summary>
@@ -117,13 +111,9 @@
         /// <param name="tcpListener"></param>
         /// <param name="pollInterval"></param>
         /// <returns></returns>
-        public static ModbusTcpSlave CreateTcp(byte unitId,
-                                               TcpListener tcpListener,
-                                               double pollInterval)
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double pollInterval)
         {
-            return new ModbusTcpSlave(unitId,
-                                      tcpListener,
-                                      pollInterval);
+            return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
         }
 
         /// <summary>
@@ -180,6 +170,7 @@
                             foreach (var key in _masters.Keys)
                             {
                                 ModbusMasterTcpConnection connection;
+
                                 if (_masters.TryRemove(key, out connection))
                                 {
                                     connection.ModbusMasterTcpConnectionClosed -= OnMasterConnectionClosedHandler;
@@ -228,9 +219,7 @@
                     TcpClient client = new TcpClient { Client = socket };
                     var masterConnection = new ModbusMasterTcpConnection(client, slave);
                     masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
-
                     slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
-
                     Debug.WriteLine("Accept completed.");
                 }
                 catch (IOException ex)
@@ -257,8 +246,7 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTimer(object sender,
-                             ElapsedEventArgs e)
+        private void OnTimer(object sender, ElapsedEventArgs e)
         {
             foreach (var master in _masters.ToList())
             {
@@ -274,21 +262,17 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMasterConnectionClosedHandler(object sender,
-                                                     TcpConnectionEventArgs e)
+        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
             ModbusMasterTcpConnection connection;
 
             if (!_masters.TryRemove(e.EndPoint, out connection))
             {
-                var msg = string.Format(CultureInfo.InvariantCulture,
-                                        "EndPoint {0} cannot be removed, it does not exist.",
-                                        e.EndPoint);
-
+                string msg = $"EndPoint {e.EndPoint} cannot be removed, it does not exist.";
                 throw new ArgumentException(msg);
             }
 
-            Debug.WriteLine("Removed Master {0}", e.EndPoint);
+            Debug.WriteLine($"Removed Master {e.EndPoint}");
         }
     }
 }

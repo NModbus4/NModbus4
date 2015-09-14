@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.IO.Ports;
 
@@ -19,8 +18,7 @@
         /// </summary>
         /// <param name="unitId"></param>
         /// <param name="transport"></param>
-        private ModbusSerialSlave(byte unitId,
-                                  ModbusTransport transport)
+        private ModbusSerialSlave(byte unitId, ModbusTransport transport)
             : base(unitId, transport)
         {
         }
@@ -33,6 +31,7 @@
             get
             {
                 var transport = Transport as ModbusSerialTransport;
+
                 if (transport == null)
                 {
                     throw new ObjectDisposedException("SerialTransport");
@@ -48,16 +47,14 @@
         /// <param name="unitId"></param>
         /// <param name="serialPort"></param>
         /// <returns></returns>
-        public static ModbusSerialSlave CreateAscii(byte unitId,
-                                                    SerialPort serialPort)
+        public static ModbusSerialSlave CreateAscii(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
             {
                 throw new ArgumentNullException(nameof(serialPort));
             }
 
-            return CreateAscii(unitId,
-                               new SerialPortAdapter(serialPort));
+            return CreateAscii(unitId, new SerialPortAdapter(serialPort));
         }
 
         /// <summary>
@@ -66,16 +63,14 @@
         /// <param name="unitId"></param>
         /// <param name="streamResource"></param>
         /// <returns></returns>
-        public static ModbusSerialSlave CreateAscii(byte unitId,
-                                                    IStreamResource streamResource)
+        public static ModbusSerialSlave CreateAscii(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)
             {
                 throw new ArgumentNullException(nameof(streamResource));
             }
 
-            return new ModbusSerialSlave(unitId,
-                                         new ModbusAsciiTransport(streamResource));
+            return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
         }
 
         /// <summary>
@@ -84,16 +79,14 @@
         /// <param name="unitId"></param>
         /// <param name="serialPort"></param>
         /// <returns></returns>
-        public static ModbusSerialSlave CreateRtu(byte unitId,
-                                                  SerialPort serialPort)
+        public static ModbusSerialSlave CreateRtu(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
             {
                 throw new ArgumentNullException(nameof(serialPort));
             }
 
-            return CreateRtu(unitId,
-                             new SerialPortAdapter(serialPort));
+            return CreateRtu(unitId, new SerialPortAdapter(serialPort));
         }
 
         /// <summary>
@@ -102,16 +95,14 @@
         /// <param name="unitId"></param>
         /// <param name="streamResource"></param>
         /// <returns></returns>
-        public static ModbusSerialSlave CreateRtu(byte unitId,
-                                                  IStreamResource streamResource)
+        public static ModbusSerialSlave CreateRtu(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)
             {
                 throw new ArgumentNullException(nameof(streamResource));
             }
 
-            return new ModbusSerialSlave(unitId,
-                                         new ModbusRtuTransport(streamResource));
+            return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
         }
 
         /// <summary>
@@ -131,18 +122,15 @@
 
                         if (SerialTransport.CheckFrame && !SerialTransport.ChecksumsMatch(request, frame))
                         {
-                            string errorMessage = string.Format(CultureInfo.InvariantCulture,
-                                "Checksums failed to match {0} != {1}", string.Join(", ", request.MessageFrame),
-                                string.Join(", ", frame));
-                            Debug.WriteLine(errorMessage);
-                            throw new IOException(errorMessage);
+                            string msg = $"Checksums failed to match {string.Join(", ", request.MessageFrame)} != {string.Join(", ", frame)}.";
+                            Debug.WriteLine(msg);
+                            throw new IOException(msg);
                         }
 
                         // only service requests addressed to this particular slave
                         if (request.SlaveAddress != UnitId)
                         {
-                            Debug.WriteLine("NModbus Slave {0} ignoring request intended for NModbus Slave {1}", UnitId,
-                                request.SlaveAddress);
+                            Debug.WriteLine($"NModbus Slave {UnitId} ignoring request intended for NModbus Slave {request.SlaveAddress}");
                             continue;
                         }
 
@@ -154,12 +142,12 @@
                     }
                     catch (IOException ioe)
                     {
-                        Debug.WriteLine("IO Exception encountered while listening for requests - {0}", ioe.Message);
+                        Debug.WriteLine($"IO Exception encountered while listening for requests - {ioe.Message}");
                         SerialTransport.DiscardInBuffer();
                     }
                     catch (TimeoutException te)
                     {
-                        Debug.WriteLine("Timeout Exception encountered while listening for requests - {0}", te.Message);
+                        Debug.WriteLine($"Timeout Exception encountered while listening for requests - {te.Message}");
                         SerialTransport.DiscardInBuffer();
                     }
 

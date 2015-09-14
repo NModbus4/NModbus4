@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.Linq;
 
     using Data;
@@ -27,10 +26,7 @@
         /// <param name="slaveAddress"></param>
         /// <param name="byteCount"></param>
         /// <param name="data"></param>
-        public ReadCoilsInputsResponse(byte functionCode,
-                                       byte slaveAddress,
-                                       byte byteCount,
-                                       DiscreteCollection data)
+        public ReadCoilsInputsResponse(byte functionCode, byte slaveAddress, byte byteCount, DiscreteCollection data)
             : base(slaveAddress, functionCode)
         {
             ByteCount = byteCount;
@@ -60,12 +56,7 @@
         /// <returns></returns>
         public override string ToString()
         {
-            string msg = string.Format(CultureInfo.InvariantCulture,
-                                       "Read {0} {1} - {2}.",
-                                       Data.Count(),
-                                       FunctionCode == Modbus.ReadInputs ? "inputs" : "coils",
-                                       Data);
-
+            string msg = $"Read {Data.Count()} {(FunctionCode == Modbus.ReadInputs ? "inputs" : "coils")} - {Data}.";
             return msg;
         }
 

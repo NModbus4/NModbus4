@@ -23,8 +23,7 @@
         /// </summary>
         /// <param name="unitId"></param>
         /// <param name="udpClient"></param>
-        private ModbusUdpSlave(byte unitId,
-                               UdpClient udpClient)
+        private ModbusUdpSlave(byte unitId, UdpClient udpClient)
             : base(unitId, new ModbusIpTransport(new UdpClientAdapter(udpClient)))
         {
             _udpClient = udpClient;
@@ -38,8 +37,7 @@
         /// <returns></returns>
         public static ModbusUdpSlave CreateUdp(UdpClient client)
         {
-            return new ModbusUdpSlave(Modbus.DefaultIpSlaveUnitId,
-                                      client);
+            return new ModbusUdpSlave(Modbus.DefaultIpSlaveUnitId, client);
         }
 
         /// <summary>
@@ -48,11 +46,9 @@
         /// <param name="unitId"></param>
         /// <param name="client"></param>
         /// <returns></returns>
-        public static ModbusUdpSlave CreateUdp(byte unitId,
-                                               UdpClient client)
+        public static ModbusUdpSlave CreateUdp(byte unitId, UdpClient client)
         {
-            return new ModbusUdpSlave(unitId,
-                                      client);
+            return new ModbusUdpSlave(unitId, client);
         }
 
         /// <summary>
@@ -71,8 +67,8 @@
 
                     frame = _udpClient.Receive(ref masterEndPoint);
 
-                    Debug.WriteLine("Read Frame completed {0} bytes", frame.Length);
-                    Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+                    Debug.WriteLine($"Read Frame completed {frame.Length} bytes");
+                    Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
                     IModbusMessage request =
                         ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
@@ -84,10 +80,8 @@
 
                     // write response
                     byte[] responseFrame = Transport.BuildMessageFrame(response);
-                    Debug.WriteLine("TX: {0}", string.Join(", ", responseFrame));
-                    _udpClient.Send(responseFrame,
-                                    responseFrame.Length,
-                                    masterEndPoint);
+                    Debug.WriteLine($"TX: {string.Join(", ", responseFrame)}");
+                    _udpClient.Send(responseFrame, responseFrame.Length, masterEndPoint);
                 }
             }
             catch (SocketException se)

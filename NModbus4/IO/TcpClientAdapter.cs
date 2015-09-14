@@ -57,13 +57,9 @@
         /// <param name="buffer"></param>
         /// <param name="offset"></param>
         /// <param name="size"></param>
-        public void Write(byte[] buffer,
-                          int offset,
-                          int size)
+        public void Write(byte[] buffer, int offset, int size)
         {
-            _tcpClient.GetStream().Write(buffer,
-                                         offset,
-                                         size);
+            _tcpClient.GetStream().Write(buffer, offset, size);
         }
 
         /// <summary>
@@ -73,13 +69,9 @@
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        public int Read(byte[] buffer,
-                        int offset,
-                        int size)
+        public int Read(byte[] buffer, int offset, int size)
         {
-            return _tcpClient.GetStream().Read(buffer,
-                                               offset,
-                                               size);
+            return _tcpClient.GetStream().Read(buffer, offset, size);
         }
 
         /// <summary>

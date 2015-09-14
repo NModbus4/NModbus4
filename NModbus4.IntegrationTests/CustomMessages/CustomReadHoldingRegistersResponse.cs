@@ -16,10 +16,7 @@ namespace Modbus.IntegrationTests.CustomMessages
 
         public ushort[] Data
         {
-            get
-            {
-                return _data.ToArray();
-            }
+            get { return _data.ToArray(); }
         }
 
         public byte[] MessageFrame

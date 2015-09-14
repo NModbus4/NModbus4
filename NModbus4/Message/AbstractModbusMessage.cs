@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
 
     /// <summary>
     ///
@@ -23,11 +22,9 @@
         /// </summary>
         /// <param name="slaveAddress"></param>
         /// <param name="functionCode"></param>
-        internal AbstractModbusMessage(byte slaveAddress,
-                                       byte functionCode)
+        internal AbstractModbusMessage(byte slaveAddress, byte functionCode)
         {
-            _messageImpl = new ModbusMessageImpl(slaveAddress,
-                                                 functionCode);
+            _messageImpl = new ModbusMessageImpl(slaveAddress, functionCode);
         }
 
         /// <summary>
@@ -94,10 +91,7 @@
         {
             if (frame.Length < MinimumFrameSize)
             {
-                string msg = string.Format(CultureInfo.InvariantCulture,
-                                           "Message frame must contain at least {0} bytes of data.",
-                                           MinimumFrameSize);
-
+                string msg = $"Message frame must contain at least {MinimumFrameSize} bytes of data.";
                 throw new FormatException(msg);
             }
 
