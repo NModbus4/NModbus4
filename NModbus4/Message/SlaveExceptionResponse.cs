@@ -4,43 +4,25 @@
     using System.Collections.Generic;
     using System.Globalization;
 
-    /// <summary>
-    ///
-    /// </summary>
     public class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
     {
         private static readonly Dictionary<byte, string> _exceptionMessages = CreateExceptionMessages();
 
-        /// <summary>
-        ///
-        /// </summary>
         public SlaveExceptionResponse()
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="functionCode"></param>
-        /// <param name="exceptionCode"></param>
         public SlaveExceptionResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
             : base(slaveAddress, functionCode)
         {
             SlaveExceptionCode = exceptionCode;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 3; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte SlaveExceptionCode
         {
             get { return MessageImpl.ExceptionCode.Value; }
@@ -68,10 +50,6 @@
                 msg);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         internal static Dictionary<byte, string> CreateExceptionMessages()
         {
             Dictionary<byte, string> messages = new Dictionary<byte, string>(9);
@@ -89,10 +67,6 @@
             return messages;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (FunctionCode <= Modbus.ExceptionOffset)

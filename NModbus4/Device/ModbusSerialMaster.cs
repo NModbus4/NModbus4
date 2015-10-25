@@ -14,10 +14,6 @@
     /// </summary>
     public class ModbusSerialMaster : ModbusMaster, IModbusSerialMaster
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="transport">Transport used by this device.</param>>
         private ModbusSerialMaster(ModbusTransport transport)
             : base(transport)
         {
@@ -35,8 +31,6 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
-        /// <param name="serialPort"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(SerialPort serialPort)
         {
             if (serialPort == null)
@@ -50,8 +44,6 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
-        /// <param name="tcpClient"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(TcpClient tcpClient)
         {
             if (tcpClient == null)
@@ -65,8 +57,6 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
-        /// <param name="udpClient"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -85,8 +75,6 @@
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
-        /// <param name="streamResource"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateAscii(IStreamResource streamResource)
         {
             if (streamResource == null)
@@ -100,8 +88,6 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
-        /// <param name="serialPort"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(SerialPort serialPort)
         {
             if (serialPort == null)
@@ -115,8 +101,6 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
-        /// <param name="tcpClient"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(TcpClient tcpClient)
         {
             if (tcpClient == null)
@@ -130,8 +114,6 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
-        /// <param name="udpClient"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -150,8 +132,6 @@
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
-        /// <param name="streamResource"></param>
-        /// <returns></returns>
         public static ModbusSerialMaster CreateRtu(IStreamResource streamResource)
         {
             if (streamResource == null)

@@ -21,6 +21,12 @@ namespace Modbus.IntegrationTests
         public const string DefaultMasterSerialPortName = "COM1";
         public const string DefaultSlaveSerialPortName = "COM2";
 
+        public static IPAddress TcpHost { get; } = new IPAddress(new byte[] { 127, 0, 0, 1 });
+
+        public static IPEndPoint DefaultModbusIPEndPoint { get; } = new IPEndPoint(TcpHost, Port);
+
+        public double AverageReadTime => 150;
+
         protected ModbusMaster Master { get; set; }
 
         protected SerialPort MasterSerialPort { get; set; }
@@ -38,21 +44,8 @@ namespace Modbus.IntegrationTests
         protected UdpClient SlaveUdp { get; set; }
 
         private Thread SlaveThread { get; set; }
-        
-        public static IPAddress TcpHost { get; } = new IPAddress(new byte[] { 127, 0, 0, 1 });
-
-        public static IPEndPoint DefaultModbusIPEndPoint { get; } = new IPEndPoint(TcpHost, Port);
 
         private Process Jamod { get; set; }
-
-        public double AverageReadTime => 150;
-
-        public void SetupSlaveSerialPort()
-        {
-            SlaveSerialPort = new SerialPort(DefaultSlaveSerialPortName);
-            SlaveSerialPort.Parity = Parity.None;
-            SlaveSerialPort.Open();
-        }
 
         public static SerialPort CreateAndOpenSerialPort(string portName)
         {
@@ -61,6 +54,13 @@ namespace Modbus.IntegrationTests
             port.Open();
 
             return port;
+        }
+
+        public void SetupSlaveSerialPort()
+        {
+            SlaveSerialPort = new SerialPort(DefaultSlaveSerialPortName);
+            SlaveSerialPort.Parity = Parity.None;
+            SlaveSerialPort.Open();
         }
 
         public void StartSlave()
@@ -231,11 +231,6 @@ namespace Modbus.IntegrationTests
             Master.ExecuteCustomMessage<CustomWriteMultipleRegistersResponse>(writeRequest);
         }
 
-        /// <summary>
-        /// Perform read registers command
-        /// </summary>
-        /// <param name="master"></param>
-        /// <returns></returns>
         internal static double CalculateAverage(IModbusMaster master)
         {
             ushort startAddress = 5;

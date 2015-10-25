@@ -37,7 +37,7 @@
         /// <summary>
         ///     Initializes a modbus message from the specified message frame.
         /// </summary>
-        /// <param name="frame">The frame.</param>
+        /// <param name="frame">Bytes of Modbus frame.</param>
         void Initialize(byte[] frame);
     }
 }

@@ -10,9 +10,6 @@
     /// </summary>
     public static class ModbusUtility
     {
-        /// <summary>
-        ///
-        /// </summary>
         private static readonly ushort[] CrcTable =
         {
             0X0000, 0XC0C1, 0XC181, 0X0140, 0XC301, 0X03C0, 0X0280, 0XC241,
@@ -86,9 +83,6 @@
         /// <summary>
         ///     Converts two UInt16 values into a UInt32.
         /// </summary>
-        /// <param name="highOrderValue"></param>
-        /// <param name="lowOrderValue"></param>
-        /// <returns></returns>
         public static uint GetUInt32(ushort highOrderValue, ushort lowOrderValue)
         {
             byte[] value = BitConverter.GetBytes(lowOrderValue)

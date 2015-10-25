@@ -14,10 +14,6 @@
     /// </summary>
     public abstract class ModbusMaster : ModbusDevice, IModbusMaster
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="transport"></param>
         internal ModbusMaster(ModbusTransport transport)
             : base(transport)
         {
@@ -386,13 +382,6 @@
             return Transport.UnicastMessage<TResponse>(request);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="argumentName"></param>
-        /// <param name="data"></param>
-        /// <param name="maxDataLength"></param>
         private static void ValidateData<T>(string argumentName, T[] data, int maxDataLength)
         {
             if (data == null)
@@ -407,12 +396,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="argumentName"></param>
-        /// <param name="numberOfPoints"></param>
-        /// <param name="maxNumberOfPoints"></param>
         private static void ValidateNumberOfPoints(string argumentName, ushort numberOfPoints, ushort maxNumberOfPoints)
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)
@@ -422,32 +405,17 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private bool[] PerformReadDiscretes(ReadCoilsInputsRequest request)
         {
             ReadCoilsInputsResponse response = Transport.UnicastMessage<ReadCoilsInputsResponse>(request);
             return response.Data.Take(request.NumberOfPoints).ToArray();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private Task<bool[]> PerformReadDiscretesAsync(ReadCoilsInputsRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadDiscretes(request));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private ushort[] PerformReadRegisters(ReadHoldingInputRegistersRequest request)
         {
             ReadHoldingInputRegistersResponse response =
@@ -456,21 +424,11 @@
             return response.Data.Take(request.NumberOfPoints).ToArray();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private Task<ushort[]> PerformReadRegistersAsync(ReadHoldingInputRegistersRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadRegisters(request));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private ushort[] PerformReadRegisters(ReadWriteMultipleRegistersRequest request)
         {
             ReadHoldingInputRegistersResponse response =
@@ -479,22 +437,11 @@
             return response.Data.Take(request.ReadRequest.NumberOfPoints).ToArray();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private Task<ushort[]> PerformReadRegistersAsync(ReadWriteMultipleRegistersRequest request)
         {
             return Task.Factory.StartNew(() => PerformReadRegisters(request));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="request"></param>
-        /// <returns></returns>
         private Task PerformWriteRequestAsync<T>(IModbusMessage request) where T : IModbusMessage, new()
         {
             return Task.Factory.StartNew(() => Transport.UnicastMessage<T>(request));

@@ -28,11 +28,6 @@
         private readonly byte[] _mbapHeader = new byte[6];
         private byte[] _messageFrame;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="client"></param>
-        /// <param name="slave"></param>
         public ModbusMasterTcpConnection(TcpClient client, ModbusTcpSlave slave)
             : base(new ModbusIpTransport(new TcpClientAdapter(client)))
         {
@@ -65,34 +60,21 @@
         /// </summary>
         public event EventHandler<TcpConnectionEventArgs> ModbusMasterTcpConnectionClosed;
 
-        /// <summary>
-        ///
-        /// </summary>
         public string EndPoint
         {
             get { return _endPoint; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public Stream Stream
         {
             get { return _stream; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public TcpClient TcpClient
         {
             get { return _client; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -103,10 +85,6 @@
             base.Dispose(disposing);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="ar"></param>
         private void ReadHeaderCompleted(IAsyncResult ar)
         {
             Debug.WriteLine("Read header completed.");
@@ -129,10 +107,6 @@
             }, EndPoint);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="ar"></param>
         private void ReadFrameCompleted(IAsyncResult ar)
         {
             CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
@@ -155,10 +129,6 @@
             }, EndPoint);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="ar"></param>
         private void WriteCompleted(IAsyncResult ar)
         {
             Debug.WriteLine("End write.");
@@ -175,9 +145,6 @@
         ///     Catches all exceptions thrown when action is executed and removes the master end point.
         ///     The exception is ignored when it simply signals a master closing its connection.
         /// </summary>
-        /// <param name="ar"></param>
-        /// <param name="action"></param>
-        /// <param name="endPoint"></param>
         private void CatchExceptionAndRemoveMasterEndPoint(
             IAsyncResult ar,
             Action<ModbusMasterTcpConnection, IAsyncResult> action,

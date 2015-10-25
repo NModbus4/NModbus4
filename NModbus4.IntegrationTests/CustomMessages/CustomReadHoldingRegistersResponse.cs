@@ -14,10 +14,7 @@ namespace Modbus.IntegrationTests.CustomMessages
         private ushort _transactionId;
         private RegisterCollection _data;
 
-        public ushort[] Data
-        {
-            get { return _data.ToArray(); }
-        }
+        public ushort[] Data => _data.ToArray();
 
         public byte[] MessageFrame
         {

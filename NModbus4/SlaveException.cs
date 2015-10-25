@@ -44,20 +44,11 @@
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="slaveExceptionResponse"></param>
         internal SlaveException(SlaveExceptionResponse slaveExceptionResponse)
         {
             _slaveExceptionResponse = slaveExceptionResponse;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="slaveExceptionResponse"></param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
         internal SlaveException(string message, SlaveExceptionResponse slaveExceptionResponse)
             : base(message)
@@ -96,13 +87,15 @@
         /// <summary>
         ///     Gets a message that describes the current exception.
         /// </summary>
+        /// <value>
+        ///     The error message that explains the reason for the exception, or an empty string.
+        /// </value>
         public override string Message
         {
             get
             {
                 string responseString;
                 responseString = _slaveExceptionResponse != null ? string.Concat(Environment.NewLine, _slaveExceptionResponse) : string.Empty;
-
                 return string.Concat(base.Message, responseString);
             }
         }

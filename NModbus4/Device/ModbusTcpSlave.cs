@@ -25,11 +25,6 @@
         private TcpListener _server;
         private Timer _timer;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="tcpListener"></param>
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
@@ -41,12 +36,6 @@
             _server = tcpListener;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="tcpListener"></param>
-        /// <param name="timeInterval"></param>
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
             : base(unitId, new EmptyTransport())
         {
@@ -95,9 +84,6 @@
         /// <summary>
         ///     Modbus TCP slave factory method.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="tcpListener"></param>
-        /// <returns></returns>
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
         {
             return new ModbusTcpSlave(unitId, tcpListener);
@@ -107,10 +93,6 @@
         ///     Creates ModbusTcpSlave with timer which polls connected clients every
         ///     <paramref name="pollInterval"/> milliseconds on that they are connected.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="tcpListener"></param>
-        /// <param name="pollInterval"></param>
-        /// <returns></returns>
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double pollInterval)
         {
             return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
@@ -183,11 +165,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="socket"></param>
-        /// <returns></returns>
         private static bool IsSocketConnected(Socket socket)
         {
             bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
@@ -241,11 +218,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
             foreach (var master in _masters.ToList())
@@ -257,11 +229,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
             ModbusMasterTcpConnection connection;

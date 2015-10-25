@@ -19,10 +19,6 @@
         private UdpClient _udpClient;
         private List<byte> _buffer;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="udpClient"></param>
         public UdpClientAdapter(UdpClient udpClient)
         {
             if (udpClient == null)
@@ -33,47 +29,28 @@
             _udpClient = udpClient;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public int InfiniteTimeout
         {
             get { return Timeout.Infinite; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public int ReadTimeout
         {
             get { return _udpClient.Client.ReceiveTimeout; }
             set { _udpClient.Client.ReceiveTimeout = value; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public int WriteTimeout
         {
             get { return _udpClient.Client.SendTimeout; }
             set { _udpClient.Client.SendTimeout = value; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public void DiscardInBuffer()
         {
             // no-op
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
         public int Read(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -123,12 +100,6 @@
             return count;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <param name="offset"></param>
-        /// <param name="count"></param>
         public void Write(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -159,19 +130,12 @@
             _udpClient.Send(buffer.Skip(offset).ToArray(), count);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

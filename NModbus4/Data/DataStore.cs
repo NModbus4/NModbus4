@@ -89,18 +89,13 @@
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <typeparam name="U">The type of elements in the collection.</typeparam>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <param name="startAddress"></param>
-        /// <param name="count"></param>
-        /// <param name="syncRoot"></param>
-        /// <returns></returns>
         internal static T ReadData<T, U>(
             DataStore dataStore,
             ModbusDataCollection<U> dataSource,
             ushort startAddress,
             ushort count,
-            object syncRoot) where T : Collection<U>, new()
+            object syncRoot)
+            where T : Collection<U>, new()
         {
             DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
@@ -131,11 +126,6 @@
         ///     Write data to data store.
         /// </summary>
         /// <typeparam name="TData">The type of the data.</typeparam>
-        /// <param name="dataStore"></param>
-        /// <param name="items"></param>
-        /// <param name="destination"></param>
-        /// <param name="startAddress"></param>
-        /// <param name="syncRoot"></param>
         internal static void WriteData<TData>(
             DataStore dataStore,
             IEnumerable<TData> items,
@@ -167,10 +157,6 @@
         /// <summary>
         ///     Updates subset of values in a collection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="items"></param>
-        /// <param name="destination"></param>
-        /// <param name="startIndex"></param>
         internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())

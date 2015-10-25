@@ -26,7 +26,6 @@
         /// <summary>
         ///    Modbus IP master factory method.
         /// </summary>
-        /// <param name="tcpClient"></param>
         /// <returns>New instance of Modbus IP master device using provided TCP client.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(TcpClient tcpClient)
@@ -42,7 +41,6 @@
         /// <summary>
         ///    Modbus IP master factory method.
         /// </summary>
-        /// <param name="udpClient"></param>
         /// <returns>New instance of Modbus IP master device using provided UDP client.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(UdpClient udpClient)
@@ -63,7 +61,6 @@
         /// <summary>
         ///     Modbus IP master factory method.
         /// </summary>
-        /// <param name="serialPort"></param>
         /// <returns>New instance of Modbus IP master device using provided serial port.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(SerialPort serialPort)
@@ -79,7 +76,6 @@
         /// <summary>
         ///     Modbus IP master factory method.
         /// </summary>
-        /// <param name="streamResource"></param>
         /// <returns>New instance of Modbus IP master device using provided stream resource.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
         public static ModbusIpMaster CreateIp(IStreamResource streamResource)

@@ -48,9 +48,6 @@
         {
         }
 
-        /// <summary>
-        ///     Gets the network bytes.
-        /// </summary>
         public byte[] NetworkBytes
         {
             get

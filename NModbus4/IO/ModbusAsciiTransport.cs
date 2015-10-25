@@ -12,21 +12,12 @@
     /// </summary>
     internal class ModbusAsciiTransport : ModbusSerialTransport
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="streamResource"></param>
         internal ModbusAsciiTransport(IStreamResource streamResource)
             : base(streamResource)
         {
             Debug.Assert(streamResource != null, "Argument streamResource cannot be null.");
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
             var msgFrame = message.MessageFrame;
@@ -44,40 +35,21 @@
             return frame.ToArray();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="messageFrame"></param>
-        /// <returns></returns>
         internal override bool ChecksumsMatch(IModbusMessage message, byte[] messageFrame)
         {
             return ModbusUtility.CalculateLrc(message.MessageFrame) == messageFrame[messageFrame.Length - 1];
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         internal override byte[] ReadRequest()
         {
             return ReadRequestResponse();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         internal override IModbusMessage ReadResponse<T>()
         {
             return CreateResponse<T>(ReadRequestResponse());
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         internal byte[] ReadRequestResponse()
         {
             // read message frame, removing frame start ':'

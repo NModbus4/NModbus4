@@ -7,7 +7,6 @@
     /// <summary>
     ///     A 1 origin collection represetative of the Modbus Data Model.
     /// </summary>
-    /// <typeparam name="TData"></typeparam>
     public class ModbusDataCollection<TData> : Collection<TData>
     {
         private bool _allowZeroElement = true;

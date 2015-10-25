@@ -3,16 +3,8 @@
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    ///
-    /// </summary>
     internal static class StreamResourceUtility
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
         internal static string ReadLine(IStreamResource stream)
         {
             var result = new StringBuilder();

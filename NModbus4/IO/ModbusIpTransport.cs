@@ -19,21 +19,12 @@
         private static readonly object _transactionIdLock = new object();
         private ushort _transactionId;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="streamResource"></param>
         internal ModbusIpTransport(IStreamResource streamResource)
             : base(streamResource)
         {
             Debug.Assert(streamResource != null, "Argument streamResource cannot be null.");
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="streamResource"></param>
-        /// <returns></returns>
         internal static byte[] ReadRequestResponse(IStreamResource streamResource)
         {
             // read header
@@ -79,11 +70,6 @@
             return frame;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         internal static byte[] GetMbapHeader(IModbusMessage message)
         {
             byte[] transactionId = BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short)message.TransactionId));
@@ -112,12 +98,6 @@
             return _transactionId;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fullFrame"></param>
-        /// <returns></returns>
         internal IModbusMessage CreateMessageAndInitializeTransactionId<T>(byte[] fullFrame)
             where T : IModbusMessage, new()
         {
@@ -130,11 +110,6 @@
             return response;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         internal override byte[] BuildMessageFrame(IModbusMessage message)
         {
             byte[] header = GetMbapHeader(message);
@@ -147,10 +122,6 @@
             return messageBody.ToArray();
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="message"></param>
         internal override void Write(IModbusMessage message)
         {
             message.TransactionId = GetNewTransactionId();
@@ -159,30 +130,16 @@
             StreamResource.Write(frame, 0, frame.Length);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         internal override byte[] ReadRequest()
         {
             return ReadRequestResponse(StreamResource);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         internal override IModbusMessage ReadResponse<T>()
         {
             return CreateMessageAndInitializeTransactionId<T>(ReadRequestResponse(StreamResource));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
         internal override void OnValidateResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId != response.TransactionId)
@@ -192,12 +149,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="response"></param>
-        /// <returns></returns>
         internal override bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             if (request.TransactionId > response.TransactionId && request.TransactionId - response.TransactionId < RetryOnOldResponseThreshold)

@@ -5,29 +5,15 @@
 
     using Data;
 
-    /// <summary>
-    ///
-    /// </summary>
     public class ReadWriteMultipleRegistersRequest : AbstractModbusMessage, IModbusRequest
     {
         private ReadHoldingInputRegistersRequest _readRequest;
         private WriteMultipleRegistersRequest _writeRequest;
 
-        /// <summary>
-        ///
-        /// </summary>
         public ReadWriteMultipleRegistersRequest()
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="startReadAddress"></param>
-        /// <param name="numberOfPointsToRead"></param>
-        /// <param name="startWriteAddress"></param>
-        /// <param name="writeData"></param>
         public ReadWriteMultipleRegistersRequest(
             byte slaveAddress,
             ushort startReadAddress,
@@ -48,9 +34,6 @@
                 writeData);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public override byte[] ProtocolDataUnit
         {
             get
@@ -69,44 +52,27 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ReadHoldingInputRegistersRequest ReadRequest
         {
             get { return _readRequest; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public WriteMultipleRegistersRequest WriteRequest
         {
             get { return _writeRequest; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 11; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             string msg = $"Write {_writeRequest.NumberOfPoints} holding registers starting at address {_writeRequest.StartAddress}, and read {_readRequest.NumberOfPoints} registers starting at address {_readRequest.StartAddress}.";
             return msg;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (ReadHoldingInputRegistersResponse)response;
@@ -119,10 +85,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[10])

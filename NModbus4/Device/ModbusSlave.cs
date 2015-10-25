@@ -14,11 +14,6 @@
     /// </summary>
     public abstract class ModbusSlave : ModbusDevice
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="transport"></param>
         internal ModbusSlave(byte unitId, ModbusTransport transport)
             : base(transport)
         {
@@ -53,13 +48,6 @@
         /// </summary>
         public abstract void Listen();
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static ReadCoilsInputsResponse ReadDiscretes(
             ReadCoilsInputsRequest request,
             DataStore dataStore,
@@ -84,13 +72,6 @@
             return response;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static ReadHoldingInputRegistersResponse ReadRegisters(
             ReadHoldingInputRegistersRequest request,
             DataStore dataStore,
@@ -114,13 +95,6 @@
             return response;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static WriteSingleCoilRequestResponse WriteSingleCoil(
             WriteSingleCoilRequestResponse request,
             DataStore dataStore,
@@ -136,13 +110,6 @@
             return request;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static WriteMultipleCoilsResponse WriteMultipleCoils(
             WriteMultipleCoilsRequest request,
             DataStore dataStore,
@@ -165,13 +132,6 @@
             return response;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static WriteSingleRegisterRequestResponse WriteSingleRegister(
             WriteSingleRegisterRequestResponse request,
             DataStore dataStore,
@@ -187,13 +147,6 @@
             return request;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="dataStore"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
         internal static WriteMultipleRegistersResponse WriteMultipleRegisters(
             WriteMultipleRegistersRequest request,
             DataStore dataStore,
@@ -216,11 +169,6 @@
             return response;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Cast is not unneccessary.")]
         internal IModbusMessage ApplyRequest(IModbusMessage request)
         {

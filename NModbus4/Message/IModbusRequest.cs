@@ -8,7 +8,6 @@
         /// <summary>
         ///     Validate the specified response against the current request.
         /// </summary>
-        /// <param name="response"></param>
         void ValidateResponse(IModbusMessage response);
     }
 }

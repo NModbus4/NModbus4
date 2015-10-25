@@ -13,19 +13,11 @@
     /// </summary>
     public class ModbusSerialSlave : ModbusSlave
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="transport"></param>
         private ModbusSerialSlave(byte unitId, ModbusTransport transport)
             : base(unitId, transport)
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         private ModbusSerialTransport SerialTransport
         {
             get
@@ -44,9 +36,6 @@
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="serialPort"></param>
-        /// <returns></returns>
         public static ModbusSerialSlave CreateAscii(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
@@ -60,9 +49,6 @@
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="streamResource"></param>
-        /// <returns></returns>
         public static ModbusSerialSlave CreateAscii(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)
@@ -76,9 +62,6 @@
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="serialPort"></param>
-        /// <returns></returns>
         public static ModbusSerialSlave CreateRtu(byte unitId, SerialPort serialPort)
         {
             if (serialPort == null)
@@ -92,9 +75,6 @@
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
-        /// <param name="unitId"></param>
-        /// <param name="streamResource"></param>
-        /// <returns></returns>
         public static ModbusSerialSlave CreateRtu(byte unitId, IStreamResource streamResource)
         {
             if (streamResource == null)

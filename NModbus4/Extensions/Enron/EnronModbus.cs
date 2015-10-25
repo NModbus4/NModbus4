@@ -130,8 +130,6 @@
         /// <summary>
         ///     Convert the 32 bit registers to two 16 bit values.
         /// </summary>
-        /// <param name="registers"></param>
-        /// <returns></returns>
         private static IEnumerable<ushort> Convert(uint[] registers)
         {
             foreach (var register in registers)
@@ -147,8 +145,6 @@
         /// <summary>
         ///     Convert the 16 bit registers to 32 bit registers.
         /// </summary>
-        /// <param name="registers"></param>
-        /// <returns></returns>
         private static IEnumerable<uint> Convert(ushort[] registers)
         {
             for (int i = 0; i < registers.Length; i++)
@@ -158,11 +154,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="numberOfPoints"></param>
-        /// <param name="maxNumberOfPoints"></param>
         private static void ValidateNumberOfPoints(ushort numberOfPoints, ushort maxNumberOfPoints)
         {
             if (numberOfPoints < 1 || numberOfPoints > maxNumberOfPoints)

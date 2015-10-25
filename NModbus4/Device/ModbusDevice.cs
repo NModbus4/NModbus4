@@ -13,10 +13,6 @@
     {
         private ModbusTransport _transport;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="transport">Transport used by this device.</param>
         internal ModbusDevice(ModbusTransport transport)
         {
             _transport = transport;

@@ -2,31 +2,18 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
 
     using Data;
 
-    /// <summary>
-    ///
-    /// </summary>
     public class WriteSingleRegisterRequestResponse : AbstractModbusMessageWithData<RegisterCollection>, IModbusRequest
     {
-        /// <summary>
-        ///
-        /// </summary>
         public WriteSingleRegisterRequestResponse()
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="startAddress"></param>
-        /// <param name="registerValue"></param>
         public WriteSingleRegisterRequestResponse(byte slaveAddress, ushort startAddress, ushort registerValue)
             : base(slaveAddress, Modbus.WriteSingleRegister)
         {
@@ -34,27 +21,17 @@
             Data = new RegisterCollection(registerValue);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 6; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ushort StartAddress
         {
             get { return MessageImpl.StartAddress.Value; }
             set { MessageImpl.StartAddress = value; }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             Debug.Assert(Data != null, "Argument Data cannot be null.");
@@ -64,10 +41,6 @@
             return msg;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (WriteSingleRegisterRequestResponse)response;
@@ -85,10 +58,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             StartAddress = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 2));

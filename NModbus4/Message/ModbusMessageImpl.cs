@@ -13,72 +13,34 @@
     /// </summary>
     internal class ModbusMessageImpl
     {
-        /// <summary>
-        ///
-        /// </summary>
         public ModbusMessageImpl()
         {
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="functionCode"></param>
         public ModbusMessageImpl(byte slaveAddress, byte functionCode)
         {
             SlaveAddress = slaveAddress;
             FunctionCode = functionCode;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte? ByteCount { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte? ExceptionCode { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ushort TransactionId { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte FunctionCode { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ushort? NumberOfPoints { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte SlaveAddress { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ushort? StartAddress { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public ushort? SubFunctionCode { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public IModbusMessageDataCollection Data { get; set; }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte[] MessageFrame
         {
             get
@@ -93,9 +55,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
         public byte[] ProtocolDataUnit
         {
             get
@@ -138,10 +97,6 @@
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="frame"></param>
         public void Initialize(byte[] frame)
         {
             if (frame == null)
