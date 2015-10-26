@@ -28,7 +28,7 @@
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
                 {
                     string msg = $"Maximum amount of data {Modbus.MaximumRegisterRequestResponseSize} registers.";
-                    throw new ArgumentOutOfRangeException("NumberOfPoints", msg);
+                    throw new ArgumentOutOfRangeException(nameof(NumberOfPoints), msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;

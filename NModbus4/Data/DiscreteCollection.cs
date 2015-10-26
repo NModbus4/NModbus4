@@ -77,7 +77,7 @@
         internal DiscreteCollection(List<bool> bits)
             : base(bits)
         {
-            Debug.Assert(bits != null, "Discrete bits not null.");
+            Debug.Assert(bits != null, "Discrete bits is null.");
             _discretes = bits;
         }
 

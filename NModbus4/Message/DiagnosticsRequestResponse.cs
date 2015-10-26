@@ -41,8 +41,7 @@
                 SubFunctionCode == Modbus.DiagnosticsReturnQueryData,
                 "Need to add support for additional sub-function.");
 
-            string msg = $"Diagnostics message, sub-function return query data - {Data}.";
-            return msg;
+            return $"Diagnostics message, sub-function return query data - {Data}.";            
         }
 
         protected override void InitializeUnique(byte[] frame)

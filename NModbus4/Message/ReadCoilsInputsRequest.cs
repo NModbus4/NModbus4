@@ -40,7 +40,7 @@
                 if (value > Modbus.MaximumDiscreteRequestResponseSize)
                 {
                     string msg = $"Maximum amount of data {Modbus.MaximumDiscreteRequestResponseSize} coils.";
-                    throw new ArgumentOutOfRangeException("NumberOfPoints", msg);
+                    throw new ArgumentOutOfRangeException(nameof(NumberOfPoints), msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;

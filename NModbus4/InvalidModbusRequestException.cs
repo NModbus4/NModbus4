@@ -82,8 +82,7 @@
 
         private static string GetMessage(byte exceptionCode)
         {
-            string msg = $"Modbus exception code {exceptionCode}.";
-            return msg;
+            return $"Modbus exception code {exceptionCode}.";
         }
     }
 }

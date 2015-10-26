@@ -55,7 +55,9 @@
         {
             if (!_allowZeroElement && index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.InsertItem(index, item);
@@ -74,7 +76,9 @@
         {
             if (index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.SetItem(index, item);
@@ -92,7 +96,9 @@
         {
             if (index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.RemoveItem(index);

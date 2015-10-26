@@ -118,10 +118,7 @@
 
             if (data.Length == 0 || data.Length > 61)
             {
-                throw new ArgumentException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "The length of argument data must be between 1 and 61 inclusive."));
+                throw new ArgumentException("The length of argument data must be between 1 and 61 inclusive.");
             }
 
             master.WriteMultipleRegisters(slaveAddress, startAddress, Convert(data).ToArray());

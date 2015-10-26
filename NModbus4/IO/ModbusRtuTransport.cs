@@ -95,10 +95,7 @@
 
             while (numBytesRead != count)
             {
-                numBytesRead += StreamResource.Read(
-                    frameBytes,
-                    numBytesRead,
-                    count - numBytesRead);
+                numBytesRead += StreamResource.Read(frameBytes, numBytesRead, count - numBytesRead);
             }
 
             return frameBytes;
