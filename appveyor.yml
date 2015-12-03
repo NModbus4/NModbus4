@@ -12,9 +12,10 @@ before_build:
 build:
   project: NModbus4.sln
   verbosity: minimal
+test_script:
+- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:"./packages/xunit.runner.console.2.0.0/tools/xunit.console.exe" -targetargs:"./NModbus4.UnitTests/bin/Debug/NModbus4.UnitTests.dll -noshadow -appveyor" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
+- "SET PATH=C:/Python34;C:/Python34/Scripts;%PATH%"
+- pip install codecov
+- codecov -f "./opencover_report.xml"
 cache:
 - packages -> **\packages.config
-test_script:
-- ps: "./run-tests-and-coverage.ps1"
-artifacts:
-- path: ./codecoverage

@@ -4,7 +4,7 @@ NModbus4
 |           |Build Status|Code Coverage|
 |-----------|:----------:|:-----------:|
 |**Mono**|[![Build Status](https://travis-ci.org/NModbus4/NModbus4.svg?branch=portable-3.0)](https://travis-ci.org/NModbus4/NModbus4)||
-|**MS .NET**|[![Build status](https://ci.appveyor.com/api/projects/status/9irkluk69cr0f5ed?svg=true)](https://ci.appveyor.com/project/Maxwe11/nmodbus4-ss8e4)|[![Coverage Status](https://coveralls.io/repos/NModbus4/NModbus4/badge.svg?branch=portable-3.0&service=github)](https://coveralls.io/github/NModbus4/NModbus4?branch=portable-3.0)|
+|**MS .NET**|[![Build status](https://ci.appveyor.com/api/projects/status/9irkluk69cr0f5ed?svg=true)](https://ci.appveyor.com/project/Maxwe11/nmodbus4-ss8e4)|[![codecov.io](https://codecov.io/github/NModbus4/NModbus4/coverage.svg?branch=portable-3.0)](https://codecov.io/github/NModbus4/NModbus4?branch=portable-3.0)|
 
 [![Join the chat at https://gitter.im/NModbus4/NModbus4](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NModbus4/NModbus4?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
