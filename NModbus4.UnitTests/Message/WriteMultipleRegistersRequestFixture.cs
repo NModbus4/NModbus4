@@ -24,16 +24,14 @@ namespace Modbus.UnitTests.Message
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new WriteMultipleRegistersRequest(1, 2,
-                MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3,
-                    Modbus.MaximumRegisterRequestResponseSize + 1)));
+                MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3, Modbus.MaximumRegisterRequestResponseSize + 1)));
         }
 
         [Fact]
         public void CreateWriteMultipleRegistersRequestMaxSize()
         {
             WriteMultipleRegistersRequest request = new WriteMultipleRegistersRequest(1, 2,
-                MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3,
-                    Modbus.MaximumRegisterRequestResponseSize));
+                MessageUtility.CreateDefaultCollection<RegisterCollection, ushort>(3, Modbus.MaximumRegisterRequestResponseSize));
             Assert.Equal(Modbus.MaximumRegisterRequestResponseSize, request.NumberOfPoints);
         }
 

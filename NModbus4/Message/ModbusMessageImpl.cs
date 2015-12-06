@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.Net;
 
@@ -107,8 +106,8 @@
 
             if (frame.Length < Modbus.MinimumFrameSize)
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture,
-                    "Message frame must contain at least {0} bytes of data.", Modbus.MinimumFrameSize));
+                string msg = $"Message frame must contain at least {Modbus.MinimumFrameSize} bytes of data.";
+                throw new FormatException(msg);
             }
 
             SlaveAddress = frame[0];

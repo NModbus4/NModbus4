@@ -49,8 +49,7 @@
             _slaveExceptionResponse = slaveExceptionResponse;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used by test code.")]
         internal SlaveException(string message, SlaveExceptionResponse slaveExceptionResponse)
             : base(message)
         {
@@ -78,24 +77,26 @@
         {
             if (info != null)
             {
-                _slaveExceptionResponse = new SlaveExceptionResponse(info.GetByte(SlaveAddressPropertyName),
-                    info.GetByte(FunctionCodePropertyName), info.GetByte(SlaveExceptionCodePropertyName));
+                _slaveExceptionResponse = new SlaveExceptionResponse(
+                    info.GetByte(SlaveAddressPropertyName),
+                    info.GetByte(FunctionCodePropertyName),
+                    info.GetByte(SlaveExceptionCodePropertyName));
             }
         }
 
         /// <summary>
         ///     Gets a message that describes the current exception.
         /// </summary>
-        /// <value></value>
-        /// <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
+        /// <value>
+        ///     The error message that explains the reason for the exception, or an empty string.
+        /// </value>
         public override string Message
         {
             get
             {
-                return string.Concat(base.Message,
-                    _slaveExceptionResponse != null
-                        ? string.Concat(Environment.NewLine, _slaveExceptionResponse)
-                        : string.Empty);
+                string responseString;
+                responseString = _slaveExceptionResponse != null ? string.Concat(Environment.NewLine, _slaveExceptionResponse) : string.Empty;
+                return string.Concat(base.Message, responseString);
             }
         }
 
@@ -148,8 +149,7 @@
         ///         version="1" Flags="SerializationFormatter" />
         /// </PermissionSet>
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods",
-            Justification = "Argument info is validated, rule does not understand AND condition.")]
+        [SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Argument info is validated, rule does not understand AND condition.")]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

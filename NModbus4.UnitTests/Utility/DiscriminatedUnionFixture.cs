@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Modbus.UnitTests.Utility
 {
-    public class DiscriminatedUnionTestSuite
+    public class DiscriminatedUnionFixture
     {
         [Fact]
         public void DiscriminatedUnion_CreateA()

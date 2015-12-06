@@ -12,7 +12,7 @@
 
             do
             {
-                if (0 == stream.Read(singleByteBuffer, 0, 1))
+                if (stream.Read(singleByteBuffer, 0, 1) == 0)
                 {
                     continue;
                 }

@@ -4,7 +4,6 @@
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net.Sockets;
@@ -91,19 +90,12 @@
         }
 
         /// <summary>
-        ///     Creates ModbusTcpSlave with timer which polls connected clients every <paramref name="pollInterval"/>
-        /// milliseconds on that they are connected.
+        ///     Creates ModbusTcpSlave with timer which polls connected clients every
+        ///     <paramref name="pollInterval"/> milliseconds on that they are connected.
         /// </summary>
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, double pollInterval)
         {
             return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
-        }
-
-        private static bool IsSocketConnected(Socket socket)
-        {
-            bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
-            bool available = (socket.Available == 0);
-            return poll && available;
         }
 
         /// <summary>
@@ -126,81 +118,6 @@
                 {
                     // this happens when the server stops
                 }
-            }
-        }
-
-        private void OnTimer(object sender, ElapsedEventArgs e)
-        {
-            foreach (var master in _masters.ToList())
-            {
-                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
-                {
-                    master.Value.Dispose();
-                }
-            }
-        }
-
-        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
-        {
-            ModbusMasterTcpConnection connection;
-            if (!_masters.TryRemove(e.EndPoint, out connection))
-            {
-                var msg = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "EndPoint {0} cannot be removed, it does not exist.",
-                    e.EndPoint);
-
-                throw new ArgumentException(msg);
-            }
-
-            Debug.WriteLine("Removed Master {0}", e.EndPoint);
-        }
-
-        private static void AcceptCompleted(IAsyncResult ar)
-        {
-            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
-
-            try
-            {
-                try
-                {
-                    // use Socket async API for compact framework compat
-                    Socket socket = null;
-                    lock (slave._serverLock)
-                    {
-                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
-                        if (slave._server == null) 
-                        {
-                            return;
-                        }
-
-                        socket = slave.Server.Server.EndAccept(ar);
-                    }
-
-                    TcpClient client = new TcpClient { Client = socket };
-                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
-
-                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
-
-                    Debug.WriteLine("Accept completed.");
-                }
-                catch (IOException ex)
-                {
-                    // Abandon the connection attempt and continue to accepting the next connection.
-                    Debug.WriteLine("Accept failed: " + ex.Message);
-                }
-
-                // Accept another client
-                // use Socket async API for compact framework compat
-                lock (slave._serverLock)
-                {
-                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                // this happens when the server stops
             }
         }
 
@@ -235,6 +152,7 @@
                             foreach (var key in _masters.Keys)
                             {
                                 ModbusMasterTcpConnection connection;
+
                                 if (_masters.TryRemove(key, out connection))
                                 {
                                     connection.ModbusMasterTcpConnectionClosed -= OnMasterConnectionClosedHandler;
@@ -245,6 +163,83 @@
                     }
                 }
             }
+        }
+
+        private static bool IsSocketConnected(Socket socket)
+        {
+            bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
+            bool available = (socket.Available == 0);
+            return poll && available;
+        }
+
+        private static void AcceptCompleted(IAsyncResult ar)
+        {
+            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
+
+            try
+            {
+                try
+                {
+                    // use Socket async API for compact framework compat
+                    Socket socket = null;
+                    lock (slave._serverLock)
+                    {
+                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
+                        if (slave._server == null)
+                        {
+                            return;
+                        }
+
+                        socket = slave.Server.Server.EndAccept(ar);
+                    }
+
+                    TcpClient client = new TcpClient { Client = socket };
+                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
+                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
+                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
+                    Debug.WriteLine("Accept completed.");
+                }
+                catch (IOException ex)
+                {
+                    // Abandon the connection attempt and continue to accepting the next connection.
+                    Debug.WriteLine("Accept failed: " + ex.Message);
+                }
+
+                // Accept another client
+                // use Socket async API for compact framework compat
+                lock (slave._serverLock)
+                {
+                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // this happens when the server stops
+            }
+        }
+
+        private void OnTimer(object sender, ElapsedEventArgs e)
+        {
+            foreach (var master in _masters.ToList())
+            {
+                if (IsSocketConnected(master.Value.TcpClient.Client) == false)
+                {
+                    master.Value.Dispose();
+                }
+            }
+        }
+
+        private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
+        {
+            ModbusMasterTcpConnection connection;
+
+            if (!_masters.TryRemove(e.EndPoint, out connection))
+            {
+                string msg = $"EndPoint {e.EndPoint} cannot be removed, it does not exist.";
+                throw new ArgumentException(msg);
+            }
+
+            Debug.WriteLine($"Removed Master {e.EndPoint}");
         }
     }
 }

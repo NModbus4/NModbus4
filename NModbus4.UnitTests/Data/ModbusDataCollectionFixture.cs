@@ -8,15 +8,6 @@ namespace Modbus.UnitTests.Data
 {
     public abstract class ModbusDataCollectionFixture<TData>
     {
-        protected abstract TData[] GetArray();
-
-        protected abstract TData GetNonExistentElement();
-
-        protected List<TData> GetList()
-        {
-            return new List<TData>(GetArray());
-        }
-
         [Fact]
         public void DefaultContstructor()
         {
@@ -114,6 +105,15 @@ namespace Modbus.UnitTests.Data
             Assert.Equal(expectedCount, col.Count);
             Assert.Equal(expectedCount, source.Count);
             Assert.Equal(source, col);
+        }
+
+        protected abstract TData[] GetArray();
+
+        protected abstract TData GetNonExistentElement();
+
+        protected List<TData> GetList()
+        {
+            return new List<TData>(GetArray());
         }
     }
 }

@@ -91,7 +91,9 @@ namespace MySample
                 ushort[] registers = master.ReadHoldingRegisters(slaveId, startAddress, numRegisters);
 
                 for (int i = 0; i < numRegisters; i++)
-                    Console.WriteLine("Register {0}={1}", startAddress + i, registers[i]);
+                {
+                    Console.WriteLine($"Register {startAddress + i}={registers[i]}");
+                }
             }
 
             // output: 
@@ -117,7 +119,9 @@ namespace MySample
                 bool[] inputs = master.ReadInputs(startAddress, numInputs);
 
                 for (int i = 0; i < numInputs; i++)
-                    Console.WriteLine("Input {0}={1}", startAddress + i, inputs[i] ? 1 : 0);
+                {
+                    Console.WriteLine($"Input {(startAddress + i)}={(inputs[i] ? 1 : 0)}");
+                }
             }
 
             // output: 
@@ -277,7 +281,9 @@ namespace MySample
             ushort[] inputs = master.ReadInputRegisters(startAddress, numInputs);
 
             for (int i = 0; i < numInputs; i++)
-                Console.WriteLine("Register {0}={1}", startAddress + i, inputs[i]);
+            {
+                Console.WriteLine($"Register {(startAddress + i)}={(inputs[i])}");
+            }
 
             // clean up
             masterTcpClient.Close();
@@ -324,7 +330,9 @@ namespace MySample
                 ushort[] registers = master.ReadHoldingRegisters(slaveId, startAddress, numRegisters);
 
                 for (int i = 0; i < numRegisters; i++)
-                    Console.WriteLine("Register {0}={1}", startAddress + i, registers[i]);
+                {
+                    Console.WriteLine($"Register {(startAddress + i)}={registers[i]}");
+                }
             }
 
             // output

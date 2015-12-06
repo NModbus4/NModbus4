@@ -15,19 +15,19 @@
     {
         private DataStoreEventArgs(ushort startAddress, ModbusDataType modbusDataType)
         {
-            this.StartAddress = startAddress;
-            this.ModbusDataType = modbusDataType;
+            StartAddress = startAddress;
+            ModbusDataType = modbusDataType;
         }
 
         /// <summary>
         ///     Type of Modbus data (e.g. Holding register).
         /// </summary>
-        public ModbusDataType ModbusDataType { get; private set; }
+        public ModbusDataType ModbusDataType { get; }
 
         /// <summary>
         ///     Start address of data.
         /// </summary>
-        public ushort StartAddress { get; private set; }
+        public ushort StartAddress { get; }
 
         /// <summary>
         ///     Data that was read or written.
@@ -35,8 +35,7 @@
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>> Data { get; private set; }
 
-        internal static DataStoreEventArgs CreateDataStoreEventArgs<T>(ushort startAddress,
-            ModbusDataType modbusDataType, IEnumerable<T> data)
+        internal static DataStoreEventArgs CreateDataStoreEventArgs<T>(ushort startAddress, ModbusDataType modbusDataType, IEnumerable<T> data)
         {
             if (data == null)
             {
@@ -48,6 +47,7 @@
             if (typeof(T) == typeof(bool))
             {
                 var a = new ReadOnlyCollection<bool>(data.Cast<bool>().ToArray());
+
                 eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
                 {
                     Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateA(a)
@@ -56,6 +56,7 @@
             else if (typeof(T) == typeof(ushort))
             {
                 var b = new ReadOnlyCollection<ushort>(data.Cast<ushort>().ToArray());
+
                 eventArgs = new DataStoreEventArgs(startAddress, modbusDataType)
                 {
                     Data = DiscriminatedUnion<ReadOnlyCollection<bool>, ReadOnlyCollection<ushort>>.CreateB(b)

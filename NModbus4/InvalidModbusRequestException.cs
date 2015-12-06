@@ -1,7 +1,6 @@
 ﻿namespace Modbus
 {
     using System;
-    using System.Globalization;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -83,7 +82,7 @@
 
         private static string GetMessage(byte exceptionCode)
         {
-            return string.Format(CultureInfo.InvariantCulture, "Modbus exception code {0}.", (int)exceptionCode);
+            return $"Modbus exception code {exceptionCode}.";
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Modbus.UnitTests.Device
         {
             _testDataStore = DataStoreFactory.CreateTestDataStore();
         }
-        
+
         [Fact]
         public void ReadDiscretesCoils()
         {

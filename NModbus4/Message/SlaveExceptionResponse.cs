@@ -4,43 +4,25 @@
     using System.Collections.Generic;
     using System.Globalization;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public class SlaveExceptionResponse : AbstractModbusMessage, IModbusMessage
     {
         private static readonly Dictionary<byte, string> _exceptionMessages = CreateExceptionMessages();
 
-        /// <summary>
-        /// 
-        /// </summary>
         public SlaveExceptionResponse()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="functionCode"></param>
-        /// <param name="exceptionCode"></param>
         public SlaveExceptionResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
             : base(slaveAddress, functionCode)
         {
             SlaveExceptionCode = exceptionCode;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 3; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public byte SlaveExceptionCode
         {
             get { return MessageImpl.ExceptionCode.Value; }
@@ -55,11 +37,17 @@
         /// </returns>
         public override string ToString()
         {
-            string message = _exceptionMessages.ContainsKey(SlaveExceptionCode)
+            string msg = _exceptionMessages.ContainsKey(SlaveExceptionCode)
                 ? _exceptionMessages[SlaveExceptionCode]
                 : Resources.Unknown;
-            return string.Format(CultureInfo.InvariantCulture, Resources.SlaveExceptionResponseFormat,
-                Environment.NewLine, FunctionCode, SlaveExceptionCode, message);
+
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                Resources.SlaveExceptionResponseFormat,
+                Environment.NewLine,
+                FunctionCode,
+                SlaveExceptionCode,
+                msg);
         }
 
         internal static Dictionary<byte, string> CreateExceptionMessages()
@@ -79,10 +67,6 @@
             return messages;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (FunctionCode <= Modbus.ExceptionOffset)

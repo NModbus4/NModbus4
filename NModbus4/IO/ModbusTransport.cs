@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Threading;
 
@@ -63,7 +62,11 @@
         /// </summary>
         public int WaitToRetryMilliseconds
         {
-            get { return _waitToRetryMilliseconds; }
+            get
+            {
+                return _waitToRetryMilliseconds;
+            }
+
             set
             {
                 if (value < 0)
@@ -110,7 +113,8 @@
             GC.SuppressFinalize(this);
         }
 
-        internal virtual T UnicastMessage<T>(IModbusMessage message) where T : IModbusMessage, new()
+        internal virtual T UnicastMessage<T>(IModbusMessage message)
+            where T : IModbusMessage, new()
         {
             IModbusMessage response = null;
             int attempt = 1;
@@ -129,17 +133,16 @@
                         {
                             readAgain = false;
                             response = ReadResponse<T>();
-
                             var exceptionResponse = response as SlaveExceptionResponse;
+
                             if (exceptionResponse != null)
                             {
                                 // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
                                 readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge;
+
                                 if (readAgain)
                                 {
-                                    Debug.WriteLine(
-                                        "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
-                                        _waitToRetryMilliseconds);
+                                    Debug.WriteLine($"Received ACKNOWLEDGE slave exception response, waiting {_waitToRetryMilliseconds} milliseconds and retrying to read response.");
                                     Sleep(WaitToRetryMilliseconds);
                                 }
                                 else
@@ -170,9 +173,7 @@
                         throw;
                     }
 
-                    Debug.WriteLine(
-                        "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
-                        _waitToRetryMilliseconds);
+                    Debug.WriteLine($"Received SLAVE_DEVICE_BUSY exception response, waiting {_waitToRetryMilliseconds} milliseconds and resubmitting request.");
                     Sleep(WaitToRetryMilliseconds);
                 }
                 catch (Exception e)
@@ -182,7 +183,7 @@
                         e is TimeoutException ||
                         e is IOException)
                     {
-                        Debug.WriteLine("{0}, {1} retries remaining - {2}", e.GetType().Name, _retries - attempt + 1, e);
+                        Debug.WriteLine($"{e.GetType().Name}, {(_retries - attempt + 1)} retries remaining - {e}");
 
                         if (attempt++ > _retries)
                         {
@@ -200,7 +201,8 @@
             return (T)response;
         }
 
-        internal virtual IModbusMessage CreateResponse<T>(byte[] frame) where T : IModbusMessage, new()
+        internal virtual IModbusMessage CreateResponse<T>(byte[] frame)
+            where T : IModbusMessage, new()
         {
             byte functionCode = frame[1];
             IModbusMessage response;
@@ -223,20 +225,19 @@
             // always check the function code and slave address, regardless of transport protocol
             if (request.FunctionCode != response.FunctionCode)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Received response with unexpected Function Code. Expected {0}, received {1}.", request.FunctionCode,
-                    response.FunctionCode));
+                string msg = $"Received response with unexpected Function Code. Expected {request.FunctionCode}, received {response.FunctionCode}.";
+                throw new IOException(msg);
             }
 
             if (request.SlaveAddress != response.SlaveAddress)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Response slave address does not match request. Expected {0}, received {1}.", response.SlaveAddress,
-                    request.SlaveAddress));
+                string msg = $"Response slave address does not match request. Expected {response.SlaveAddress}, received {request.SlaveAddress}.";
+                throw new IOException(msg);
             }
 
             // message specific validation
             var req = request as IModbusRequest;
+
             if (req != null)
             {
                 req.ValidateResponse(response);
@@ -246,7 +247,7 @@
         }
 
         /// <summary>
-        /// Check whether we need to attempt to read another response before processing it (e.g. response was from previous request)
+        ///     Check whether we need to attempt to read another response before processing it (e.g. response was from previous request)
         /// </summary>
         internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
@@ -265,7 +266,7 @@
         }
 
         /// <summary>
-        /// Provide hook to check whether receiving a response should be retried
+        ///     Provide hook to check whether receiving a response should be retried
         /// </summary>
         internal virtual bool OnShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
@@ -279,7 +280,8 @@
 
         internal abstract byte[] ReadRequest();
 
-        internal abstract IModbusMessage ReadResponse<T>() where T : IModbusMessage, new();
+        internal abstract IModbusMessage ReadResponse<T>()
+            where T : IModbusMessage, new();
 
         internal abstract byte[] BuildMessageFrame(IModbusMessage message);
 

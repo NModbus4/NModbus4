@@ -16,6 +16,11 @@
         /// <summary>
         ///     Factory method for default data store - register values set to 0 and discrete values set to false.
         /// </summary>
+        /// <param name="coilsCount">Number of discrete coils.</param>
+        /// <param name="inputsCount">Number of discrete inputs.</param>
+        /// <param name="holdingRegistersCount">Number of holding registers.</param>
+        /// <param name="inputRegistersCount">Number of input registers.</param>
+        /// <returns>New instance of Data store with defined inputs/outputs.</returns>
         public static DataStore CreateDefaultDataStore(ushort coilsCount, ushort inputsCount, ushort holdingRegistersCount, ushort inputRegistersCount)
         {
             var coils = new bool[coilsCount];

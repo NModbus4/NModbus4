@@ -6,7 +6,7 @@ namespace Modbus.IntegrationTests
 {
     internal class NModbusSerialAsciiMasterJamodSerialAsciiSlaveFixture : ModbusMasterFixture
     {
-        private string program = string.Format(CultureInfo.InvariantCulture, "SerialSlave {0} ASCII", DefaultSlaveSerialPortName);
+        private string program = $"SerialSlave {DefaultSlaveSerialPortName} ASCII";
 
         public NModbusSerialAsciiMasterJamodSerialAsciiSlaveFixture()
         {

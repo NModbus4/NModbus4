@@ -1,46 +1,39 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.IO;
 
     using Data;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public class ReadWriteMultipleRegistersRequest : AbstractModbusMessage, IModbusRequest
     {
         private ReadHoldingInputRegistersRequest _readRequest;
         private WriteMultipleRegistersRequest _writeRequest;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ReadWriteMultipleRegistersRequest()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="startReadAddress"></param>
-        /// <param name="numberOfPointsToRead"></param>
-        /// <param name="startWriteAddress"></param>
-        /// <param name="writeData"></param>
-        public ReadWriteMultipleRegistersRequest(byte slaveAddress, ushort startReadAddress, ushort numberOfPointsToRead,
-            ushort startWriteAddress, RegisterCollection writeData)
+        public ReadWriteMultipleRegistersRequest(
+            byte slaveAddress,
+            ushort startReadAddress,
+            ushort numberOfPointsToRead,
+            ushort startWriteAddress,
+            RegisterCollection writeData)
             : base(slaveAddress, Modbus.ReadWriteMultipleRegisters)
         {
-            _readRequest = new ReadHoldingInputRegistersRequest(Modbus.ReadHoldingRegisters, slaveAddress,
-                startReadAddress, numberOfPointsToRead);
-            _writeRequest = new WriteMultipleRegistersRequest(slaveAddress, startWriteAddress, writeData);
+            _readRequest = new ReadHoldingInputRegistersRequest(
+                Modbus.ReadHoldingRegisters,
+                slaveAddress,
+                startReadAddress,
+                numberOfPointsToRead);
+
+            _writeRequest = new WriteMultipleRegistersRequest(
+                slaveAddress,
+                startWriteAddress,
+                writeData);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override byte[] ProtocolDataUnit
         {
             get
@@ -59,66 +52,39 @@
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ReadHoldingInputRegistersRequest ReadRequest
         {
             get { return _readRequest; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public WriteMultipleRegistersRequest WriteRequest
         {
             get { return _writeRequest; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 11; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "Write {0} holding registers starting at address {1}, and read {2} registers starting at address {3}.",
-                _writeRequest.NumberOfPoints,
-                _writeRequest.StartAddress,
-                _readRequest.NumberOfPoints,
-                _readRequest.StartAddress);
+            string msg = $"Write {_writeRequest.NumberOfPoints} holding registers starting at address {_writeRequest.StartAddress}, and read {_readRequest.NumberOfPoints} registers starting at address {_readRequest.StartAddress}.";
+            return msg;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (ReadHoldingInputRegistersResponse)response;
-
             var expectedByteCount = ReadRequest.NumberOfPoints * 2;
+
             if (expectedByteCount != typedResponse.ByteCount)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected byte count in response. Expected {0}, received {1}.",
-                    expectedByteCount,
-                    typedResponse.ByteCount));
+                string msg = $"Unexpected byte count in response. Expected {expectedByteCount}, received {typedResponse.ByteCount}.";
+                throw new IOException(msg);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[10])

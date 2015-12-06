@@ -28,7 +28,7 @@ namespace Modbus.UnitTests.IO
         {
             var adapter = new UdpClientAdapter(new UdpClient());
 
-            // buffer 
+            // buffer
             Assert.Throws<ArgumentNullException>(() => adapter.Write(null, 1, 1));
 
             // offset

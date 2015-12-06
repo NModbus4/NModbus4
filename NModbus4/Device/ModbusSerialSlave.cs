@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.IO.Ports;
 
@@ -24,6 +23,7 @@
             get
             {
                 var transport = Transport as ModbusSerialTransport;
+
                 if (transport == null)
                 {
                     throw new ObjectDisposedException("SerialTransport");
@@ -102,18 +102,15 @@
 
                         if (SerialTransport.CheckFrame && !SerialTransport.ChecksumsMatch(request, frame))
                         {
-                            string errorMessage = string.Format(CultureInfo.InvariantCulture,
-                                "Checksums failed to match {0} != {1}", string.Join(", ", request.MessageFrame),
-                                string.Join(", ", frame));
-                            Debug.WriteLine(errorMessage);
-                            throw new IOException(errorMessage);
+                            string msg = $"Checksums failed to match {string.Join(", ", request.MessageFrame)} != {string.Join(", ", frame)}.";
+                            Debug.WriteLine(msg);
+                            throw new IOException(msg);
                         }
 
                         // only service requests addressed to this particular slave
                         if (request.SlaveAddress != UnitId)
                         {
-                            Debug.WriteLine("NModbus Slave {0} ignoring request intended for NModbus Slave {1}", UnitId,
-                                request.SlaveAddress);
+                            Debug.WriteLine($"NModbus Slave {UnitId} ignoring request intended for NModbus Slave {request.SlaveAddress}");
                             continue;
                         }
 
@@ -125,12 +122,12 @@
                     }
                     catch (IOException ioe)
                     {
-                        Debug.WriteLine("IO Exception encountered while listening for requests - {0}", ioe.Message);
+                        Debug.WriteLine($"IO Exception encountered while listening for requests - {ioe.Message}");
                         SerialTransport.DiscardInBuffer();
                     }
                     catch (TimeoutException te)
                     {
-                        Debug.WriteLine("Timeout Exception encountered while listening for requests - {0}", te.Message);
+                        Debug.WriteLine($"Timeout Exception encountered while listening for requests - {te.Message}");
                         SerialTransport.DiscardInBuffer();
                     }
 

@@ -42,16 +42,6 @@
         internal ModbusDataType ModbusDataType { get; set; }
 
         /// <summary>
-        ///     Adds a default element to the collection.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        private static IList<TData> AddDefault(IList<TData> data)
-        {
-            data.Insert(0, default(TData));
-            return data;
-        }
-
-        /// <summary>
         ///     Inserts an element into the <see cref="T:System.Collections.ObjectModel.Collection`1"></see> at the specified
         ///     index.
         /// </summary>
@@ -65,7 +55,9 @@
         {
             if (!_allowZeroElement && index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.InsertItem(index, item);
@@ -84,7 +76,9 @@
         {
             if (index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.SetItem(index, item);
@@ -102,7 +96,9 @@
         {
             if (index == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), "0 is not a valid address for a Modbus data collection.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(index), 
+                    "0 is not a valid address for a Modbus data collection.");
             }
 
             base.RemoveItem(index);
@@ -117,6 +113,16 @@
             base.ClearItems();
             AddDefault(this);
             _allowZeroElement = false;
+        }
+
+        /// <summary>
+        ///     Adds a default element to the collection.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        private static IList<TData> AddDefault(IList<TData> data)
+        {
+            data.Insert(0, default(TData));
+            return data;
         }
     }
 }

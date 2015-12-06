@@ -1,7 +1,6 @@
 ﻿namespace Modbus.Message
 {
     using System;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -10,24 +9,12 @@
 
     using Unme.Common;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public class WriteMultipleRegistersRequest : AbstractModbusMessageWithData<RegisterCollection>, IModbusRequest
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public WriteMultipleRegistersRequest()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="slaveAddress"></param>
-        /// <param name="startAddress"></param>
-        /// <param name="data"></param>
         public WriteMultipleRegistersRequest(byte slaveAddress, ushort startAddress, RegisterCollection data)
             : base(slaveAddress, Modbus.WriteMultipleRegisters)
         {
@@ -37,90 +24,65 @@
             Data = data;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public byte ByteCount
         {
             get { return MessageImpl.ByteCount.Value; }
             set { MessageImpl.ByteCount = value; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ushort NumberOfPoints
         {
-            get { return MessageImpl.NumberOfPoints.Value; }
+            get
+            {
+                return MessageImpl.NumberOfPoints.Value;
+            }
+
             set
             {
                 if (value > Modbus.MaximumRegisterRequestResponseSize)
                 {
-                    throw new ArgumentOutOfRangeException("NumberOfPoints",
-                        string.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
-                            Modbus.MaximumRegisterRequestResponseSize));
+                    string msg = $"Maximum amount of data {Modbus.MaximumRegisterRequestResponseSize} registers.";
+                    throw new ArgumentOutOfRangeException(nameof(NumberOfPoints), msg);
                 }
 
                 MessageImpl.NumberOfPoints = value;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ushort StartAddress
         {
             get { return MessageImpl.StartAddress.Value; }
             set { MessageImpl.StartAddress = value; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override int MinimumFrameSize
         {
             get { return 7; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Write {0} holding registers starting at address {1}.",
-                NumberOfPoints, StartAddress);
+            string msg = $"Write {NumberOfPoints} holding registers starting at address {StartAddress}.";
+            return msg;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="response"></param>
         public void ValidateResponse(IModbusMessage response)
         {
             var typedResponse = (WriteMultipleRegistersResponse)response;
 
             if (StartAddress != typedResponse.StartAddress)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected start address in response. Expected {0}, received {1}.",
-                    StartAddress,
-                    typedResponse.StartAddress));
+                string msg = $"Unexpected start address in response. Expected {StartAddress}, received {typedResponse.StartAddress}.";
+                throw new IOException(msg);
             }
 
             if (NumberOfPoints != typedResponse.NumberOfPoints)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Unexpected number of points in response. Expected {0}, received {1}.",
-                    NumberOfPoints,
-                    typedResponse.NumberOfPoints));
+                string msg = $"Unexpected number of points in response. Expected {NumberOfPoints}, received {typedResponse.NumberOfPoints}.";
+                throw new IOException(msg);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="frame"></param>
         protected override void InitializeUnique(byte[] frame)
         {
             if (frame.Length < MinimumFrameSize + frame[6])

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Modbus.UnitTests.Message
 {
-    public class ReadCoilsResponseFixture
+    public class ReadCoilsInputsResponseFixture
     {
         [Fact]
         public void CreateReadCoilsResponse()

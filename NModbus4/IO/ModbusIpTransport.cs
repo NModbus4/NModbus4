@@ -2,13 +2,12 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
-    
+
     using Message;
-    
+
     using Unme.Common;
 
     /// <summary>
@@ -44,9 +43,9 @@
                 numBytesRead += bRead;
             }
 
-            Debug.WriteLine("MBAP header: {0}", string.Join(", ", mbapHeader));
+            Debug.WriteLine($"MBAP header: {string.Join(", ", mbapHeader)}");
             var frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(mbapHeader, 4));
-            Debug.WriteLine("{0} bytes in PDU.", frameLength);
+            Debug.WriteLine($"{frameLength} bytes in PDU.");
 
             // read message
             var messageFrame = new byte[frameLength];
@@ -64,9 +63,9 @@
                 numBytesRead += bRead;
             }
 
-            Debug.WriteLine("PDU: {0}", frameLength);
+            Debug.WriteLine($"PDU: {frameLength}");
             var frame = mbapHeader.Concat(messageFrame).ToArray();
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
             return frame;
         }
@@ -92,7 +91,9 @@
         internal virtual ushort GetNewTransactionId()
         {
             lock (_transactionIdLock)
+            {
                 _transactionId = _transactionId == ushort.MaxValue ? (ushort)1 : ++_transactionId;
+            }
 
             return _transactionId;
         }
@@ -125,7 +126,7 @@
         {
             message.TransactionId = GetNewTransactionId();
             byte[] frame = BuildMessageFrame(message);
-            Debug.WriteLine("TX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"TX: {string.Join(", ", frame)}");
             StreamResource.Write(frame, 0, frame.Length);
         }
 
@@ -143,9 +144,8 @@
         {
             if (request.TransactionId != response.TransactionId)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture,
-                    "Response was not of expected transaction ID. Expected {0}, received {1}.", request.TransactionId,
-                    response.TransactionId));
+                string msg = $"Response was not of expected transaction ID. Expected {request.TransactionId}, received {response.TransactionId}.";
+                throw new IOException(msg);
             }
         }
 

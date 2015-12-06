@@ -47,7 +47,7 @@
         };
 
         /// <summary>
-        /// Converts four UInt16 values into a IEEE 64 floating point format.
+        ///     Converts four UInt16 values into a IEEE 64 floating point format.
         /// </summary>
         /// <param name="b3">Highest-order ushort value.</param>
         /// <param name="b2">Second-to-highest-order ushort value.</param>
@@ -61,57 +61,62 @@
                 .Concat(BitConverter.GetBytes(b2))
                 .Concat(BitConverter.GetBytes(b3))
                 .ToArray();
+
             return BitConverter.ToDouble(value, 0);
         }
 
         /// <summary>
-        ///     Converts two UInt16 values into a IEEE 32 floating point format
+        ///     Converts two UInt16 values into a IEEE 32 floating point format.
         /// </summary>
-        /// <param name="highOrderValue">High order ushort value</param>
-        /// <param name="lowOrderValue">Low order ushort value</param>
-        /// <returns>IEEE 32 floating point value</returns>
+        /// <param name="highOrderValue">High order ushort value.</param>
+        /// <param name="lowOrderValue">Low order ushort value.</param>
+        /// <returns>IEEE 32 floating point value.</returns>
         public static float GetSingle(ushort highOrderValue, ushort lowOrderValue)
         {
-            return
-                BitConverter.ToSingle(
-                    BitConverter.GetBytes(lowOrderValue).Concat(BitConverter.GetBytes(highOrderValue)).ToArray(), 0);
+            byte[] value = BitConverter.GetBytes(lowOrderValue)
+                .Concat(BitConverter.GetBytes(highOrderValue))
+                .ToArray();
+
+            return BitConverter.ToSingle(value, 0);
         }
 
         /// <summary>
-        ///     Converts two UInt16 values into a UInt32
+        ///     Converts two UInt16 values into a UInt32.
         /// </summary>
         public static uint GetUInt32(ushort highOrderValue, ushort lowOrderValue)
         {
-            return
-                BitConverter.ToUInt32(
-                    BitConverter.GetBytes(lowOrderValue).Concat(BitConverter.GetBytes(highOrderValue)).ToArray(), 0);
+            byte[] value = BitConverter.GetBytes(lowOrderValue)
+                .Concat(BitConverter.GetBytes(highOrderValue))
+                .ToArray();
+
+            return BitConverter.ToUInt32(value, 0);
         }
 
         /// <summary>
-        ///     Converts an array of bytes to an ASCII byte array
+        ///     Converts an array of bytes to an ASCII byte array.
         /// </summary>
-        /// <param name="numbers">The byte array</param>
-        /// <returns>An array of ASCII byte values</returns>
+        /// <param name="numbers">The byte array.</param>
+        /// <returns>An array of ASCII byte values.</returns>
         public static byte[] GetAsciiBytes(params byte[] numbers)
         {
             return Encoding.ASCII.GetBytes(numbers.SelectMany(n => n.ToString("X2")).ToArray());
         }
 
         /// <summary>
-        ///     Converts an array of UInt16 to an ASCII byte array
+        ///     Converts an array of UInt16 to an ASCII byte array.
         /// </summary>
-        /// <param name="numbers">The ushort array</param>
-        /// <returns>An array of ASCII byte values</returns>
+        /// <param name="numbers">The ushort array.</param>
+        /// <returns>An array of ASCII byte values.</returns>
         public static byte[] GetAsciiBytes(params ushort[] numbers)
         {
             return Encoding.ASCII.GetBytes(numbers.SelectMany(n => n.ToString("X4")).ToArray());
         }
 
         /// <summary>
-        ///     Converts a network order byte array to an array of UInt16 values in host order
+        ///     Converts a network order byte array to an array of UInt16 values in host order.
         /// </summary>
-        /// <param name="networkBytes">The network order byte array</param>
-        /// <returns>The host order ushort array</returns>
+        /// <param name="networkBytes">The network order byte array.</param>
+        /// <returns>The host order ushort array.</returns>
         public static ushort[] NetworkBytesToHostUInt16(byte[] networkBytes)
         {
             if (networkBytes == null)
@@ -137,8 +142,8 @@
         /// <summary>
         ///     Converts a hex string to a byte array.
         /// </summary>
-        /// <param name="hex">The hex string</param>
-        /// <returns>Array of bytes</returns>
+        /// <param name="hex">The hex string.</param>
+        /// <returns>Array of bytes.</returns>
         public static byte[] HexToBytes(string hex)
         {
             if (hex == null)
@@ -164,8 +169,8 @@
         /// <summary>
         ///     Calculate Longitudinal Redundancy Check.
         /// </summary>
-        /// <param name="data">The data used in LRC</param>
-        /// <returns>LRC value</returns>
+        /// <param name="data">The data used in LRC.</param>
+        /// <returns>LRC value.</returns>
         public static byte CalculateLrc(byte[] data)
         {
             if (data == null)
@@ -174,6 +179,7 @@
             }
 
             byte lrc = 0;
+
             foreach (byte b in data)
             {
                 lrc += b;
@@ -185,10 +191,10 @@
         }
 
         /// <summary>
-        ///     Calculate Cyclical Redundancy Check
+        ///     Calculate Cyclical Redundancy Check.
         /// </summary>
-        /// <param name="data">The data used in CRC</param>
-        /// <returns>CRC value</returns>
+        /// <param name="data">The data used in CRC.</param>
+        /// <returns>CRC value.</returns>
         public static byte[] CalculateCrc(byte[] data)
         {
             if (data == null)

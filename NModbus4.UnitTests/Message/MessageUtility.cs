@@ -8,7 +8,8 @@ namespace Modbus.UnitTests.Message
         /// <summary>
         ///     Creates a collection initialized to a default value.
         /// </summary>
-        public static T CreateDefaultCollection<T, V>(V defaultValue, int size) where T : ICollection<V>, new()
+        public static T CreateDefaultCollection<T, V>(V defaultValue, int size)
+            where T : ICollection<V>, new()
         {
             if (size < 0)
             {

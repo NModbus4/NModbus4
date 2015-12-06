@@ -27,7 +27,18 @@
             InputRegisters = new ModbusDataCollection<ushort> { ModbusDataType = ModbusDataType.InputRegister };
         }
 
-        internal DataStore(IList<bool> coilDiscretes, IList<bool> inputDiscretes, IList<ushort> holdingRegisters, IList<ushort> inputRegisters)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DataStore"/> class.
+        /// </summary>
+        /// <param name="coilDiscretes">List of discrete coil values.</param>
+        /// <param name="inputDiscretes">List of discrete input values</param>
+        /// <param name="holdingRegisters">List of holding register values.</param>
+        /// <param name="inputRegisters">List of input register values.</param>
+        internal DataStore(
+            IList<bool> coilDiscretes,
+            IList<bool> inputDiscretes,
+            IList<ushort> holdingRegisters,
+            IList<ushort> inputRegisters)
         {
             CoilDiscretes = new ModbusDataCollection<bool>(coilDiscretes) { ModbusDataType = ModbusDataType.Coil };
             InputDiscretes = new ModbusDataCollection<bool>(inputDiscretes) { ModbusDataType = ModbusDataType.Input };
@@ -46,24 +57,24 @@
         public event EventHandler<DataStoreEventArgs> DataStoreReadFrom;
 
         /// <summary>
-        ///     Gets the coil discretes.
+        ///     Gets the discrete coils.
         /// </summary>
-        public ModbusDataCollection<bool> CoilDiscretes { get; private set; }
+        public ModbusDataCollection<bool> CoilDiscretes { get; }
 
         /// <summary>
-        ///     Gets the input discretes.
+        ///     Gets the discrete inputs.
         /// </summary>
-        public ModbusDataCollection<bool> InputDiscretes { get; private set; }
+        public ModbusDataCollection<bool> InputDiscretes { get; }
 
         /// <summary>
         ///     Gets the holding registers.
         /// </summary>
-        public ModbusDataCollection<ushort> HoldingRegisters { get; private set; }
+        public ModbusDataCollection<ushort> HoldingRegisters { get; }
 
         /// <summary>
         ///     Gets the input registers.
         /// </summary>
-        public ModbusDataCollection<ushort> InputRegisters { get; private set; }
+        public ModbusDataCollection<ushort> InputRegisters { get; }
 
         /// <summary>
         ///     An object that can be used to synchronize direct access to the DataStore collections.
@@ -78,9 +89,15 @@
         /// </summary>
         /// <typeparam name="T">The collection type.</typeparam>
         /// <typeparam name="U">The type of elements in the collection.</typeparam>
-        internal static T ReadData<T, U>(DataStore dataStore, ModbusDataCollection<U> dataSource, ushort startAddress,
-            ushort count, object syncRoot) where T : Collection<U>, new()
+        internal static T ReadData<T, U>(
+            DataStore dataStore,
+            ModbusDataCollection<U> dataSource,
+            ushort startAddress,
+            ushort count,
+            object syncRoot)
+            where T : Collection<U>, new()
         {
+            DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || dataSource.Count < startIndex + count)
@@ -90,7 +107,9 @@
 
             U[] dataToRetrieve;
             lock (syncRoot)
+            {
                 dataToRetrieve = dataSource.Slice(startIndex, count).ToArray();
+            }
 
             T result = new T();
             for (int i = 0; i < count; i++)
@@ -98,9 +117,8 @@
                 result.Add(dataToRetrieve[i]);
             }
 
-            dataStore.DataStoreReadFrom.Raise(dataStore,
-                DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result));
-
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result);
+            dataStore.DataStoreReadFrom?.Invoke(dataStore, dataStoreEventArgs);
             return result;
         }
 
@@ -108,9 +126,14 @@
         ///     Write data to data store.
         /// </summary>
         /// <typeparam name="TData">The type of the data.</typeparam>
-        internal static void WriteData<TData>(DataStore dataStore, IEnumerable<TData> items,
-            ModbusDataCollection<TData> destination, ushort startAddress, object syncRoot)
+        internal static void WriteData<TData>(
+            DataStore dataStore,
+            IEnumerable<TData> items,
+            ModbusDataCollection<TData> destination,
+            ushort startAddress,
+            object syncRoot)
         {
+            DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
 
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
@@ -119,10 +142,16 @@
             }
 
             lock (syncRoot)
+            {
                 Update(items, destination, startIndex);
+            }
 
-            dataStore.DataStoreWrittenTo.Raise(dataStore,
-                DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, destination.ModbusDataType, items));
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(
+                startAddress,
+                destination.ModbusDataType,
+                items);
+
+            dataStore.DataStoreWrittenTo?.Invoke(dataStore, dataStoreEventArgs);
         }
 
         /// <summary>
@@ -136,6 +165,7 @@
             }
 
             int index = startIndex;
+
             foreach (T item in items)
             {
                 destination[index] = item;

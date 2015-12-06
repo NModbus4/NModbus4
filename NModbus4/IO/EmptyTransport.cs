@@ -1,12 +1,8 @@
 ﻿namespace Modbus.IO
 {
     using System;
-
     using Message;
 
-    /// <summary>
-    ///     Empty placeholder.
-    /// </summary>
     public class EmptyTransport : ModbusTransport
     {
         internal override byte[] ReadRequest()

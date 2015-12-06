@@ -19,6 +19,9 @@
         {
         }
 
+        /// <summary>
+        ///     Gets the Modbus Transport.
+        /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ModbusSerialTransport IModbusSerialMaster.Transport
         {
@@ -150,9 +153,15 @@
         /// <returns>Return true if slave device echoed data.</returns>
         public bool ReturnQueryData(byte slaveAddress, ushort data)
         {
-            DiagnosticsRequestResponse request = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData,
-                slaveAddress, new RegisterCollection(data));
-            DiagnosticsRequestResponse response = Transport.UnicastMessage<DiagnosticsRequestResponse>(request);
+            DiagnosticsRequestResponse request;
+            DiagnosticsRequestResponse response;
+
+            request = new DiagnosticsRequestResponse(
+                Modbus.DiagnosticsReturnQueryData,
+                slaveAddress,
+                new RegisterCollection(data));
+
+            response = Transport.UnicastMessage<DiagnosticsRequestResponse>(request);
 
             return response.Data[0] == data;
         }

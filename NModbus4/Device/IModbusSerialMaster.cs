@@ -15,8 +15,8 @@
         /// <summary>
         ///     Serial Line only.
         ///     Diagnostic function which loops back the original data.
-        ///     NModbus only supports looping back one ushort value, this is a limitation of the "Best Effort" implementation of
-        ///     the RTU protocol.
+        ///     NModbus only supports looping back one ushort value, this is a
+        ///     limitation of the "Best Effort" implementation of the RTU protocol.
         /// </summary>
         /// <param name="slaveAddress">Address of device to test.</param>
         /// <param name="data">Data to return.</param>

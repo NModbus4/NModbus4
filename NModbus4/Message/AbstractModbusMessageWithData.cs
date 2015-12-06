@@ -2,11 +2,8 @@
 {
     using Data;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TData"></typeparam>
-    public abstract class AbstractModbusMessageWithData<TData> : AbstractModbusMessage where TData : IModbusMessageDataCollection
+    public abstract class AbstractModbusMessageWithData<TData> : AbstractModbusMessage
+        where TData : IModbusMessageDataCollection
     {
         internal AbstractModbusMessageWithData()
         {
@@ -17,9 +14,6 @@
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public TData Data
         {
             get { return (TData)MessageImpl.Data; }

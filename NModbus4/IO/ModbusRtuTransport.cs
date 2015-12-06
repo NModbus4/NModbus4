@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
 
@@ -15,6 +14,7 @@
     internal class ModbusRtuTransport : ModbusSerialTransport
     {
         public const int RequestFrameStartLength = 7;
+
         public const int ResponseFrameStartLength = 4;
 
         internal ModbusRtuTransport(IStreamResource streamResource)
@@ -45,10 +45,9 @@
                     numBytes = byteCount + 2;
                     break;
                 default:
-                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
-                        functionCode);
-                    Debug.WriteLine(errorMessage);
-                    throw new NotImplementedException(errorMessage);
+                    string msg = $"Function code {functionCode} not supported.";
+                    Debug.WriteLine(msg);
+                    throw new NotImplementedException(msg);
             }
 
             return numBytes;
@@ -81,10 +80,9 @@
                     numBytes = 4;
                     break;
                 default:
-                    string errorMessage = string.Format(CultureInfo.InvariantCulture, "Function code {0} not supported.",
-                        functionCode);
-                    Debug.WriteLine(errorMessage);
-                    throw new NotImplementedException(errorMessage);
+                    string msg = $"Function code {functionCode} not supported.";
+                    Debug.WriteLine(msg);
+                    throw new NotImplementedException(msg);
             }
 
             return numBytes;
@@ -118,7 +116,7 @@
         internal override bool ChecksumsMatch(IModbusMessage message, byte[] messageFrame)
         {
             return BitConverter.ToUInt16(messageFrame, messageFrame.Length - 2) ==
-                   BitConverter.ToUInt16(ModbusUtility.CalculateCrc(message.MessageFrame), 0);
+                BitConverter.ToUInt16(ModbusUtility.CalculateCrc(message.MessageFrame), 0);
         }
 
         internal override IModbusMessage ReadResponse<T>()
@@ -126,7 +124,7 @@
             byte[] frameStart = Read(ResponseFrameStartLength);
             byte[] frameEnd = Read(ResponseBytesToRead(frameStart));
             byte[] frame = Enumerable.Concat(frameStart, frameEnd).ToArray();
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
             return CreateResponse<T>(frame);
         }
@@ -136,7 +134,7 @@
             byte[] frameStart = Read(RequestFrameStartLength);
             byte[] frameEnd = Read(RequestBytesToRead(frameStart));
             byte[] frame = Enumerable.Concat(frameStart, frameEnd).ToArray();
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Debug.WriteLine($"RX: {string.Join(", ", frame)}");
 
             return frame;
         }

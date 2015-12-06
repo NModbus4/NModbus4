@@ -11,6 +11,9 @@
     /// </summary>
     public class DiscreteCollection : Collection<bool>, IModbusMessageDataCollection
     {
+        /// <summary>
+        ///     Number of bits per byte.
+        /// </summary>
         private const int BitsPerByte = 8;
         private readonly List<bool> _discretes;
 
@@ -25,6 +28,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscreteCollection" /> class.
         /// </summary>
+        /// <param name="bits">Array for discrete collection.</param>
         public DiscreteCollection(params bool[] bits)
             : this((IList<bool>)bits)
         {
@@ -33,6 +37,7 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscreteCollection" /> class.
         /// </summary>
+        /// <param name="bytes">Array for discrete collection.</param>
         public DiscreteCollection(params byte[] bytes)
             : this()
         {
@@ -42,6 +47,7 @@
             }
 
             _discretes.Capacity = bytes.Length * BitsPerByte;
+
             foreach (byte b in bytes)
             {
                 _discretes.Add((b & 1) == 1);
@@ -58,15 +64,20 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscreteCollection" /> class.
         /// </summary>
+        /// <param name="bits">List for discrete collection.</param>
         public DiscreteCollection(IList<bool> bits)
             : this(new List<bool>(bits))
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DiscreteCollection" /> class.
+        /// </summary>
+        /// <param name="bits">List for discrete collection.</param>
         internal DiscreteCollection(List<bool> bits)
             : base(bits)
         {
-            Debug.Assert(bits != null);
+            Debug.Assert(bits != null, "Discrete bits is null.");
             _discretes = bits;
         }
 

@@ -29,7 +29,9 @@ namespace Modbus.IntegrationTests
 
                     // create modbus master
                     using (var master = ModbusSerialMaster.CreateRtu(masterPort))
+                    {
                         ReadRegisters(master);
+                    }
                 }
             }
         }
@@ -45,7 +47,9 @@ namespace Modbus.IntegrationTests
                 var masterClient = new TcpClient(address.ToString(), 502);
 
                 using (var master = ModbusIpMaster.CreateIp(masterClient))
+                {
                     ReadRegisters(master);
+                }
             }
         }
 
@@ -61,7 +65,9 @@ namespace Modbus.IntegrationTests
                 masterClient.Connect(endPoint);
 
                 using (var master = ModbusIpMaster.CreateIp(masterClient))
+                {
                     ReadRegisters(master);
+                }
             }
         }
 
