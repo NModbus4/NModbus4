@@ -7,8 +7,9 @@ platform: Any CPU
 shallow_clone: true
 init:
 - git config --global core.autocrlf true
-before_build:
-- nuget restore
+install:
+- cmd: >-
+    dnu restore
 build:
   project: NModbus4.sln
   verbosity: minimal
