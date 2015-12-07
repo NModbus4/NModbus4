@@ -1,0 +1,25 @@
+﻿{
+    "version": "3.0.0-alpha1",
+    "description": "NModbus is a C# implementation of the Modbus protocol. Provides connectivity to Modbus slave compatible devices and applications. Supports TCP, and UDP protocols. NModbus4 it's a fork of NModbus(https://code.google.com/p/nmodbus)",
+    "authors": [ "Dmitry Turin" ],
+    "tags": [ "modbus", "nmodbus", "tcp", "udp", "master", "slave" ],
+    "projectUrl": "https://github.com/NModbus4/NModbus4",
+    "licenseUrl": "http://opensource.org/licenses/MIT",
+
+    "frameworks": {
+        "dotnet5.5": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-*",
+                "System.Collections": "4.0.11-beta-*",
+                "System.Collections.Concurrent": "4.0.11-beta-*",
+                "System.Linq": "4.0.1-beta-*",
+                "System.IO": "4.0.11-beta-*",
+                "System.Runtime": "4.0.21-beta-*",
+                "System.Threading.Tasks": "4.0.11-beta-*",
+                "System.Net.Sockets": "4.1.0-beta-*",
+                "System.Diagnostics.Tools": "4.0.1-beta-*",
+                "System.Diagnostics.Debug": "4.0.11-beta-*"
+            }
+        }
+    }
+}

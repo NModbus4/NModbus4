@@ -1,0 +1,6 @@
+﻿{
+    "projects": ["NModbus4"],
+    "sdk": {
+        "version": "1.0.0-rc1-final"
+    }
+}
