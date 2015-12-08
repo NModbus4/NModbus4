@@ -1,4 +1,5 @@
-﻿namespace Modbus.IO
+﻿#if SERIAL
+namespace Modbus.IO
 {
     using System;
     using System.Diagnostics;
@@ -68,3 +69,4 @@
         }
     }
 }
+#endif

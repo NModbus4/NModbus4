@@ -3,8 +3,9 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+#if SERIAL
     using System.IO.Ports;
-
+#endif
     using IO;
     using Message;
 
@@ -33,6 +34,7 @@
             }
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
@@ -45,6 +47,7 @@
 
             return CreateAscii(unitId, new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus ASCII slave factory method.
@@ -59,6 +62,7 @@
             return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
@@ -71,6 +75,7 @@
 
             return CreateRtu(unitId, new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus RTU slave factory method.

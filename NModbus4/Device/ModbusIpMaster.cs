@@ -2,7 +2,9 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+#if SERIAL
     using System.IO.Ports;
+#endif
     using System.Net.Sockets;
     using System.Threading.Tasks;
 
@@ -58,6 +60,7 @@
             return CreateIp(new UdpClientAdapter(udpClient));
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus IP master factory method.
         /// </summary>
@@ -72,6 +75,7 @@
 
             return CreateIp(new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus IP master factory method.

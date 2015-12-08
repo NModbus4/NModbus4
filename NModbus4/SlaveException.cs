@@ -2,14 +2,18 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+#if NET46
     using System.Runtime.Serialization;
     using System.Security.Permissions;
+#endif
     using Message;
 
     /// <summary>
     ///     Represents slave errors that occur during communication.
     /// </summary>
+#if NET46
     [Serializable]
+#endif
     public class SlaveException : Exception
     {
         private const string SlaveAddressPropertyName = "SlaveAdress";
@@ -56,6 +60,7 @@
             _slaveExceptionResponse = slaveExceptionResponse;
         }
 
+#if NET46
         /// <summary>
         ///     Initializes a new instance of the <see cref="SlaveException" /> class.
         /// </summary>
@@ -83,6 +88,7 @@
                     info.GetByte(SlaveExceptionCodePropertyName));
             }
         }
+#endif
 
         /// <summary>
         ///     Gets a message that describes the current exception.
@@ -127,6 +133,7 @@
             get { return _slaveExceptionResponse != null ? _slaveExceptionResponse.SlaveAddress : (byte)0; }
         }
 
+#if NET46
         /// <summary>
         ///     When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"></see>
         ///     with information about the exception.
@@ -161,5 +168,6 @@
                 info.AddValue(SlaveExceptionCodePropertyName, _slaveExceptionResponse.SlaveExceptionCode);
             }
         }
+#endif
     }
 }

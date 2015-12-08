@@ -7,8 +7,9 @@
     using System.IO;
     using System.Linq;
     using System.Net.Sockets;
+#if TIMER
     using System.Timers;
-
+#endif
     using IO;
 
     /// <summary>
@@ -23,8 +24,9 @@
             new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
+#if TIMER
         private Timer _timer;
-
+#endif
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
@@ -36,6 +38,7 @@
             _server = tcpListener;
         }
 
+#if TIMER
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
             : base(unitId, new EmptyTransport())
         {
@@ -49,6 +52,7 @@
             _timer.Elapsed += OnTimer;
             _timer.Enabled = true;
         }
+#endif
 
         /// <summary>
         ///     Gets the Modbus TCP Masters connected to this Modbus TCP Slave.
@@ -89,6 +93,7 @@
             return new ModbusTcpSlave(unitId, tcpListener);
         }
 
+#if TIMER
         /// <summary>
         ///     Creates ModbusTcpSlave with timer which polls connected clients every
         ///     <paramref name="pollInterval"/> milliseconds on that they are connected.
@@ -97,6 +102,7 @@
         {
             return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
         }
+#endif
 
         /// <summary>
         ///     Start slave listening for requests.
@@ -143,11 +149,13 @@
                             _server.Stop();
                             _server = null;
 
+#if TIMER
                             if (_timer != null)
                             {
                                 _timer.Dispose();
                                 _timer = null;
                             }
+#endif
 
                             foreach (var key in _masters.Keys)
                             {
@@ -218,6 +226,7 @@
             }
         }
 
+#if TIMER
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
             foreach (var master in _masters.ToList())
@@ -228,7 +237,7 @@
                 }
             }
         }
-
+#endif
         private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
             ModbusMasterTcpConnection connection;
