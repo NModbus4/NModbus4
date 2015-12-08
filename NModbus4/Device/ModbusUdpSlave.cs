@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     using IO;
     using Message;
@@ -44,7 +45,7 @@
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public override void Listen()
+        public override async Task ListenAsync()
         {
             Debug.WriteLine("Start Modbus Udp Server.");
 
@@ -52,10 +53,9 @@
             {
                 while (true)
                 {
-                    IPEndPoint masterEndPoint = null;
-                    byte[] frame;
-
-                    frame = _udpClient.Receive(ref masterEndPoint);
+                    UdpReceiveResult receiveResult = await _udpClient.ReceiveAsync().ConfigureAwait(false);
+                    IPEndPoint masterEndPoint = receiveResult.RemoteEndPoint;
+                    byte[] frame = receiveResult.Buffer;
 
                     Debug.WriteLine($"Read Frame completed {frame.Length} bytes");
                     Debug.WriteLine($"RX: {string.Join(", ", frame)}");
@@ -71,13 +71,13 @@
                     // write response
                     byte[] responseFrame = Transport.BuildMessageFrame(response);
                     Debug.WriteLine($"TX: {string.Join(", ", responseFrame)}");
-                    _udpClient.Send(responseFrame, responseFrame.Length, masterEndPoint);
+                    await _udpClient.SendAsync(responseFrame, responseFrame.Length, masterEndPoint).ConfigureAwait(false);
                 }
             }
             catch (SocketException se)
             {
                 // this hapens when slave stops
-                if (se.ErrorCode != Modbus.WSACancelBlockingCall)
+                if (se.SocketErrorCode != SocketError.Interrupted)
                 {
                     throw;
                 }

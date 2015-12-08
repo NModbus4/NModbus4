@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading.Tasks;
 #if SERIAL
     using System.IO.Ports;
 #endif
@@ -93,7 +94,7 @@
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public override void Listen()
+        public override async Task ListenAsync()
         {
             while (true)
             {
@@ -101,6 +102,9 @@
                 {
                     try
                     {
+                        //TODO: remove deleay once async will be implemented in transport level
+                        await Task.Delay(20).ConfigureAwait(false);
+
                         // read request and build message
                         byte[] frame = SerialTransport.ReadRequest();
                         IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame);

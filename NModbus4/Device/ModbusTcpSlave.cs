@@ -4,9 +4,9 @@
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 #if TIMER
     using System.Timers;
 #endif
@@ -107,23 +107,18 @@
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public override void Listen()
+        public override async Task ListenAsync()
         {
             Debug.WriteLine("Start Modbus Tcp Server.");
+            // TODO: add state {stoped, listening} and check it before starting
+            Server.Start();
 
-            lock (_serverLock)
+            while (true)
             {
-                try
-                {
-                    Server.Start();
-
-                    // use Socket async API for compact framework compat
-                    Server.Server.BeginAccept(state => AcceptCompleted(state), this);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // this happens when the server stops
-                }
+                TcpClient client = await Server.AcceptTcpClientAsync().ConfigureAwait(false);
+                var masterConnection = new ModbusMasterTcpConnection(client, this);
+                masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
+                _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
             }
         }
 
@@ -178,52 +173,6 @@
             bool poll = socket.Poll(TimeWaitResponse, SelectMode.SelectRead);
             bool available = (socket.Available == 0);
             return poll && available;
-        }
-
-        private static void AcceptCompleted(IAsyncResult ar)
-        {
-            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
-
-            try
-            {
-                try
-                {
-                    // use Socket async API for compact framework compat
-                    Socket socket = null;
-                    lock (slave._serverLock)
-                    {
-                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
-                        if (slave._server == null)
-                        {
-                            return;
-                        }
-
-                        socket = slave.Server.Server.EndAccept(ar);
-                    }
-
-                    TcpClient client = new TcpClient { Client = socket };
-                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
-                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
-                    Debug.WriteLine("Accept completed.");
-                }
-                catch (IOException ex)
-                {
-                    // Abandon the connection attempt and continue to accepting the next connection.
-                    Debug.WriteLine("Accept failed: " + ex.Message);
-                }
-
-                // Accept another client
-                // use Socket async API for compact framework compat
-                lock (slave._serverLock)
-                {
-                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                // this happens when the server stops
-            }
         }
 
 #if TIMER
