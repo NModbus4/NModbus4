@@ -1,4 +1,6 @@
-﻿using System.IO.Ports;
+﻿#if SERIAL
+using System.IO.Ports;
+#endif
 using System.Linq;
 using Modbus.Data;
 using Modbus.Device;
@@ -129,6 +131,7 @@ namespace Modbus.UnitTests.Device
             ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
         }
 
+#if SERIAL
         [Fact]
         public void ApplyRequest_VerifyModbusRequestReceivedEventIsFired()
         {
@@ -144,6 +147,7 @@ namespace Modbus.UnitTests.Device
             slave.ApplyRequest(request);
             Assert.True(eventFired);
         }
+#endif
 
         [Fact]
         public void WriteMultipCoils_MakeSureWeDoNotWriteRemainder()

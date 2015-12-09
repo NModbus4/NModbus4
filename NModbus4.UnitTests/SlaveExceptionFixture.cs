@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+#if NET46
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using Modbus.Message;
 using Xunit;
 
@@ -53,9 +56,7 @@ namespace Modbus.UnitTests
             Assert.Null(e.InnerException);
 
             Assert.Equal(
-                $@"Exception of type '{typeof(SlaveException).FullName}' was thrown.
-Function Code: {response.FunctionCode}
-Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalFunction}",
+                $@"Exception of type '{typeof(SlaveException).FullName}' was thrown.{Environment.NewLine}Function Code: {response.FunctionCode}{Environment.NewLine}Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalFunction}",
                 e.Message);
         }
 
@@ -72,12 +73,11 @@ Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalFunction}",
             Assert.Null(e.InnerException);
 
             Assert.Equal(
-                $@"{customMessage}
-Function Code: {response.FunctionCode}
-Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalDataAddress}",
+                $@"{customMessage}{Environment.NewLine}Function Code: {response.FunctionCode}{Environment.NewLine}Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalDataAddress}",
                 e.Message);
         }
 
+#if NET46
         [Fact]
         public void Serializable()
         {
@@ -96,5 +96,6 @@ Exception Code: {response.SlaveExceptionCode} - {Resources.IllegalDataAddress}",
                 Assert.Equal(3, e2.SlaveExceptionCode);
             }
         }
+#endif
     }
 }
