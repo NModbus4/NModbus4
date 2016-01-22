@@ -9,16 +9,16 @@
     "frameworks": {
         "dotnet5.5": {
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-*",
-                "System.Collections": "4.0.11-beta-*",
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-                "System.Linq": "4.0.1-beta-*",
-                "System.IO": "4.0.11-beta-*",
-                "System.Runtime": "4.0.21-beta-*",
-                "System.Threading.Tasks": "4.0.11-beta-*",
-                "System.Net.Sockets": "4.1.0-beta-*",
-                "System.Diagnostics.Tools": "4.0.1-beta-*",
-                "System.Diagnostics.Debug": "4.0.11-beta-*"
+                "Microsoft.CSharp": "4.0.1-*",
+                "System.Collections": "4.0.11-*",
+                "System.Collections.Concurrent": "4.0.11-*",
+                "System.Linq": "4.0.1-*",
+                "System.IO": "4.0.11-*",
+                "System.Runtime": "4.0.21-*",
+                "System.Threading.Tasks": "4.0.11-*",
+                "System.Net.Sockets": "4.1.0-*",
+                "System.Diagnostics.Tools": "4.0.1-*",
+                "System.Diagnostics.Debug": "4.0.10"
             }
         }
     }

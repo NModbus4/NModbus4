@@ -1,0 +1,30 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "NModbus4.Serial Class Library",
+    "authors": [ "turin" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "NModbus4": { "target": "project" }
+    },
+
+    "frameworks": {
+        "net461": {
+            "dependencies": {
+                "System.Runtime": "4.0.21-*",
+                "System.Diagnostics.Debug": "4.0.10",
+                "Microsoft.CSharp": "4.0.1-*"
+            },
+            "frameworkAssemblies": {
+                "mscorlib": "4.0.0.0",
+                "System": "4.0.0.0",
+                "System.Core": "4.0.0.0",
+                "System.Diagnostics.Debug": "4.0.10.0",
+                "System.Runtime": "4.0.20.0",
+                "Microsoft.CSharp": "4.0.0.0"
+            }
+        }
+    }
+}
