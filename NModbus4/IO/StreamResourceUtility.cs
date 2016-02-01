@@ -17,7 +17,7 @@
                     continue;
                 }
 
-                result.Append(Encoding.ASCII.GetChars(singleByteBuffer).First());
+                result.Append(Encoding.UTF8.GetChars(singleByteBuffer).First());
             }
             while (!result.ToString().EndsWith(Modbus.NewLine));
 

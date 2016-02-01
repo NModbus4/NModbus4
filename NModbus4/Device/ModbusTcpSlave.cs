@@ -4,11 +4,12 @@
     using System.Collections.Concurrent;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
+#if TIMER
     using System.Timers;
-
+#endif
     using IO;
 
     /// <summary>
@@ -23,8 +24,9 @@
             new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
+#if TIMER
         private Timer _timer;
-
+#endif
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener)
             : base(unitId, new EmptyTransport())
         {
@@ -36,6 +38,7 @@
             _server = tcpListener;
         }
 
+#if TIMER
         private ModbusTcpSlave(byte unitId, TcpListener tcpListener, double timeInterval)
             : base(unitId, new EmptyTransport())
         {
@@ -49,6 +52,7 @@
             _timer.Elapsed += OnTimer;
             _timer.Enabled = true;
         }
+#endif
 
         /// <summary>
         ///     Gets the Modbus TCP Masters connected to this Modbus TCP Slave.
@@ -89,6 +93,7 @@
             return new ModbusTcpSlave(unitId, tcpListener);
         }
 
+#if TIMER
         /// <summary>
         ///     Creates ModbusTcpSlave with timer which polls connected clients every
         ///     <paramref name="pollInterval"/> milliseconds on that they are connected.
@@ -97,27 +102,23 @@
         {
             return new ModbusTcpSlave(unitId, tcpListener, pollInterval);
         }
+#endif
 
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public override void Listen()
+        public override async Task ListenAsync()
         {
             Debug.WriteLine("Start Modbus Tcp Server.");
+            // TODO: add state {stoped, listening} and check it before starting
+            Server.Start();
 
-            lock (_serverLock)
+            while (true)
             {
-                try
-                {
-                    Server.Start();
-
-                    // use Socket async API for compact framework compat
-                    Server.Server.BeginAccept(state => AcceptCompleted(state), this);
-                }
-                catch (ObjectDisposedException)
-                {
-                    // this happens when the server stops
-                }
+                TcpClient client = await Server.AcceptTcpClientAsync().ConfigureAwait(false);
+                var masterConnection = new ModbusMasterTcpConnection(client, this);
+                masterConnection.ModbusMasterTcpConnectionClosed += OnMasterConnectionClosedHandler;
+                _masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
             }
         }
 
@@ -143,11 +144,13 @@
                             _server.Stop();
                             _server = null;
 
+#if TIMER
                             if (_timer != null)
                             {
                                 _timer.Dispose();
                                 _timer = null;
                             }
+#endif
 
                             foreach (var key in _masters.Keys)
                             {
@@ -172,52 +175,7 @@
             return poll && available;
         }
 
-        private static void AcceptCompleted(IAsyncResult ar)
-        {
-            ModbusTcpSlave slave = (ModbusTcpSlave)ar.AsyncState;
-
-            try
-            {
-                try
-                {
-                    // use Socket async API for compact framework compat
-                    Socket socket = null;
-                    lock (slave._serverLock)
-                    {
-                        // Checks for disposal to an otherwise unnecessary exception (which is slow and hinders debugging).
-                        if (slave._server == null)
-                        {
-                            return;
-                        }
-
-                        socket = slave.Server.Server.EndAccept(ar);
-                    }
-
-                    TcpClient client = new TcpClient { Client = socket };
-                    var masterConnection = new ModbusMasterTcpConnection(client, slave);
-                    masterConnection.ModbusMasterTcpConnectionClosed += slave.OnMasterConnectionClosedHandler;
-                    slave._masters.TryAdd(client.Client.RemoteEndPoint.ToString(), masterConnection);
-                    Debug.WriteLine("Accept completed.");
-                }
-                catch (IOException ex)
-                {
-                    // Abandon the connection attempt and continue to accepting the next connection.
-                    Debug.WriteLine("Accept failed: " + ex.Message);
-                }
-
-                // Accept another client
-                // use Socket async API for compact framework compat
-                lock (slave._serverLock)
-                {
-                    slave.Server.Server.BeginAccept(state => AcceptCompleted(state), slave);
-                }
-            }
-            catch (ObjectDisposedException)
-            {
-                // this happens when the server stops
-            }
-        }
-
+#if TIMER
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
             foreach (var master in _masters.ToList())
@@ -228,7 +186,7 @@
                 }
             }
         }
-
+#endif
         private void OnMasterConnectionClosedHandler(object sender, TcpConnectionEventArgs e)
         {
             ModbusMasterTcpConnection connection;

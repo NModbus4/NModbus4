@@ -6,11 +6,10 @@
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     using IO;
     using Message;
-
-    using Unme.Common;
 
     /// <summary>
     /// Represents an incoming connection from a Modbus master. Contains the slave's logic to process the connection.
@@ -21,9 +20,7 @@
         private readonly string _endPoint;
         private readonly Stream _stream;
         private readonly ModbusTcpSlave _slave;
-        private readonly AsyncCallback _readHeaderCompletedCallback;
-        private readonly AsyncCallback _readFrameCompletedCallback;
-        private readonly AsyncCallback _writeCompletedCallback;
+        private readonly Task _requestHandlerTask;
 
         private readonly byte[] _mbapHeader = new byte[6];
         private byte[] _messageFrame;
@@ -45,14 +42,7 @@
             _endPoint = client.Client.RemoteEndPoint.ToString();
             _stream = client.GetStream();
             _slave = slave;
-            _readHeaderCompletedCallback = ReadHeaderCompleted;
-            _readFrameCompletedCallback = ReadFrameCompleted;
-            _writeCompletedCallback = WriteCompleted;
-
-            Debug.WriteLine($"Creating new Master connection at IP:{EndPoint}");
-            Debug.WriteLine("Begin reading header.");
-
-            Stream.BeginRead(_mbapHeader, 0, 6, _readHeaderCompletedCallback, null);
+            _requestHandlerTask = Task.Run((Func<Task>)HandleRequestAsync);
         }
 
         /// <summary>
@@ -85,103 +75,47 @@
             base.Dispose(disposing);
         }
 
-        private void ReadHeaderCompleted(IAsyncResult ar)
+        private async Task HandleRequestAsync()
         {
-            Debug.WriteLine("Read header completed.");
-
-            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
+            while (true)
             {
-                // this is the normal way a master closes its connection
-                if (thisRef.Stream.EndRead(asyncResult) == 0)
+                Debug.WriteLine($"Begin reading header from Master at IP: {EndPoint}");
+
+                int readBytes = await Stream.ReadAsync(_mbapHeader, 0, 6).ConfigureAwait(false);
+                if (readBytes == 0)
                 {
-                    Debug.WriteLine("0 bytes read, Master has closed Socket connection.");
-                    thisRef.ModbusMasterTcpConnectionClosed?.Invoke(thisRef, new TcpConnectionEventArgs(thisRef.EndPoint));
+                    Debug.WriteLine($"0 bytes read, Master at {EndPoint} has closed Socket connection.");
+                    ModbusMasterTcpConnectionClosed?.Invoke(this, new TcpConnectionEventArgs(EndPoint));
                     return;
                 }
 
-                Debug.WriteLine($"MBAP header: {string.Join(", ", thisRef._mbapHeader)}");
-                ushort frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(thisRef._mbapHeader, 4));
-                Debug.WriteLine($"{frameLength} bytes in PDU.");
-                thisRef._messageFrame = new byte[frameLength];
-                thisRef.Stream.BeginRead(thisRef._messageFrame, 0, frameLength, thisRef._readFrameCompletedCallback, null);
-            }, EndPoint);
-        }
+                ushort frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(_mbapHeader, 4));
+                Debug.WriteLine($"Master at {EndPoint} sent header: \"{string.Join(", ", _mbapHeader)}\" with {frameLength} bytes in PDU");
 
-        private void ReadFrameCompleted(IAsyncResult ar)
-        {
-            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
-            {
-                Debug.WriteLine($"Read Frame completed {thisRef.Stream.EndRead(asyncResult)} bytes");
-                byte[] frame = thisRef._mbapHeader.Concat(thisRef._messageFrame).ToArray();
-                Debug.WriteLine($"RX: {string.Join(", ", frame)}");
+                _messageFrame = new byte[frameLength];
+                readBytes = await Stream.ReadAsync(_messageFrame, 0, frameLength).ConfigureAwait(false);
+                if (readBytes == 0)
+                {
+                    Debug.WriteLine($"0 bytes read, Master at {EndPoint} has closed Socket connection.");
+                    ModbusMasterTcpConnectionClosed?.Invoke(this, new TcpConnectionEventArgs(EndPoint));
+                    return;
+                }
 
-                IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
+                Debug.WriteLine($"Read frame from Master at {EndPoint} completed {readBytes} bytes");
+                byte[] frame = _mbapHeader.Concat(_messageFrame).ToArray();
+                Debug.WriteLine($"RX from Master at {EndPoint}: {string.Join(", ", frame)}");
+
+                var request = ModbusMessageFactory.CreateModbusRequest(_messageFrame);
                 request.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
 
                 // perform action and build response
-                IModbusMessage response = thisRef._slave.ApplyRequest(request);
+                IModbusMessage response = _slave.ApplyRequest(request);
                 response.TransactionId = request.TransactionId;
 
                 // write response
-                byte[] responseFrame = thisRef.Transport.BuildMessageFrame(response);
-                Debug.WriteLine($"TX: {string.Join(", ", responseFrame)}");
-                thisRef.Stream.BeginWrite(responseFrame, 0, responseFrame.Length, thisRef._writeCompletedCallback, null);
-            }, EndPoint);
-        }
-
-        private void WriteCompleted(IAsyncResult ar)
-        {
-            Debug.WriteLine("End write.");
-
-            CatchExceptionAndRemoveMasterEndPoint(ar, (thisRef, asyncResult) =>
-            {
-                thisRef.Stream.EndWrite(asyncResult);
-                Debug.WriteLine("Begin reading another request.");
-                thisRef.Stream.BeginRead(thisRef._mbapHeader, 0, 6, thisRef._readHeaderCompletedCallback, null);
-            }, EndPoint);
-        }
-
-        /// <summary>
-        ///     Catches all exceptions thrown when action is executed and removes the master end point.
-        ///     The exception is ignored when it simply signals a master closing its connection.
-        /// </summary>
-        private void CatchExceptionAndRemoveMasterEndPoint(
-            IAsyncResult ar,
-            Action<ModbusMasterTcpConnection, IAsyncResult> action,
-            string endPoint)
-        {
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            if (endPoint == null)
-            {
-                throw new ArgumentNullException(nameof(endPoint));
-            }
-
-            if (endPoint == string.Empty)
-            {
-                throw new ArgumentException(Resources.EmptyEndPoint);
-            }
-
-            try
-            {
-                action(this, ar);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception processing request: [{ex.GetType().Name}] {ex.Message}");
-
-                // This will typically result in the exception being unhandled, which will terminate the thread pool thread and
-                // thereby the process, depending on the process's configuration. Such a crash would cause all connections to be
-                // dropped, even if the slave were restarted.
-                // Otherwise, the request is discarded and the slave awaits the next message. If the master is unable to synchronize
-                // the frame, it can drop the connection.
-                if (!(ex is IOException || ex is FormatException || ex is ObjectDisposedException))
-                {
-                    throw;
-                }
+                byte[] responseFrame = Transport.BuildMessageFrame(response);
+                Debug.WriteLine($"TX to Master at {EndPoint}: {string.Join(", ", responseFrame)}");
+                await Stream.WriteAsync(responseFrame, 0, responseFrame.Length).ConfigureAwait(false);
             }
         }
     }

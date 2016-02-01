@@ -99,7 +99,7 @@
         /// <returns>An array of ASCII byte values.</returns>
         public static byte[] GetAsciiBytes(params byte[] numbers)
         {
-            return Encoding.ASCII.GetBytes(numbers.SelectMany(n => n.ToString("X2")).ToArray());
+            return Encoding.UTF8.GetBytes(numbers.SelectMany(n => n.ToString("X2")).ToArray());
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
         /// <returns>An array of ASCII byte values.</returns>
         public static byte[] GetAsciiBytes(params ushort[] numbers)
         {
-            return Encoding.ASCII.GetBytes(numbers.SelectMany(n => n.ToString("X4")).ToArray());
+            return Encoding.UTF8.GetBytes(numbers.SelectMany(n => n.ToString("X4")).ToArray());
         }
 
         /// <summary>

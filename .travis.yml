@@ -1,6 +1,25 @@
 language: csharp
-mono:
-  - alpha
+sudo: required
+os: linux
+dist: trusty
+addons:
+  apt:
+    sources:
+    - debian-sid
+    packages:
+    - libunwind8
+    - gettext
+    - libssl-dev
+    - libcurl4-openssl-dev
+    - zlib1g
+    - libicu-dev
+    - uuid-dev
+install:
+- curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
+- dnvm upgrade -r coreclr
 solution: NModbus4.sln
 script:
-  - xbuild /p:Configuration=Debug NModbus4.sln
+- dnu restore
+- cd NModbus4.UnitTests
+- dnu build
+- dnx test

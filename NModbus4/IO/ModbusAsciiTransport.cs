@@ -24,7 +24,7 @@
 
             var msgFrameAscii = ModbusUtility.GetAsciiBytes(msgFrame);
             var lrcAscii = ModbusUtility.GetAsciiBytes(ModbusUtility.CalculateLrc(msgFrame));
-            var nlAscii = Encoding.ASCII.GetBytes(Modbus.NewLine.ToCharArray());
+            var nlAscii = Encoding.UTF8.GetBytes(Modbus.NewLine.ToCharArray());
 
             var frame = new MemoryStream(1 + msgFrameAscii.Length + lrcAscii.Length + nlAscii.Length);
             frame.WriteByte((byte)':');

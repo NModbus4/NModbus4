@@ -1,5 +1,7 @@
 ﻿using System.IO;
+#if NET46
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using Xunit;
 
 namespace Modbus.UnitTests
@@ -44,6 +46,7 @@ namespace Modbus.UnitTests
             Assert.Same(inner, e.InnerException);
         }
 
+#if NET46
         [Fact]
         public void Serializable()
         {
@@ -61,5 +64,6 @@ namespace Modbus.UnitTests
                 Assert.Equal($"Modbus exception code {Modbus.SlaveDeviceBusy}.", e2.Message);
             }
         }
+#endif
     }
 }

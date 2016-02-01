@@ -7,15 +7,16 @@ platform: Any CPU
 shallow_clone: true
 init:
 - git config --global core.autocrlf true
-before_build:
-- nuget restore
+install:
+- cmd: >-
+    dnu restore
 build:
   project: NModbus4.sln
   verbosity: minimal
 test_script:
-- .\packages\OpenCover.4.6.166\tools\OpenCover.Console.exe -register:user -target:"./packages/xunit.runner.console.2.1.0/tools/xunit.console.exe" -targetargs:"./NModbus4.UnitTests/bin/Debug/NModbus4.UnitTests.dll -noshadow -appveyor" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
+- dnvm use 1.0.0-rc1-final -r coreclr
+- cd NModbus4.UnitTests
+- C:\Users\appveyor\.dnx\packages\OpenCover\4.6.166\tools\OpenCover.Console.exe -register:user -target:"dnx.exe" -targetargs:"--lib C:\projects\nmodbus4-ss8e4\artifacts\bin\NModbus4\Debug\dotnet5.5 test" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
 - "SET PATH=C:/Python34;C:/Python34/Scripts;%PATH%"
 - pip install codecov
 - codecov -f "./opencover_report.xml"
-cache:
-- packages -> **\packages.config

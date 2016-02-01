@@ -2,7 +2,9 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+#if SERIAL
     using System.IO.Ports;
+#endif
     using System.Net.Sockets;
 
     using Data;
@@ -28,6 +30,7 @@
             get { return (ModbusSerialTransport)Transport; }
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus ASCII master factory method.
         /// </summary>
@@ -40,6 +43,7 @@
 
             return CreateAscii(new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus ASCII master factory method.
@@ -85,6 +89,7 @@
             return new ModbusSerialMaster(new ModbusAsciiTransport(streamResource));
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus RTU master factory method.
         /// </summary>
@@ -97,6 +102,7 @@
 
             return CreateRtu(new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus RTU master factory method.

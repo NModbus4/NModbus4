@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if MOQ
+using System;
 using System.IO;
 using System.Linq;
 using Modbus.Data;
@@ -454,3 +455,4 @@ namespace Modbus.UnitTests.IO
         }
     }
 }
+#endif

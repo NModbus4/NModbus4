@@ -1,10 +1,8 @@
 ﻿namespace Modbus.IO
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Net.Sockets;
     using System.Threading;
 
@@ -16,8 +14,10 @@
     internal class UdpClientAdapter : IStreamResource
     {
         // strategy for cross platform r/w
+        private const int MaxBufferSize = ushort.MaxValue;
         private UdpClient _udpClient;
-        private List<byte> _buffer;
+        private readonly byte[] _buffer = new byte[MaxBufferSize];
+        private int _bufferOffset;
 
         public UdpClientAdapter(UdpClient udpClient)
         {
@@ -86,20 +86,19 @@
                     "Argument count cannot be greater than the length of buffer minus offset.");
             }
 
-            if (_buffer == null || _buffer.Count == 0)
+            if (_bufferOffset == 0)
             {
-                IPEndPoint remoteIpEndPoint = null;
-                _buffer = _udpClient.Receive(ref remoteIpEndPoint).ToList();
+                _bufferOffset = _udpClient.Client.Receive(_buffer);
             }
 
-            if (_buffer.Count < count)
+            if (_bufferOffset < count)
             {
                 throw new IOException("Not enough bytes in the datagram.");
             }
 
-            _buffer.CopyTo(0, buffer, offset, count);
-
-            _buffer.RemoveRange(0, count);
+            Buffer.BlockCopy(_buffer, 0, buffer, offset, count);
+            _bufferOffset -= count;
+            Buffer.BlockCopy(_buffer, count, _buffer, 0, _bufferOffset);
 
             return count;
         }
@@ -139,7 +138,7 @@
                     "Argument count cannot be greater than the length of buffer minus offset.");
             }
 
-            _udpClient.Send(buffer.Skip(offset).ToArray(), count);
+            _udpClient.Client.Send(buffer.Skip(offset).Take(count).ToArray());
         }
 
         public void Dispose()

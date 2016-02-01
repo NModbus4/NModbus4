@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using System.Threading;
+    using System.Threading.Tasks;
 
     using Message;
 
@@ -304,7 +304,7 @@
 
         private static void Sleep(int millisecondsTimeout)
         {
-            Thread.Sleep(millisecondsTimeout);
+            Task.Delay(millisecondsTimeout).Wait();
         }
     }
 }

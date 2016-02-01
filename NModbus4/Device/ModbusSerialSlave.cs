@@ -3,8 +3,10 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading.Tasks;
+#if SERIAL
     using System.IO.Ports;
-
+#endif
     using IO;
     using Message;
 
@@ -33,6 +35,7 @@
             }
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus ASCII slave factory method.
         /// </summary>
@@ -45,6 +48,7 @@
 
             return CreateAscii(unitId, new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus ASCII slave factory method.
@@ -59,6 +63,7 @@
             return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
         }
 
+#if SERIAL
         /// <summary>
         ///     Modbus RTU slave factory method.
         /// </summary>
@@ -71,6 +76,7 @@
 
             return CreateRtu(unitId, new SerialPortAdapter(serialPort));
         }
+#endif
 
         /// <summary>
         ///     Modbus RTU slave factory method.
@@ -88,7 +94,7 @@
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public override void Listen()
+        public override async Task ListenAsync()
         {
             while (true)
             {
@@ -96,6 +102,9 @@
                 {
                     try
                     {
+                        //TODO: remove deleay once async will be implemented in transport level
+                        await Task.Delay(20).ConfigureAwait(false);
+
                         // read request and build message
                         byte[] frame = SerialTransport.ReadRequest();
                         IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame);
