@@ -2,20 +2,14 @@
 using System.Text;
 using Modbus.IO;
 using Modbus.Message;
-#if MOQ
 using Moq;
-#endif
 using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
     public class ModbusAsciiTransportFixture
     {
-#if MOQ
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
-#else
-        private static IStreamResource StreamResource => new DummyStreamResource();
-#endif
 
         [Fact]
         public void BuildMessageFrame()
@@ -28,7 +22,6 @@ namespace Modbus.UnitTests.IO
             Assert.Equal(expected, actual);
         }
 
-#if MOQ
         [Fact]
         public void ReadRequestResponse()
         {
@@ -68,7 +61,6 @@ namespace Modbus.UnitTests.IO
             Assert.Throws<IOException>(() => transport.ReadRequestResponse());
             mock.VerifyAll();
         }
-#endif
 
         [Fact]
         public void ChecksumsMatchSucceed()

@@ -2,20 +2,14 @@
 using System.Linq;
 using Modbus.Device;
 using Modbus.IO;
-#if MOQ
 using Moq;
-#endif
 using Xunit;
 
 namespace Modbus.UnitTests.Device
 {
     public class ModbusMasterFixture
     {
-#if MOQ
         private static IStreamResource StreamRsource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
-#else
-        private static IStreamResource StreamRsource => new DummyStreamResource();
-#endif
 
         private ModbusSerialMaster Master => ModbusSerialMaster.CreateRtu(StreamRsource);
 
