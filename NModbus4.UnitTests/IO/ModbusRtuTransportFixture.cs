@@ -5,20 +5,14 @@ using Modbus.Data;
 using Modbus.IO;
 using Modbus.Message;
 using Modbus.Utility;
-#if MOQ
 using Moq;
-#endif
 using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
     public class ModbusRtuTransportFixture
     {
-#if MOQ
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
-#else
-        private static IStreamResource StreamResource => new DummyStreamResource();
-#endif
 
         [Fact]
         public void BuildMessageFrame()
@@ -127,7 +121,6 @@ namespace Modbus.UnitTests.IO
             Assert.False(transport.ChecksumsMatch(message, frame));
         }
 
-#if MOQ
         [Fact]
         public void ReadResponse()
         {
@@ -237,6 +230,5 @@ namespace Modbus.UnitTests.IO
 
             mock.VerifyAll();
         }
-#endif
     }
 }
