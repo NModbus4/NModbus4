@@ -5,20 +5,14 @@ using Modbus.IO;
 using Modbus.Message;
 using Modbus.UnitTests.Message;
 using Modbus.Utility;
-#if MOQ
 using Moq;
-#endif
 using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
     public class ModbusSerialTransportFixture
     {
-#if MOQ
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
-#else
-        private static IStreamResource StreamResource => new DummyStreamResource();
-#endif
 
         [Fact]
         public void CreateResponse()
@@ -50,7 +44,6 @@ namespace Modbus.UnitTests.IO
             transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] { 19, Modbus.ReadCoils, 0, 0, 0, 2, 115 });
         }
 
-#if MOQ
         /// <summary>
         /// When using the serial RTU protocol the beginning of the message could get mangled leading to an unsupported message type.
         /// We want to be sure to try the message again so clear the RX buffer and try again.
@@ -102,6 +95,5 @@ namespace Modbus.UnitTests.IO
             ModbusMessageFixture.AssertModbusMessagePropertiesAreEqual(response, actualResponse);
             mock.VerifyAll();
         }
-#endif
     }
 }

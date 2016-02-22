@@ -5,33 +5,25 @@ using Modbus.Data;
 using Modbus.IO;
 using Modbus.Message;
 using Modbus.UnitTests.Message;
-#if MOQ
 using Moq;
-#endif
 using Xunit;
 
 namespace Modbus.UnitTests.IO
 {
     public class ModbusTcpTransportFixture
     {
-#if MOQ
-        private Mock<IStreamResource> StreamResourceMock => new Mock<IStreamResource>(MockBehavior.Strict);
-#else
-        private IStreamResource StreamResourceMock => new DummyStreamResource();
-#endif
+        private IStreamResource StreamResourceMock => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
-#if MOQ
         [Fact]
         public void BuildMessageFrame()
         {
-            var mock = new Mock<ModbusIpTransport>(StreamResourceMock.Object) { CallBase = true };
+            var mock = new Mock<ModbusIpTransport>(StreamResourceMock) { CallBase = true };
             var message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 10, 5);
 
             byte[] result = mock.Object.BuildMessageFrame(message);
             Assert.Equal(new byte[] { 0, 0, 0, 0, 0, 6, 2, 1, 0, 10, 0, 5 }, result);
             mock.VerifyAll();
         }
-#endif
 
         [Fact]
         public void GetMbapHeader()
@@ -41,7 +33,6 @@ namespace Modbus.UnitTests.IO
             Assert.Equal(new byte[] { 0, 45, 0, 0, 0, 247, 3 }, ModbusIpTransport.GetMbapHeader(message));
         }
 
-#if MOQ
         [Fact]
         public void Write()
         {
@@ -110,7 +101,6 @@ namespace Modbus.UnitTests.IO
             Assert.Throws<IOException>(() => ModbusIpTransport.ReadRequestResponse(mock.Object));
             mock.VerifyAll();
         }
-#endif
 
         [Fact]
         public void GetNewTransactionId()
