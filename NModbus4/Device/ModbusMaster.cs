@@ -121,14 +121,14 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///    Asynchronously reads contiguous block of holding registers.
+        ///    Asynchronously reads contiguous block of holding registers referenced by 32bit address.
         /// </summary>
         /// <param name="slaveAddress">Address of device to read values from.</param>
         /// <param name="referenceType">Reference type for first group: - 06 for 6xxxx extended register files</param>
         /// <param name="referenceNumber">Reference number for first group: - file number:offset for 6xxxx files, - 32 bit reference number for 4xxxx registers.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        public Task<ushort[]> ReadGeneralReferenceAsync(byte slaveAddress, byte referenceType, byte[] referenceNumber, ushort numberOfPoints)
+        private Task<ushort[]> ReadGeneralReferenceAsync(byte slaveAddress, byte referenceType, byte[] referenceNumber, ushort numberOfPoints)
         {
             ValidateNumberOfPoints("numberOfPoints", numberOfPoints, 125);
 
@@ -143,13 +143,43 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///    Asynchronously reads contiguous block of holding registers.
+        ///    Asynchronously reads contiguous block of holding registers referenced by 32bit address.
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="referenceType">Reference type: - 06 for 6xxxx extended register files</param>
+        /// <param name="referenceNumber">Reference number: 32 bit reference number for 4xxxx registers.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task<ushort[]> ReadGeneralReferenceAsync(byte slaveAddress, byte referenceType, int referenceNumber, ushort numberOfPoints)
+        {
+            return ReadGeneralReferenceAsync(slaveAddress, referenceType, BitConverter.GetBytes(IPAddress.HostToNetworkOrder(referenceNumber)), numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads contiguous block of holding registers referenced by 32bit address.
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="referenceType">Reference type for first group: - 06 for 6xxxx extended register files</param>
+        /// <param name="fileNumber">file number to look into.</param>
+        /// <param name="offset">offset in the file number to read.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task<ushort[]> ReadGeneralReferenceAsync(byte slaveAddress, byte referenceType, ushort fileNumber, ushort offset, ushort numberOfPoints)
+        {
+            var refencerNumber = new byte[4];
+            refencerNumber.SetValue(fileNumber, 0);
+            refencerNumber.SetValue(offset, 2);
+            return ReadGeneralReferenceAsync(slaveAddress, referenceType, refencerNumber, numberOfPoints);
+        }
+        
+        /// <summary>
+        ///    reads contiguous block of holding registers referenced by 32bit address.
         /// </summary>
         /// <param name="slaveAddress">Address of device to read values from.</param>
         /// <param name="referenceType">Reference type for first group: - 06 for 6xxxx extended register files</param>
         /// <param name="referenceNumber">Reference number for first group: - file number:offset for 6xxxx files, - 32 bit reference number for 4xxxx registers.</param>
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
-        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <returns>Holding registers status</returns>
         private ushort[] ReadGeneralReference(byte slaveAddress, byte referenceType, byte[] referenceNumber, ushort numberOfPoints)
         {
             ValidateNumberOfPoints("numberOfPoints", numberOfPoints, 125);
@@ -165,18 +195,27 @@ namespace Modbus.Device
         }
 
         /// <summary>
-        ///    Asynchronously reads contiguous block of holding registers.
+        ///    reads contiguous block of holding registers referenced by 32bit address.
         /// </summary>
-        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="referenceType">Reference type for first group: - 06 for 6xxxx extended register files</param>
+        /// <param name="referenceNumber">Reference number: 32 bit reference number for 4xxxx registers.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>Holding registers status</returns>
         public ushort[] ReadGeneralReference(byte slaveAddress, byte referenceType, int referenceNumber, ushort numberOfPoints)
         {
             return ReadGeneralReference(slaveAddress, referenceType, BitConverter.GetBytes(IPAddress.HostToNetworkOrder(referenceNumber)), numberOfPoints);
         }
 
         /// <summary>
-        ///    Asynchronously reads contiguous block of holding registers.
+        ///    reads contiguous block of holding registers referenced by 32bit address.
         /// </summary>
-        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="referenceType">Reference type for first group: - 06 for 6xxxx extended register files</param>
+        /// <param name="fileNumber">file number to look into.</param>
+        /// <param name="offset">offset in the file number to read.</param>
+        /// <param name="numberOfPoints">Number of holding registers to read.</param>
+        /// <returns>Holding registers status</returns>
         public ushort[] ReadGeneralReference(byte slaveAddress, byte referenceType, ushort fileNumber, ushort offset, ushort numberOfPoints)
         {
             var refencerNumber = new byte[4];
