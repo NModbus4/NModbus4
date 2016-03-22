@@ -1,3 +1,6 @@
+﻿using System.Linq;
+using System.Net;
+
 namespace Modbus.Device
 {
     using System;
@@ -133,6 +136,45 @@ namespace Modbus.Device
         public Task<ushort[]> ReadHoldingRegistersAsync(ushort startAddress, ushort numberOfPoints)
         {
             return base.ReadHoldingRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads contiguous block of holding registers.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task<ushort[]> ReadGeneralReferenceAsync(byte referenceType, int referenceNumber, ushort numberOfPoints)
+        {
+            return base.ReadGeneralReferenceAsync(Modbus.DefaultIpSlaveUnitId, referenceType, BitConverter.GetBytes(referenceNumber), numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads contiguous block of holding registers.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task<ushort[]> ReadGeneralReferenceAsync(byte referenceType, ushort fileNumber, ushort offset, ushort numberOfPoints)
+        {
+            var refencerNumber = new byte[4];
+            refencerNumber.SetValue(fileNumber, 0);
+            refencerNumber.SetValue(offset, 2);
+            return base.ReadGeneralReferenceAsync(Modbus.DefaultIpSlaveUnitId, referenceType, refencerNumber, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads contiguous block of holding registers.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public ushort[] ReadGeneralReference(byte referenceType, int referenceNumber, ushort numberOfPoints)
+        {
+            return base.ReadGeneralReference(Modbus.DefaultIpSlaveUnitId, referenceType, referenceNumber, numberOfPoints);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads contiguous block of holding registers.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public ushort[] ReadGeneralReference(byte referenceType, ushort fileNumber, ushort offset, ushort numberOfPoints)
+        {
+            return base.ReadGeneralReference(Modbus.DefaultIpSlaveUnitId, referenceType, fileNumber, offset, numberOfPoints);
         }
 
         /// <summary>

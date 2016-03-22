@@ -145,6 +145,7 @@ namespace Modbus.IO
                                     throw new SlaveException(exceptionResponse);
                                 }
                             }
+
                             else if (ShouldRetryResponse(message, response))
                             {
                                 readAgain = true;
