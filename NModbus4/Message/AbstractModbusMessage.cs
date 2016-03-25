@@ -43,7 +43,7 @@
             set { _messageImpl.SlaveAddress = value; }
         }
 
-        public byte[] MessageFrame
+        public virtual byte[] MessageFrame
         {
             get { return _messageImpl.MessageFrame; }
         }

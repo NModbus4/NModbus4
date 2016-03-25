@@ -70,6 +70,7 @@
                 case Modbus.ReadInputs:
                 case Modbus.ReadHoldingRegisters:
                 case Modbus.ReadInputRegisters:
+                case Modbus.ReadWriteMultipleRegisters:
                     numBytes = frameStart[2] + 1;
                     break;
                 case Modbus.WriteSingleCoil:
