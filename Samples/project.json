@@ -2,16 +2,13 @@
     "version": "1.0.0-*",
     "description": "Samples Console Application",
     "authors": [ "Dmitry Turin" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
 
-    "compilationOptions": {
+    "buildOptions": {
         "emitEntryPoint": true
     },
 
     "dependencies": {
-        "NModbus4": "3.0.0-alpha1",
+        "NModbus4": { "target": "project" },
         "NModbus4.Serial": "1.0.0-alpha1"
     },
 
@@ -20,6 +17,6 @@
     },
 
     "frameworks": {
-        "dnx451": { }
+        "net45": { }
     }
 }
