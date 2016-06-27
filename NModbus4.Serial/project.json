@@ -2,15 +2,22 @@
     "version": "1.0.0-alpha1",
     "description": "NModbus4.Serial Class Library",
     "authors": [ "Dmitry Turin" ],
-    "tags": [ "modbus", "nmodbus", "serial", "master", "slave" ],
-    "projectUrl": "https://github.com/NModbus4/NModbus4",
-    "licenseUrl": "http://opensource.org/licenses/MIT",
+
+    "packOptions": {
+        "tags": [ "modbus", "nmodbus", "serial", "master", "slave" ],
+        "projectUrl": "https://github.com/NModbus4/NModbus4",
+        "licenseUrl": "http://opensource.org/licenses/MIT"
+    },
 
     "dependencies": {
         "NModbus4": "3.0.0-*"
     },
 
+    "buildOptions": {
+        "warningsAsErrors": true
+    },
+
     "frameworks": {
-        "net45": { }
+        "net45": {}
     }
 }
