@@ -4,8 +4,6 @@ os: linux
 dist: trusty
 addons:
   apt:
-    sources:
-    - debian-sid
     packages:
     - libunwind8
     - gettext
@@ -13,13 +11,13 @@ addons:
     - libcurl4-openssl-dev
     - zlib1g
     - libicu-dev
-    - uuid-dev
 install:
-- curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh && source ~/.dnx/dnvm/dnvm.sh
-- dnvm upgrade -r coreclr
+- sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+- sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+- sudo apt-get update
+- sudo apt-get --assume-yes install dotnet-dev-1.0.0-preview2-003121
 solution: NModbus4.sln
 script:
-- dnu restore
+- dotnet restore
 - cd NModbus4.UnitTests
-- dnu build
-- dnx test
+- dotnet test

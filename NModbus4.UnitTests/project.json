@@ -1,25 +1,33 @@
 ﻿{
     "version": "1.0.0-*",
-    "description": "NModbus4.UnitTests Class Library",
-    "authors": [ "turin" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+    "testRunner": "xunit",
 
     "dependencies": {
-        "moq.netcore": "4.4.0-*",
+        "dotnet-test-xunit": "2.2.0-*",
+        "Moq": "4.6.25-alpha",
         "NModbus4": { "target": "project" },
         "OpenCover": "4.6.166",
-        "xunit": "2.1.0",
-        "xunit.runner.dnx": "2.1.0-*"
+        "System.Diagnostics.TraceSource": "4.0.0",
+        "xunit": "2.1.0"
+    },
+
+    "buildOptions": {
+        "warningsAsErrors": true
     },
 
     "frameworks": {
-        "dnxcore50": {
-        }
-    },
+        "netcoreapp1.0": {
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0"
+                }
+            },
+            "imports": [
+                "dnxcore50",
+                "portable-net45+win8"
+            ]
 
-    "commands": {
-        "test": "xunit.runner.dnx"
+        }
     }
 }

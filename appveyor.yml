@@ -9,14 +9,13 @@ init:
 - git config --global core.autocrlf true
 install:
 - cmd: >-
-    dnu restore
+    dotnet restore
 build:
   project: NModbus4.sln
   verbosity: minimal
 test_script:
-- dnvm use 1.0.0-rc1-final -r coreclr
 - cd NModbus4.UnitTests
-- C:\Users\appveyor\.dnx\packages\OpenCover\4.6.166\tools\OpenCover.Console.exe -register:user -target:"dnx.exe" -targetargs:"--lib C:\projects\nmodbus4-ss8e4\artifacts\bin\NModbus4\Debug\dotnet5.5 test" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
-- "SET PATH=C:/Python34;C:/Python34/Scripts;%PATH%"
+- "SET PATH=C:/Users/appveyor/.nuget/packages/OpenCover/4.6.166/tools;C:/Python34;C:/Python34/Scripts;%PATH%"
+- OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
 - pip install codecov
 - codecov -f "./opencover_report.xml"
