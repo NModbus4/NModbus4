@@ -16,6 +16,6 @@ build:
 test_script:
 - cd NModbus4.UnitTests
 - "SET PATH=C:/Users/appveyor/.nuget/packages/OpenCover/4.6.166/tools;C:/Python34;C:/Python34/Scripts;%PATH%"
-- OpenCover.Console.exe -register:user -target:"dotnet.exe" -targetargs:"test" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
+- OpenCover.Console.exe -oldStyle -register:user -target:"dotnet.exe" -targetargs:"test" -returntargetcode -filter:"+[NModbus4]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:./opencover_report.xml
 - pip install codecov
 - codecov -f "./opencover_report.xml"
