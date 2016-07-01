@@ -51,6 +51,19 @@
                 return stream.ToArray();
             }
         }
+        public override byte[] MessageFrame
+        {
+            get
+            {
+                var pdu = ProtocolDataUnit;
+                var frame = new MemoryStream(1 + pdu.Length);
+
+                frame.WriteByte(SlaveAddress);
+                frame.Write(pdu, 0, pdu.Length);
+
+                return frame.ToArray();
+            }
+        }
 
         public ReadHoldingInputRegistersRequest ReadRequest
         {
