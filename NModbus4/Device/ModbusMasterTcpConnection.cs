@@ -81,27 +81,37 @@
             {
                 Debug.WriteLine($"Begin reading header from Master at IP: {EndPoint}");
 
-                int readBytes = await Stream.ReadAsync(_mbapHeader, 0, 6).ConfigureAwait(false);
+                const int headerLength = 6;
+                var offset = 0;
+                while (offset < headerLength)
+                {
+                  var readBytes = await Stream.ReadAsync(_mbapHeader, offset, headerLength - offset).ConfigureAwait(false);
                 if (readBytes == 0)
                 {
                     Debug.WriteLine($"0 bytes read, Master at {EndPoint} has closed Socket connection.");
                     ModbusMasterTcpConnectionClosed?.Invoke(this, new TcpConnectionEventArgs(EndPoint));
                     return;
+                }
+                  offset += readBytes;
                 }
 
                 ushort frameLength = (ushort)IPAddress.HostToNetworkOrder(BitConverter.ToInt16(_mbapHeader, 4));
                 Debug.WriteLine($"Master at {EndPoint} sent header: \"{string.Join(", ", _mbapHeader)}\" with {frameLength} bytes in PDU");
 
                 _messageFrame = new byte[frameLength];
-                readBytes = await Stream.ReadAsync(_messageFrame, 0, frameLength).ConfigureAwait(false);
+                offset = 0;
+                while (offset < frameLength)
+                {
+                  var readBytes = await Stream.ReadAsync(_messageFrame, offset, frameLength - offset).ConfigureAwait(false);
                 if (readBytes == 0)
                 {
                     Debug.WriteLine($"0 bytes read, Master at {EndPoint} has closed Socket connection.");
                     ModbusMasterTcpConnectionClosed?.Invoke(this, new TcpConnectionEventArgs(EndPoint));
                     return;
                 }
-
-                Debug.WriteLine($"Read frame from Master at {EndPoint} completed {readBytes} bytes");
+                  offset += readBytes;
+                }
+                Debug.WriteLine($"Read frame from Master at {EndPoint} completed {offset} bytes");
                 byte[] frame = _mbapHeader.Concat(_messageFrame).ToArray();
                 Debug.WriteLine($"RX from Master at {EndPoint}: {string.Join(", ", frame)}");
 
