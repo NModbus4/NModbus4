@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Ports;
 using Modbus.Data;
 using Modbus.IO;
 using Modbus.Message;
@@ -14,6 +15,12 @@ namespace Modbus.UnitTests.IO
     {
         private static IStreamResource StreamResource => new Mock<IStreamResource>(MockBehavior.Strict).Object;
 
+        [Fact]
+        public void TestPorts()
+        {
+            Assert.Equal(new[] { "foo" }, SerialPort.GetPortNames());
+        }
+        
         [Fact]
         public void CreateResponse()
         {
