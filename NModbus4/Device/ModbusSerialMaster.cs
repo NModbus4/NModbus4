@@ -128,7 +128,7 @@ namespace Modbus.Device
         /// <returns>Return true if slave device echoed data.</returns>
         public bool ReturnQueryData(byte slaveAddress, ushort data)
         {
-            DiagnosticsRequestResponse request = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData,
+            DiagnosticsRequestResponse request = new DiagnosticsRequestResponse(ModbusConstants.DiagnosticsReturnQueryData,
                 slaveAddress, new RegisterCollection(data));
             DiagnosticsRequestResponse response = Transport.UnicastMessage<DiagnosticsRequestResponse>(request);
 

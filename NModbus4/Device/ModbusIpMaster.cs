@@ -77,7 +77,7 @@ namespace Modbus.Device
         /// <returns>Coils status</returns>
         public bool[] ReadCoils(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadCoils(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadCoils(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous read operation</returns>
         public Task<bool[]> ReadCoilsAsync(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadCoilsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadCoilsAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Modbus.Device
         /// <returns>Discrete inputs status</returns>
         public bool[] ReadInputs(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadInputs(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadInputs(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous read operation</returns>
         public Task<bool[]> ReadInputsAsync(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadInputsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadInputsAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Modbus.Device
         /// <returns>Holding registers status</returns>
         public ushort[] ReadHoldingRegisters(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadHoldingRegisters(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadHoldingRegisters(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous read operation</returns>
         public Task<ushort[]> ReadHoldingRegistersAsync(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadHoldingRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadHoldingRegistersAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Modbus.Device
         /// <returns>Input registers status</returns>
         public ushort[] ReadInputRegisters(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadInputRegisters(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadInputRegisters(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous read operation</returns>
         public Task<ushort[]> ReadInputRegistersAsync(ushort startAddress, ushort numberOfPoints)
         {
-            return base.ReadInputRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
+            return base.ReadInputRegistersAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, numberOfPoints);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Modbus.Device
         /// <param name="value">Value to write.</param>
         public void WriteSingleCoil(ushort coilAddress, bool value)
         {
-            base.WriteSingleCoil(Modbus.DefaultIpSlaveUnitId, coilAddress, value);
+            base.WriteSingleCoil(ModbusConstants.DefaultIpSlaveUnitId, coilAddress, value);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous write operation</returns>
         public Task WriteSingleCoilAsync(ushort coilAddress, bool value)
         {
-            return base.WriteSingleCoilAsync(Modbus.DefaultIpSlaveUnitId, coilAddress, value);
+            return base.WriteSingleCoilAsync(ModbusConstants.DefaultIpSlaveUnitId, coilAddress, value);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Modbus.Device
         /// <param name="value">Value to write.</param>
         public void WriteSingleRegister(ushort registerAddress, ushort value)
         {
-            base.WriteSingleRegister(Modbus.DefaultIpSlaveUnitId, registerAddress, value);
+            base.WriteSingleRegister(ModbusConstants.DefaultIpSlaveUnitId, registerAddress, value);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous write operation</returns>
         public Task WriteSingleRegisterAsync(ushort registerAddress, ushort value)
         {
-            return base.WriteSingleRegisterAsync(Modbus.DefaultIpSlaveUnitId, registerAddress, value);
+            return base.WriteSingleRegisterAsync(ModbusConstants.DefaultIpSlaveUnitId, registerAddress, value);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Modbus.Device
         /// <param name="data">Values to write.</param>
         public void WriteMultipleRegisters(ushort startAddress, ushort[] data)
         {
-            base.WriteMultipleRegisters(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+            base.WriteMultipleRegisters(ModbusConstants.DefaultIpSlaveUnitId, startAddress, data);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous write operation</returns>
         public Task WriteMultipleRegistersAsync(ushort startAddress, ushort[] data)
         {
-            return base.WriteMultipleRegistersAsync(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+            return base.WriteMultipleRegistersAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, data);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace Modbus.Device
         /// <param name="data">Values to write.</param>
         public void WriteMultipleCoils(ushort startAddress, bool[] data)
         {
-            base.WriteMultipleCoils(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+            base.WriteMultipleCoils(ModbusConstants.DefaultIpSlaveUnitId, startAddress, data);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Modbus.Device
         /// <returns>A task that represents the asynchronous write operation</returns>
         public Task WriteMultipleCoilsAsync(ushort startAddress, bool[] data)
         {
-            return base.WriteMultipleCoilsAsync(Modbus.DefaultIpSlaveUnitId, startAddress, data);
+            return base.WriteMultipleCoilsAsync(ModbusConstants.DefaultIpSlaveUnitId, startAddress, data);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace Modbus.Device
         public ushort[] ReadWriteMultipleRegisters(ushort startReadAddress, ushort numberOfPointsToRead,
             ushort startWriteAddress, ushort[] writeData)
         {
-            return base.ReadWriteMultipleRegisters(Modbus.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
+            return base.ReadWriteMultipleRegisters(ModbusConstants.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
                 startWriteAddress, writeData);
         }
 
@@ -269,7 +269,7 @@ namespace Modbus.Device
         public Task<ushort[]> ReadWriteMultipleRegistersAsync(ushort startReadAddress, ushort numberOfPointsToRead,
             ushort startWriteAddress, ushort[] writeData)
         {
-            return base.ReadWriteMultipleRegistersAsync(Modbus.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
+            return base.ReadWriteMultipleRegistersAsync(ModbusConstants.DefaultIpSlaveUnitId, startReadAddress, numberOfPointsToRead,
                 startWriteAddress, writeData);
         }
     }

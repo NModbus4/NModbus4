@@ -34,7 +34,7 @@ namespace Modbus.UnitTests
         [Fact]
         public void CreateSlaveException_SlaveExceptionResponse()
         {
-            SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 1);
+            SlaveExceptionResponse response = new SlaveExceptionResponse(12, ModbusConstants.ReadCoils, 1);
             SlaveException se = new SlaveException(response);
             Assert.Equal(
                 String.Format(
@@ -45,7 +45,7 @@ namespace Modbus.UnitTests
         [Fact]
         public void CreateSlaveException_CustomMessageAndSlaveExceptionResponse()
         {
-            SlaveExceptionResponse response = new SlaveExceptionResponse(12, Modbus.ReadCoils, 2);
+            SlaveExceptionResponse response = new SlaveExceptionResponse(12, ModbusConstants.ReadCoils, 2);
             string customMessage = "custom message";
             SlaveException se = new SlaveException(customMessage, response);
             Assert.Equal(String.Format("{0}\r\nFunction Code: {1}\r\nException Code: {2} - {3}",

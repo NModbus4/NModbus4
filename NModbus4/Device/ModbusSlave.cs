@@ -74,7 +74,7 @@ namespace Modbus.Device
         internal static WriteSingleCoilRequestResponse WriteSingleCoil(WriteSingleCoilRequestResponse request,
             DataStore dataStore, ModbusDataCollection<bool> dataSource)
         {
-            DataStore.WriteData(dataStore, new DiscreteCollection(request.Data[0] == Modbus.CoilOn), dataSource,
+            DataStore.WriteData(dataStore, new DiscreteCollection(request.Data[0] == ModbusConstants.CoilOn), dataSource,
                 request.StartAddress, dataStore.SyncRoot);
 
             return request;
@@ -120,44 +120,44 @@ namespace Modbus.Device
 
                 switch (request.FunctionCode)
                 {
-                    case Modbus.ReadCoils:
+                    case ModbusConstants.ReadCoils:
                         response = ReadDiscretes((ReadCoilsInputsRequest)request, DataStore, DataStore.CoilDiscretes);
                         break;
-                    case Modbus.ReadInputs:
+                    case ModbusConstants.ReadInputs:
                         response = ReadDiscretes((ReadCoilsInputsRequest)request, DataStore, DataStore.InputDiscretes);
                         break;
-                    case Modbus.ReadHoldingRegisters:
+                    case ModbusConstants.ReadHoldingRegisters:
                         response = ReadRegisters((ReadHoldingInputRegistersRequest)request, DataStore,
                             DataStore.HoldingRegisters);
                         break;
-                    case Modbus.ReadInputRegisters:
+                    case ModbusConstants.ReadInputRegisters:
                         response = ReadRegisters((ReadHoldingInputRegistersRequest)request, DataStore,
                             DataStore.InputRegisters);
                         break;
-                    case Modbus.Diagnostics:
+                    case ModbusConstants.Diagnostics:
                         response = request;
                         break;
-                    case Modbus.WriteSingleCoil:
+                    case ModbusConstants.WriteSingleCoil:
                         response = WriteSingleCoil((WriteSingleCoilRequestResponse)request, DataStore,
                             DataStore.CoilDiscretes);
                         WriteComplete.Raise(this, eventArgs);
                         break;
-                    case Modbus.WriteSingleRegister:
+                    case ModbusConstants.WriteSingleRegister:
                         response = WriteSingleRegister((WriteSingleRegisterRequestResponse)request, DataStore,
                             DataStore.HoldingRegisters);
                         WriteComplete.Raise(this, eventArgs);
                         break;
-                    case Modbus.WriteMultipleCoils:
+                    case ModbusConstants.WriteMultipleCoils:
                         response = WriteMultipleCoils((WriteMultipleCoilsRequest)request, DataStore,
                             DataStore.CoilDiscretes);
                         WriteComplete.Raise(this, eventArgs);
                         break;
-                    case Modbus.WriteMultipleRegisters:
+                    case ModbusConstants.WriteMultipleRegisters:
                         response = WriteMultipleRegisters((WriteMultipleRegistersRequest)request, DataStore,
                             DataStore.HoldingRegisters);
                         WriteComplete.Raise(this, eventArgs);
                         break;
-                    case Modbus.ReadWriteMultipleRegisters:
+                    case ModbusConstants.ReadWriteMultipleRegisters:
                         ReadWriteMultipleRegistersRequest readWriteRequest = (ReadWriteMultipleRegistersRequest)request;
                         WriteMultipleRegisters(readWriteRequest.WriteRequest, DataStore, DataStore.HoldingRegisters);
                         WriteComplete.Raise(this, eventArgs);
@@ -167,12 +167,12 @@ namespace Modbus.Device
                         string errorMessage = String.Format(CultureInfo.InvariantCulture, "Unsupported function code {0}",
                             request.FunctionCode);
                         Debug.WriteLine(errorMessage);
-                        throw new InvalidModbusRequestException(Modbus.IllegalFunction);
+                        throw new InvalidModbusRequestException(ModbusConstants.IllegalFunction);
                 }
             }
             catch (InvalidModbusRequestException ex) // Catches the exception for an illegal function or a custom exception from the ModbusSlaveRequestReceived event.
             {
-                response = new SlaveExceptionResponse(request.SlaveAddress, (byte)(Modbus.ExceptionOffset + request.FunctionCode), ex.ExceptionCode);
+                response = new SlaveExceptionResponse(request.SlaveAddress, (byte)(ModbusConstants.ExceptionOffset + request.FunctionCode), ex.ExceptionCode);
             }
 
             return response;

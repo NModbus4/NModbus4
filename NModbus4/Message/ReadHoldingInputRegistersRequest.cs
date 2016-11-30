@@ -58,10 +58,10 @@ namespace Modbus.Message
             get { return MessageImpl.NumberOfPoints.Value; }
             set
             {
-                if (value > Modbus.MaximumRegisterRequestResponseSize)
+                if (value > ModbusConstants.MaximumRegisterRequestResponseSize)
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
                         String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} registers.",
-                            Modbus.MaximumRegisterRequestResponseSize));
+                            ModbusConstants.MaximumRegisterRequestResponseSize));
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -74,7 +74,7 @@ namespace Modbus.Message
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "Read {0} {1} registers starting at address {2}.",
-                NumberOfPoints, FunctionCode == Modbus.ReadHoldingRegisters ? "holding" : "input", StartAddress);
+                NumberOfPoints, FunctionCode == ModbusConstants.ReadHoldingRegisters ? "holding" : "input", StartAddress);
         }
 
         /// <summary>

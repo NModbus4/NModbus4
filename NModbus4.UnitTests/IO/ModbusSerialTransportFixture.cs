@@ -16,11 +16,11 @@ namespace Modbus.UnitTests.IO
         public void CreateResponse()
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
-            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 1,
+            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(ModbusConstants.ReadCoils, 2, 1,
                 new DiscreteCollection(true, false, false, false, false, false, false, true));
             byte lrc = ModbusUtility.CalculateLrc(expectedResponse.MessageFrame);
             ReadCoilsInputsResponse response =
-                transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {2, Modbus.ReadCoils, 1, 129, lrc}) as
+                transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {2, ModbusConstants.ReadCoils, 1, 129, lrc}) as
                     ReadCoilsInputsResponse;
             Assert.NotNull(response);
             AssertModbusMessagePropertiesAreEqual(expectedResponse, response);
@@ -31,7 +31,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             transport.CheckFrame = true;
-            Assert.Throws<IOException>(() => transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115}));
+            Assert.Throws<IOException>(() => transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, ModbusConstants.ReadCoils, 0, 0, 0, 2, 115}));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Modbus.UnitTests.IO
         {
             ModbusAsciiTransport transport = new ModbusAsciiTransport(MockRepository.GenerateStub<IStreamResource>());
             transport.CheckFrame = false;
-            transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, Modbus.ReadCoils, 0, 0, 0, 2, 115});
+            transport.CreateResponse<ReadCoilsInputsResponse>(new byte[] {19, ModbusConstants.ReadCoils, 0, 0, 0, 2, 115});
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Modbus.UnitTests.IO
             LastCall.IgnoreArguments();
 
             // normal response
-            ReadCoilsInputsResponse response = new ReadCoilsInputsResponse(Modbus.ReadCoils, 2, 1,
+            ReadCoilsInputsResponse response = new ReadCoilsInputsResponse(ModbusConstants.ReadCoils, 2, 1,
                 new DiscreteCollection(true, false, true, false, false, false, false, false));
 
             // read header
@@ -87,7 +87,7 @@ namespace Modbus.UnitTests.IO
 
             mocks.ReplayAll();
 
-            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 2, 3, 4);
+            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 2, 3, 4);
             transport.UnicastMessage<ReadCoilsInputsResponse>(request);
 
             mocks.VerifyAll();

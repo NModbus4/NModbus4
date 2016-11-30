@@ -40,30 +40,30 @@ namespace Modbus.Message
 
             switch (functionCode)
             {
-                case Modbus.ReadCoils:
-                case Modbus.ReadInputs:
+                case ModbusConstants.ReadCoils:
+                case ModbusConstants.ReadInputs:
                     request = CreateModbusMessage<ReadCoilsInputsRequest>(frame);
                     break;
-                case Modbus.ReadHoldingRegisters:
-                case Modbus.ReadInputRegisters:
+                case ModbusConstants.ReadHoldingRegisters:
+                case ModbusConstants.ReadInputRegisters:
                     request = CreateModbusMessage<ReadHoldingInputRegistersRequest>(frame);
                     break;
-                case Modbus.WriteSingleCoil:
+                case ModbusConstants.WriteSingleCoil:
                     request = CreateModbusMessage<WriteSingleCoilRequestResponse>(frame);
                     break;
-                case Modbus.WriteSingleRegister:
+                case ModbusConstants.WriteSingleRegister:
                     request = CreateModbusMessage<WriteSingleRegisterRequestResponse>(frame);
                     break;
-                case Modbus.Diagnostics:
+                case ModbusConstants.Diagnostics:
                     request = CreateModbusMessage<DiagnosticsRequestResponse>(frame);
                     break;
-                case Modbus.WriteMultipleCoils:
+                case ModbusConstants.WriteMultipleCoils:
                     request = CreateModbusMessage<WriteMultipleCoilsRequest>(frame);
                     break;
-                case Modbus.WriteMultipleRegisters:
+                case ModbusConstants.WriteMultipleRegisters:
                     request = CreateModbusMessage<WriteMultipleRegistersRequest>(frame);
                     break;
-                case Modbus.ReadWriteMultipleRegisters:
+                case ModbusConstants.ReadWriteMultipleRegisters:
                     request = CreateModbusMessage<ReadWriteMultipleRegistersRequest>(frame);
                     break;
                 default:

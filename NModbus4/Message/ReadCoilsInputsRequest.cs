@@ -56,10 +56,10 @@ namespace Modbus.Message
             get { return MessageImpl.NumberOfPoints.Value; }
             set
             {
-                if (value > Modbus.MaximumDiscreteRequestResponseSize)
+                if (value > ModbusConstants.MaximumDiscreteRequestResponseSize)
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
                         String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
-                            Modbus.MaximumDiscreteRequestResponseSize));
+                            ModbusConstants.MaximumDiscreteRequestResponseSize));
 
                 MessageImpl.NumberOfPoints = value;
             }
@@ -72,7 +72,7 @@ namespace Modbus.Message
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "Read {0} {1} starting at address {2}.", NumberOfPoints,
-                FunctionCode == Modbus.ReadCoils ? "coils" : "inputs", StartAddress);
+                FunctionCode == ModbusConstants.ReadCoils ? "coils" : "inputs", StartAddress);
         }
 
         /// <summary>

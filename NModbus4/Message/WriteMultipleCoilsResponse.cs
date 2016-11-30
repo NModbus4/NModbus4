@@ -23,7 +23,7 @@ namespace Modbus.Message
         /// <param name="startAddress"></param>
         /// <param name="numberOfPoints"></param>
         public WriteMultipleCoilsResponse(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
-            : base(slaveAddress, Modbus.WriteMultipleCoils)
+            : base(slaveAddress, ModbusConstants.WriteMultipleCoils)
         {
             StartAddress = startAddress;
             NumberOfPoints = numberOfPoints;
@@ -37,10 +37,10 @@ namespace Modbus.Message
             get { return MessageImpl.NumberOfPoints.Value; }
             set
             {
-                if (value > Modbus.MaximumDiscreteRequestResponseSize)
+                if (value > ModbusConstants.MaximumDiscreteRequestResponseSize)
                     throw new ArgumentOutOfRangeException("NumberOfPoints",
                         String.Format(CultureInfo.InvariantCulture, "Maximum amount of data {0} coils.",
-                            Modbus.MaximumDiscreteRequestResponseSize));
+                            ModbusConstants.MaximumDiscreteRequestResponseSize));
 
                 MessageImpl.NumberOfPoints = value;
             }

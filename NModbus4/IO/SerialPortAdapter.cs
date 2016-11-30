@@ -18,7 +18,7 @@ namespace Modbus.IO
             Debug.Assert(serialPort != null, "Argument serialPort cannot be null.");
 
             _serialPort = serialPort;
-            _serialPort.NewLine = Modbus.NewLine;
+            _serialPort.NewLine = ModbusConstants.NewLine;
         }
 
         public int InfiniteTimeout

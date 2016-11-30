@@ -16,8 +16,8 @@ namespace Modbus.UnitTests.IO
         [Fact]
         public void BuildMessageFrame()
         {
-            byte[] message = {17, Modbus.ReadCoils, 0, 19, 0, 37, 14, 132};
-            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(Modbus.ReadCoils, 17, 19, 37);
+            byte[] message = {17, ModbusConstants.ReadCoils, 0, 19, 0, 37, 14, 132};
+            ReadCoilsInputsRequest request = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 17, 19, 37);
             Assert.Equal(message,
                 new ModbusRtuTransport(MockRepository.GenerateStub<IStreamResource>()).BuildMessageFrame(request));
         }
@@ -53,7 +53,7 @@ namespace Modbus.UnitTests.IO
         [Fact]
         public void ResponseBytesToReadSlaveException()
         {
-            byte[] frameStart = {0x01, Modbus.ExceptionOffset + 1, 0x01};
+            byte[] frameStart = {0x01, ModbusConstants.ExceptionOffset + 1, 0x01};
             Assert.Equal(1, ModbusRtuTransport.ResponseBytesToRead(frameStart));
         }
 
@@ -103,8 +103,8 @@ namespace Modbus.UnitTests.IO
         public void ChecksumsMatchSucceed()
         {
             ModbusRtuTransport transport = new ModbusRtuTransport(MockRepository.GenerateStub<IStreamResource>());
-            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 17, 19, 37);
-            byte[] frame = {17, Modbus.ReadCoils, 0, 19, 0, 37, 14, 132};
+            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 17, 19, 37);
+            byte[] frame = {17, ModbusConstants.ReadCoils, 0, 19, 0, 37, 14, 132};
             Assert.True(transport.ChecksumsMatch(message, frame));
         }
 
@@ -112,8 +112,8 @@ namespace Modbus.UnitTests.IO
         public void ChecksumsMatchFail()
         {
             ModbusRtuTransport transport = new ModbusRtuTransport(MockRepository.GenerateStub<IStreamResource>());
-            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(Modbus.ReadCoils, 17, 19, 38);
-            byte[] frame = {17, Modbus.ReadCoils, 0, 19, 0, 37, 14, 132};
+            ReadCoilsInputsRequest message = new ReadCoilsInputsRequest(ModbusConstants.ReadCoils, 17, 19, 38);
+            byte[] frame = {17, ModbusConstants.ReadCoils, 0, 19, 0, 37, 14, 132};
             Assert.False(transport.ChecksumsMatch(message, frame));
         }
 
@@ -135,7 +135,7 @@ namespace Modbus.UnitTests.IO
             ReadCoilsInputsResponse response =
                 transport.ReadResponse<ReadCoilsInputsResponse>() as ReadCoilsInputsResponse;
             Assert.NotNull(response);
-            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(Modbus.ReadCoils, 1, 1,
+            ReadCoilsInputsResponse expectedResponse = new ReadCoilsInputsResponse(ModbusConstants.ReadCoils, 1, 1,
                 new DiscreteCollection(false));
             Assert.Equal(response.MessageFrame, expectedResponse.MessageFrame);
 

@@ -9,7 +9,7 @@ namespace Modbus.UnitTests.Message
         [Fact]
         public void ToString_Test()
         {
-            var message = new DiagnosticsRequestResponse(Modbus.DiagnosticsReturnQueryData, 3, new RegisterCollection(5));
+            var message = new DiagnosticsRequestResponse(ModbusConstants.DiagnosticsReturnQueryData, 3, new RegisterCollection(5));
 
             Assert.Equal("Diagnostics message, sub-function return query data - {5}.", message.ToString());
         }
