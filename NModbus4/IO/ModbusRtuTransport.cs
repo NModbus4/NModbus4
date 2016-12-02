@@ -14,6 +14,7 @@ namespace Modbus.IO
     /// </summary>
     internal class ModbusRtuTransport : ModbusSerialTransport
     {
+        public const int MaxRetries = 10;
         public const int RequestFrameStartLength = 7;
         public const int ResponseFrameStartLength = 4;
 
@@ -92,9 +93,19 @@ namespace Modbus.IO
         {
             byte[] frameBytes = new byte[count];
             int numBytesRead = 0;
+            int stageRead = 0;
+            int retries = 0;
 
-            while (numBytesRead != count)
-                numBytesRead += StreamResource.Read(frameBytes, numBytesRead, count - numBytesRead);
+            while (numBytesRead != count && retries<MaxRetries){
+                stageRead = StreamResource.Read(frameBytes, numBytesRead, count - numBytesRead);
+                if (stageRead==0) retries++;
+                else numBytesRead += stageRead;
+            }
+
+            if (retries==MaxRetries) {
+                Debug.WriteLine("Line not responding");
+                throw new Exception("Line not responding");
+            }
 
             return frameBytes;
         }
