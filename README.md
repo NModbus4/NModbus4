@@ -34,3 +34,6 @@ Documentation is available in chm format (NModbus.chm)
 License
 =======
 NModbus4 is licensed under the [MIT license](LICENSE.txt).
+Test
+
+
