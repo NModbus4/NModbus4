@@ -83,5 +83,15 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Child class should provide an implementation if custom messages need to be handled
+        /// </summary>
+        /// <param name="messageFrame"></param>
+        /// <returns></returns>
+        internal override Message.IModbusMessage OnCustomRequestReceived(byte[] messageFrame)
+        {
+            throw new NotImplementedException("Child class should provide the handling of custom messages");
+        }
     }
 }

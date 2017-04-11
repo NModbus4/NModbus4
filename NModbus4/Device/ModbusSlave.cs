@@ -267,5 +267,12 @@
 
             return response;
         }
+
+        /// <summary>
+        /// Child class should provide an implementation if custom messages need to be handled
+        /// </summary>
+        /// <param name="messageFrame"></param>
+        /// <returns></returns>
+        internal abstract IModbusMessage OnCustomRequestReceived(byte[] messageFrame);
     }
 }

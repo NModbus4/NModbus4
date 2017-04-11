@@ -105,7 +105,15 @@
                 byte[] frame = _mbapHeader.Concat(_messageFrame).ToArray();
                 Debug.WriteLine($"RX from Master at {EndPoint}: {string.Join(", ", frame)}");
 
-                var request = ModbusMessageFactory.CreateModbusRequest(_messageFrame);
+                IModbusMessage request = null;
+                try
+                {
+                    request = ModbusMessageFactory.CreateModbusRequest(_messageFrame);
+                }catch(ArgumentException)
+                {
+                    //seems like a custom request, call custom creator
+                    request = _slave.OnCustomRequestReceived(_messageFrame);
+                }
                 request.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
 
                 // perform action and build response

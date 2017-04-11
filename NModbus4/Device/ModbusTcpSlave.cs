@@ -11,6 +11,7 @@
     using System.Timers;
 #endif
     using IO;
+    using global::Modbus.Message;
 
     /// <summary>
     ///     Modbus TCP slave device.
@@ -24,6 +25,10 @@
             new ConcurrentDictionary<string, ModbusMasterTcpConnection>();
 
         private TcpListener _server;
+        /// <summary>
+        /// Custom Request Creator, will be called when custom request is received. 
+        /// </summary>
+        private Func<byte[], IModbusMessage> _customRequestCreator;
 #if TIMER
         private Timer _timer;
 #endif
@@ -91,6 +96,20 @@
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
         {
             return new ModbusTcpSlave(unitId, tcpListener);
+        }
+
+        /// <summary>
+        /// Modbus TCP slave factory method.
+        /// </summary>
+        /// <param name="unitId">Unit Id</param>
+        /// <param name="tcpListener">TCP Listener</param>
+        /// <param name="customRequestCreator">CustomMessageHandler which will be called when a custom request is received</param>
+        /// <returns></returns>
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, Func<byte[], IModbusMessage> customRequestCreator)
+        {
+            var slave = new ModbusTcpSlave(unitId, tcpListener);
+            slave._customRequestCreator = customRequestCreator;
+            return slave;
         }
 
 #if TIMER
@@ -198,6 +217,23 @@
             }
 
             Debug.WriteLine($"Removed Master {e.EndPoint}");
+        }
+
+        /// <summary>
+        /// Child class should provide an implementation if custom messages need to be handled
+        /// </summary>
+        /// <param name="messageFrame"></param>
+        /// <returns></returns>
+        internal override Message.IModbusMessage OnCustomRequestReceived(byte[] messageFrame)
+        {
+            if(_customRequestCreator == null)
+            {
+                throw new NotImplementedException("Please provide valid CustomRequestCreator using proper Factory method of ModbusTcpSlave");
+            }
+            else
+            {
+                return _customRequestCreator.Invoke(messageFrame);
+            }
         }
     }
 }
