@@ -13,7 +13,7 @@
     /// <summary>
     ///     Modbus slave device.
     /// </summary>
-    public abstract class ModbusSlave : ModbusDevice
+    public class ModbusSlave : ModbusDevice
     {
         internal ModbusSlave(byte unitId, ModbusTransport transport)
             : base(transport)
@@ -42,12 +42,25 @@
         /// <summary>
         ///     Gets or sets the unit ID.
         /// </summary>
-        public byte UnitId { get; set; }
+        public byte UnitId { get; [Obsolete]set; }
 
         /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
-        public abstract Task ListenAsync();
+        public virtual Task ListenAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        ///    Create a slave to be added to a network.
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <returns></returns>
+        public static ModbusSlave Create(byte unitId)
+        {
+            return new ModbusSlave(unitId, null);
+        }
 
         internal static ReadCoilsInputsResponse ReadDiscretes(
             ReadCoilsInputsRequest request,
