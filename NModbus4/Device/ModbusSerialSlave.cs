@@ -48,6 +48,23 @@
 
             return CreateAscii(unitId, new SerialPortAdapter(serialPort));
         }
+
+        /// <summary>
+        ///     Modbus ASCII slave factory method.
+        /// </summary>
+        public static ModbusSerialSlave CreateAscii(byte unitId, SerialPort serialPort,
+        Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage, IModbusMessage> customResponseCreator)
+        {
+            if (serialPort == null)
+            {
+                throw new ArgumentNullException(nameof(serialPort));
+            }
+
+            var slave = new CreateAscii(unitId, new SerialPortAdapter(serialPort));
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
+        }
 #endif
 
         /// <summary>
@@ -63,6 +80,27 @@
             return new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
         }
 
+        /// <summary>
+        ///     Modbus ASCII slave factory method.
+        /// <param name="unitId"></param>
+        /// <param name="streamResource"></param>
+        /// <param name="customRequestCreator">CustomMessageHandler which will be called when a custom request is received</param>
+        /// <param name="customResponseCreator">Custom Response generator, will be called when custom response is required against a custom request</param>
+        /// </summary>
+        public static ModbusSerialSlave CreateAscii(byte unitId, IStreamResource streamResource,
+            Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage, IModbusMessage> customResponseCreator)
+        {
+            if (streamResource == null)
+            {
+                throw new ArgumentNullException(nameof(streamResource));
+            }
+
+            var slave = new ModbusSerialSlave(unitId, new ModbusAsciiTransport(streamResource));
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
+        }
+
 #if SERIAL
         /// <summary>
         ///     Modbus RTU slave factory method.
@@ -75,6 +113,23 @@
             }
 
             return CreateRtu(unitId, new SerialPortAdapter(serialPort));
+        }
+
+        /// <summary>
+        ///     Modbus RTU slave factory method.
+        /// </summary>
+        public static ModbusSerialSlave CreateRtu(byte unitId, SerialPort serialPort,
+        Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage, IModbusMessage> customResponseCreator)
+        {
+            if (serialPort == null)
+            {
+                throw new ArgumentNullException(nameof(serialPort));
+            }
+
+            var slave = new CreateRtu(unitId, new SerialPortAdapter(serialPort));
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
         }
 #endif
 
@@ -89,6 +144,23 @@
             }
 
             return new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
+        }
+
+        /// <summary>
+        ///     Modbus RTU slave factory method.
+        /// </summary>
+        public static ModbusSerialSlave CreateRtu(byte unitId, IStreamResource streamResource,
+            Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage, IModbusMessage> customResponseCreator)
+        {
+            if (streamResource == null)
+            {
+                throw new ArgumentNullException(nameof(streamResource));
+            }
+
+            var slave = new ModbusSerialSlave(unitId, new ModbusRtuTransport(streamResource));
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
         }
 
         /// <summary>
@@ -107,8 +179,9 @@
 
                         // read request and build message
                         byte[] frame = SerialTransport.ReadRequest();
-                        IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame);
-
+                        
+                        IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame, this);
+                        
                         if (SerialTransport.CheckFrame && !SerialTransport.ChecksumsMatch(request, frame))
                         {
                             string msg = $"Checksums failed to match {string.Join(", ", request.MessageFrame)} != {string.Join(", ", frame)}.";
@@ -148,16 +221,6 @@
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Child class should provide an implementation if custom messages need to be handled
-        /// </summary>
-        /// <param name="messageFrame"></param>
-        /// <returns></returns>
-        internal override Message.IModbusMessage OnCustomRequestReceived(byte[] messageFrame)
-        {
-            throw new NotImplementedException("Child class should provide the handling of custom messages");
         }
     }
 }
