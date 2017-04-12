@@ -42,7 +42,7 @@
         /// <summary>
         ///     Gets or sets the unit ID.
         /// </summary>
-        public byte UnitId { get; [Obsolete]set; }
+        public byte UnitId { get; set; }
 
         /// <summary>
         ///     Start slave listening for requests.
