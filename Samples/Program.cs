@@ -2,9 +2,12 @@ using System;
 using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Modbus.Data;
 using Modbus.Device;
+using Modbus.IO;
 using Modbus.Utility;
 using Modbus.Serial;
 
@@ -30,6 +33,7 @@ namespace MySample
                 //StartModbusTcpSlave();
                 //StartModbusUdpSlave();
                 //StartModbusAsciiSlave();
+                //StartModbusSerialSlaveNetwork().GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
@@ -199,6 +203,34 @@ namespace MySample
                 slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
 
                 slave.ListenAsync().GetAwaiter().GetResult();
+            }
+        }
+
+        public static async Task StartModbusSerialSlaveNetwork()
+        {
+            using (SerialPort slavePort = new SerialPort("COM2"))
+            {
+                // configure serial port
+                slavePort.BaudRate = 9600;
+                slavePort.DataBits = 8;
+                slavePort.Parity = Parity.None;
+                slavePort.StopBits = StopBits.One;
+                slavePort.Open();
+
+                var adapter = new SerialPortAdapter(slavePort);
+
+                ModbusSlaveNetwork modbusSlaveNetwork = ModbusSerialSlaveNetwork.CreateRtu(adapter);
+
+                ModbusSlave slave1 = ModbusSlave.Create(1);
+                ModbusSlave slave2 = ModbusSlave.Create(2);
+
+                slave1.DataStore.HoldingRegisters[1] = 1;
+                slave2.DataStore.HoldingRegisters[1] = 2;
+
+                await modbusSlaveNetwork.AddSlaveAsync(slave1);
+                await modbusSlaveNetwork.AddSlaveAsync(slave2);
+
+                await modbusSlaveNetwork.ListenAsync();
             }
         }
 
