@@ -31,6 +31,10 @@ Custom Function support
 =======
 This library now support custom functions in Modbus Slave, and example code has been added in samples project.
 
+Compile and build
+=======
+Visual studio 2017 is required to compile the solution. Comunity edition should be Ok!
+
 Documentation
 =======
 Documentation is available in chm format (NModbus.chm)
