@@ -27,6 +27,10 @@ To install NModbus4, run the following command in the Package Manager Console
 
     PM> Install-Package NModbus4
 
+Custom Function support
+=======
+This library now support custom functions in Modbus Slave, and example code has been added in samples project.
+
 Documentation
 =======
 Documentation is available in chm format (NModbus.chm)
