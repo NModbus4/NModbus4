@@ -7,6 +7,8 @@ using Modbus.Data;
 using Modbus.Device;
 using Modbus.Utility;
 using Modbus.Serial;
+using Modbus.Message;
+using Samples.ModbusCustomMessage;
 
 namespace MySample
 {
@@ -30,6 +32,11 @@ namespace MySample
                 //StartModbusTcpSlave();
                 //StartModbusUdpSlave();
                 //StartModbusAsciiSlave();
+
+                //Custom Message Example - Start
+                //StartModbusTcpSlaveCustomFunctionHandler();
+                //StartModbusTcpMasterCustomFunction();
+                //Custom Message Example - End
             }
             catch (Exception e)
             {
@@ -37,6 +44,99 @@ namespace MySample
             }
 
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Starts a Modbus Master to request a custom function over modbus and receive the response
+        /// </summary>
+        private static void StartModbusTcpMasterCustomFunction()
+        {
+            //TcpClient client = new TcpClient(AddressFamily.InterNetwork);
+            //client.SendTimeout = 1000;
+            //client.ReceiveTimeout = 1000;
+            //await client.ConnectAsync(amsIpAddress, _modbusPort);
+            //masterAMS = ModbusIpMaster.CreateIp(client);
+
+            try
+            {
+                using (TcpClient client = new TcpClient("127.0.0.1", 502))
+                {
+                    ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
+                    //Generate a custom function 105 request
+                    var request = new CustomFunctionModbusMessage();
+                    request.SlaveAddress = 1;
+                    request.FunctionCode = 105;
+                    request.PayloadLength = 0;
+
+                    var response = master.ExecuteCustomMessage<CustomFunctionModbusMessage>(request);
+                    
+                    Console.WriteLine($"Response function code received {response.FunctionCode}");
+                }
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine($"Exception occured while executing custom function, {exp.Message}");
+            }
+            
+        }
+
+        /// <summary>
+        /// Starts a Modbus Slave with custom function handler
+        /// It will use custom function 105 just as an example
+        /// </summary>
+        private static void StartModbusTcpSlaveCustomFunctionHandler()
+        {
+            byte slaveId = 1;
+            int port = 502;
+            IPAddress address = new IPAddress(new byte[] { 127, 0, 0, 1 });
+
+            // create and start the TCP slave
+            TcpListener slaveTcpListener = new TcpListener(address, port);
+            slaveTcpListener.Start();
+
+            ModbusSlave slave = ModbusTcpSlave.CreateTcp(slaveId, slaveTcpListener, onCreateCustomRequest, onCreateCustomResponse);
+            slave.DataStore = DataStoreFactory.CreateDefaultDataStore();
+
+            slave.ListenAsync().GetAwaiter().GetResult();
+
+            // prevent the main thread from exiting
+            Thread.Sleep(Timeout.Infinite);
+        }
+
+        /// <summary>
+        /// Call back to create custom Modbus response object based to specific request
+        /// </summary>
+        /// <param name="request">Custom ModbusRequest object created in <see cref="onCreateCustomRequest(byte[])"/></param>
+        /// <returns></returns>
+        private static IModbusMessage onCreateCustomResponse(IModbusMessage request)
+        {
+            //create custom response, It will not do any thing special, will only check function code, if it is 105
+            //then send response just with function code 105
+            if(request.FunctionCode == 105)
+            {
+                //Custome function request received.
+                var response = new CustomFunctionModbusMessage();
+                response.Initialize(request.MessageFrame);
+                //update and send back the custom response
+                return response;
+            }
+            else
+            {
+                //Not implemented function
+                throw new NotImplementedException($"The function code {request.FunctionCode} is not supported");
+            }
+        }
+
+        /// <summary>
+        /// Call back to create Modbus custom request object from raw message frame
+        /// </summary>
+        /// <param name="rawMessageFrame"></param>
+        /// <returns></returns>
+        private static IModbusMessage onCreateCustomRequest(byte[] rawMessageFrame)
+        {
+            var request = new CustomFunctionModbusMessage();
+            request.Initialize(rawMessageFrame);
+            return request;
         }
 
         /// <summary>

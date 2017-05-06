@@ -35,6 +35,16 @@
         public event EventHandler<ModbusSlaveRequestEventArgs> WriteComplete;
 
         /// <summary>
+        /// Custom Request Creator, will be called when custom request is received. 
+        /// </summary>
+        protected Func<byte[], IModbusMessage> _customRequestCreator;
+
+        /// <summary>
+        /// Custom Response Creator, will be called when custom response needs to be generated
+        /// </summary>
+        protected Func<IModbusMessage, IModbusMessage> _customResponseCreator;
+
+        /// <summary>
         ///     Gets or sets the data store.
         /// </summary>
         public DataStore DataStore { get; set; }
@@ -251,9 +261,12 @@
                             DataStore.HoldingRegisters);
                         break;
                     default:
-                        string msg = $"Unsupported function code {request.FunctionCode}.";
-                        Debug.WriteLine(msg);
-                        throw new InvalidModbusRequestException(Modbus.IllegalFunction);
+                        //Seems to be a custom request, create custom response
+                        response = ApplyCustomRequest(request);
+                        break;
+                        //string msg = $"Unsupported function code {request.FunctionCode}.";
+                        //Debug.WriteLine(msg);
+                        //throw new InvalidModbusRequestException(Modbus.IllegalFunction);
                 }
             }
             catch (InvalidModbusRequestException ex)
@@ -266,6 +279,45 @@
             }
 
             return response;
+        }
+
+        /// <summary>
+        /// Calls a handler for custom messages
+        /// </summary>
+        /// <param name="messageFrame"></param>
+        /// <returns></returns>
+        internal Message.IModbusMessage OnCustomRequestReceived(byte[] messageFrame)
+        {
+            if (_customRequestCreator == null)
+            {
+                string msg = $"Unsupported function code {messageFrame[1]}, Consider using proper overload to provide handler for custom request creator";
+                Debug.WriteLine(msg);
+                throw new ArgumentException(msg, nameof(messageFrame));
+            }
+            else
+            {
+                return _customRequestCreator.Invoke(messageFrame);
+            }
+        }
+
+        /// <summary>
+        /// Calls a Handler for a custom request and generate 
+        /// valid Modbus custom response (If needs to be handled in different way)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Response of provided Modbus request</returns>
+        internal IModbusMessage ApplyCustomRequest(IModbusMessage request)
+        {
+            if (_customResponseCreator == null)
+            {
+                string msg = $"Unsupported function code {request.FunctionCode}, Consider using proper overload to provide handler for custom response creator";
+                Debug.WriteLine(msg);
+                throw new InvalidModbusRequestException(Modbus.IllegalFunction);
+            }
+            else
+            {
+                return _customResponseCreator.Invoke(request);
+            }
         }
     }
 }

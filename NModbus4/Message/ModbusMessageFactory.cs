@@ -1,5 +1,6 @@
 ﻿namespace Modbus.Message
 {
+    using global::Modbus.Device;
     using System;
 
     /// <summary>
@@ -31,8 +32,9 @@
         ///     Create a Modbus request.
         /// </summary>
         /// <param name="frame">Bytes of Modbus frame.</param>
+        /// <param name="slave">In case custom request/response handler needs to be provided</param>
         /// <returns>Modbus request.</returns>
-        public static IModbusMessage CreateModbusRequest(byte[] frame)
+        public static IModbusMessage CreateModbusRequest(byte[] frame, ModbusSlave slave = null)
         {
             if (frame.Length < MinRequestFrameLength)
             {
@@ -72,8 +74,14 @@
                     request = CreateModbusMessage<ReadWriteMultipleRegistersRequest>(frame);
                     break;
                 default:
-                    string msg = $"Unsupported function code {functionCode}";
-                    throw new ArgumentException(msg, nameof(frame));
+                    if(slave == null)
+                    {
+                        string msg = $"Unsupported function code {frame[1]}";
+                        throw new ArgumentException(msg, nameof(frame));
+                    }
+                    //seems like a custom request, call custom creator
+                    request = slave.OnCustomRequestReceived(frame);
+                    break;
             }
 
             return request;

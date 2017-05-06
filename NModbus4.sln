@@ -1,21 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NModbus4", "NModbus4\NModbus4.xproj", "{9B07ED72-3AD9-45EC-AAE9-295849B309AA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67F4885B-CF1F-4640-943F-363213B100A9}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
 		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NModbus4.UnitTests", "NModbus4.UnitTests\NModbus4.UnitTests.xproj", "{099155AF-8348-4829-B959-2F83AFCDD4E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NModbus4", "NModbus4\NModbus4.csproj", "{9B07ED72-3AD9-45EC-AAE9-295849B309AA}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NModbus4.Serial", "NModbus4.Serial\NModbus4.Serial.xproj", "{2246217D-D3C2-41CB-B866-D093DF087846}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NModbus4.UnitTests", "NModbus4.UnitTests\NModbus4.UnitTests.csproj", "{099155AF-8348-4829-B959-2F83AFCDD4E3}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Samples", "Samples\Samples.xproj", "{24958647-C7E3-46C0-885D-89521C4811B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NModbus4.Serial", "NModbus4.Serial\NModbus4.Serial.csproj", "{2246217D-D3C2-41CB-B866-D093DF087846}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples", "Samples\Samples.csproj", "{24958647-C7E3-46C0-885D-89521C4811B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

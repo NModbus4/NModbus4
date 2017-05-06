@@ -11,6 +11,7 @@
     using System.Timers;
 #endif
     using IO;
+    using global::Modbus.Message;
 
     /// <summary>
     ///     Modbus TCP slave device.
@@ -91,6 +92,23 @@
         public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener)
         {
             return new ModbusTcpSlave(unitId, tcpListener);
+        }
+
+        /// <summary>
+        /// Modbus TCP slave factory method.
+        /// </summary>
+        /// <param name="unitId">Unit Id</param>
+        /// <param name="tcpListener">TCP Listener</param>
+        /// <param name="customRequestCreator">CustomMessageHandler which will be called when a custom request is received</param>
+        /// <param name="customResponseCreator">Custom Response generator, will be called when custom response is required against a custom request</param>
+        /// <returns></returns>
+        public static ModbusTcpSlave CreateTcp(byte unitId, TcpListener tcpListener, 
+            Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage,IModbusMessage> customResponseCreator)
+        {
+            var slave = new ModbusTcpSlave(unitId, tcpListener);
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
         }
 
 #if TIMER

@@ -43,6 +43,18 @@
         }
 
         /// <summary>
+        ///     Modbus UDP slave factory method.
+        /// </summary>
+        public static ModbusUdpSlave CreateUdp(byte unitId, UdpClient client,
+            Func<byte[], IModbusMessage> customRequestCreator, Func<IModbusMessage, IModbusMessage> customResponseCreator)
+        {
+            var slave = new ModbusUdpSlave(unitId, client);
+            slave._customRequestCreator = customRequestCreator;
+            slave._customResponseCreator = customResponseCreator;
+            return slave;
+        }
+
+        /// <summary>
         ///     Start slave listening for requests.
         /// </summary>
         public override async Task ListenAsync()
@@ -59,9 +71,9 @@
 
                     Debug.WriteLine($"Read Frame completed {frame.Length} bytes");
                     Debug.WriteLine($"RX: {string.Join(", ", frame)}");
-
-                    IModbusMessage request =
-                        ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray());
+                    
+                    IModbusMessage request = ModbusMessageFactory.CreateModbusRequest(frame.Slice(6, frame.Length - 6).ToArray(), this);
+                    
                     request.TransactionId = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(frame, 0));
 
                     // perform action and build response
