@@ -57,12 +57,10 @@
             DiscreteCollection data;
             ReadCoilsInputsResponse response;
 
-            data = DataStore.ReadData<DiscreteCollection, bool>(
-                dataStore,
+            data = dataStore.ReadData(
                 dataSource,
                 request.StartAddress,
-                request.NumberOfPoints,
-                dataStore.SyncRoot);
+                request.NumberOfPoints);
 
             response = new ReadCoilsInputsResponse(
                 request.FunctionCode,
@@ -81,12 +79,10 @@
             RegisterCollection data;
             ReadHoldingInputRegistersResponse response;
 
-            data = DataStore.ReadData<RegisterCollection, ushort>(
-                dataStore,
+            data = dataStore.ReadData(
                 dataSource,
                 request.StartAddress,
-                request.NumberOfPoints,
-                dataStore.SyncRoot);
+                request.NumberOfPoints);
 
             response = new ReadHoldingInputRegistersResponse(
                 request.FunctionCode,
@@ -101,12 +97,10 @@
             DataStore dataStore,
             ModbusDataCollection<bool> dataSource)
         {
-            DataStore.WriteData(
-                dataStore,
+            dataStore.WriteData(
                 new DiscreteCollection(request.Data[0] == Modbus.CoilOn),
                 dataSource,
-                request.StartAddress,
-                dataStore.SyncRoot);
+                request.StartAddress);
 
             return request;
         }
@@ -118,12 +112,10 @@
         {
             WriteMultipleCoilsResponse response;
 
-            DataStore.WriteData(
-                dataStore,
+            dataStore.WriteData(
                 request.Data.Take(request.NumberOfPoints),
                 dataSource,
-                request.StartAddress,
-                dataStore.SyncRoot);
+                request.StartAddress);
 
             response = new WriteMultipleCoilsResponse(
                 request.SlaveAddress,
@@ -138,12 +130,10 @@
             DataStore dataStore,
             ModbusDataCollection<ushort> dataSource)
         {
-            DataStore.WriteData(
-                dataStore,
+            dataStore.WriteData(
                 request.Data,
                 dataSource,
-                request.StartAddress,
-                dataStore.SyncRoot);
+                request.StartAddress);
 
             return request;
         }
@@ -155,12 +145,10 @@
         {
             WriteMultipleRegistersResponse response;
 
-            DataStore.WriteData(
-                dataStore,
+            dataStore.WriteData(
                 request.Data,
                 dataSource,
-                request.StartAddress,
-                dataStore.SyncRoot);
+                request.StartAddress);
 
             response = new WriteMultipleRegistersResponse(
                 request.SlaveAddress,

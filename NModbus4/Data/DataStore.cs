@@ -12,7 +12,7 @@
     ///     The underlying collections are thread safe when using the ModbusMaster API to read/write values.
     ///     You can use the SyncRoot property to synchronize direct access to the DataStore collections.
     /// </summary>
-    public class DataStore
+    public class DataStore : IDataStore
     {
         private readonly object _syncRoot = new object();
 
@@ -84,18 +84,10 @@
             get { return _syncRoot; }
         }
 
-        /// <summary>
-        ///     Retrieves subset of data from collection.
-        /// </summary>
-        /// <typeparam name="T">The collection type.</typeparam>
-        /// <typeparam name="U">The type of elements in the collection.</typeparam>
-        internal static T ReadData<T, U>(
-            DataStore dataStore,
-            ModbusDataCollection<U> dataSource,
+        public virtual DiscreteCollection ReadData(
+            ModbusDataCollection<bool> dataSource,
             ushort startAddress,
-            ushort count,
-            object syncRoot)
-            where T : Collection<U>, new()
+            ushort count)
         {
             DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
@@ -105,33 +97,57 @@
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
             }
 
-            U[] dataToRetrieve;
-            lock (syncRoot)
+            bool[] dataToRetrieve;
+            lock(SyncRoot)
             {
                 dataToRetrieve = dataSource.Slice(startIndex, count).ToArray();
             }
 
-            T result = new T();
+            DiscreteCollection result = new DiscreteCollection();
             for (int i = 0; i < count; i++)
             {
                 result.Add(dataToRetrieve[i]);
             }
 
             dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result);
-            dataStore.DataStoreReadFrom?.Invoke(dataStore, dataStoreEventArgs);
+            DataStoreReadFrom?.Invoke(this, dataStoreEventArgs);
             return result;
         }
 
-        /// <summary>
-        ///     Write data to data store.
-        /// </summary>
-        /// <typeparam name="TData">The type of the data.</typeparam>
-        internal static void WriteData<TData>(
-            DataStore dataStore,
-            IEnumerable<TData> items,
-            ModbusDataCollection<TData> destination,
+        public virtual RegisterCollection ReadData(
+            ModbusDataCollection<ushort> dataSource,
             ushort startAddress,
-            object syncRoot)
+            ushort count)
+        {
+            DataStoreEventArgs dataStoreEventArgs;
+            int startIndex = startAddress + 1;
+
+            if (startIndex < 0 || dataSource.Count < startIndex + count)
+            {
+                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+            }
+
+            ushort[] dataToRetrieve;
+            lock (SyncRoot)
+            {
+                dataToRetrieve = dataSource.Slice(startIndex, count).ToArray();
+            }
+
+            RegisterCollection result = new RegisterCollection();
+            for (int i = 0; i < count; i++)
+            {
+                result.Add(dataToRetrieve[i]);
+            }
+
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(startAddress, dataSource.ModbusDataType, result);
+            DataStoreReadFrom?.Invoke(this, dataStoreEventArgs);
+            return result;
+        }
+
+        public virtual void WriteData(
+            IEnumerable<bool> items,
+            ModbusDataCollection<bool> destination,
+            ushort startAddress)
         {
             DataStoreEventArgs dataStoreEventArgs;
             int startIndex = startAddress + 1;
@@ -141,7 +157,7 @@
                 throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
             }
 
-            lock (syncRoot)
+            lock(SyncRoot)
             {
                 Update(items, destination, startIndex);
             }
@@ -151,12 +167,35 @@
                 destination.ModbusDataType,
                 items);
 
-            dataStore.DataStoreWrittenTo?.Invoke(dataStore, dataStoreEventArgs);
+            DataStoreWrittenTo?.Invoke(this, dataStoreEventArgs);
         }
 
-        /// <summary>
-        ///     Updates subset of values in a collection.
-        /// </summary>
+        public virtual void WriteData(
+            IEnumerable<ushort> items,
+            ModbusDataCollection<ushort> destination,
+            ushort startAddress)
+        {
+            DataStoreEventArgs dataStoreEventArgs;
+            int startIndex = startAddress + 1;
+
+            if (startIndex < 0 || destination.Count < startIndex + items.Count())
+            {
+                throw new InvalidModbusRequestException(Modbus.IllegalDataAddress);
+            }
+
+            lock (SyncRoot)
+            {
+                Update(items, destination, startIndex);
+            }
+
+            dataStoreEventArgs = DataStoreEventArgs.CreateDataStoreEventArgs(
+                startAddress,
+                destination.ModbusDataType,
+                items);
+
+            DataStoreWrittenTo?.Invoke(this, dataStoreEventArgs);
+        }
+
         internal static void Update<T>(IEnumerable<T> items, IList<T> destination, int startIndex)
         {
             if (startIndex < 0 || destination.Count < startIndex + items.Count())
