@@ -24,21 +24,21 @@ namespace Modbus.IO
         {
             message.TransactionId = GetNewTransactionId();
             byte[] frame = BuildMessageFrame(message);
-            _logger.Log(Severity.Debug, $"TX: {BitConverter.ToString(frame)}");
+            _logger.Log(Severity.Debug, string.Format("TX: {0}", BitConverter.ToString(frame)));
             StreamResource.Write(frame, 0, frame.Length);
         }
 
         internal override byte[] ReadRequest()
         {
             var response = ReadRequestResponse(StreamResource);
-            _logger.Log(Severity.Debug, $"RX: {BitConverter.ToString(response)}");
+            _logger.Log(Severity.Debug, string.Format("RX: {0}", BitConverter.ToString(response)));
             return response;
         }
 
         internal override IModbusMessage ReadResponse<T>()
         {
             var response = ReadRequestResponse(StreamResource);
-            _logger.Log(Severity.Debug, $"RX: {BitConverter.ToString(response)}");
+            _logger.Log(Severity.Debug, string.Format("RX: {0}", BitConverter.ToString(response)));
             return CreateMessageAndInitializeTransactionId<T>(response);
         }
     }
