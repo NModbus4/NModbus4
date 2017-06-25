@@ -14,7 +14,7 @@ namespace Modbus.Device
     [SuppressMessage("Microsoft.Naming", "CA1706:ShortAcronymsShouldBeUppercase", Justification = "Breaking change.")]
     public class ModbusIpMaster : ModbusMaster
     {
-        private ModbusIpMaster(ModbusTransport transport)
+        internal ModbusIpMaster(ModbusTransport transport)
             : base(transport)
         {
         }

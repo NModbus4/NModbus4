@@ -53,6 +53,7 @@
     <Compile Include="Device\IModbusMaster.cs" />
     <Compile Include="Device\IModbusSerialMaster.cs" />
     <Compile Include="Device\ModbusIpMaster.cs" />
+    <Compile Include="Device\ModbusIpMasterWithLogging.cs" />
     <Compile Include="Device\ModbusMasterTcpConnection.cs" />
     <Compile Include="Device\ModbusSerialMaster.cs" />
     <Compile Include="Device\ModbusDevice.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="Device\TcpConnectionEventArgs.cs" />
     <Compile Include="Extensions\Enron\EnronModbus.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IO\ModbusIpTransportWithLogging.cs" />
+    <Compile Include="Logging\INmodbusLogSink.cs" />
     <Compile Include="InvalidModbusRequestException.cs" />
     <Compile Include="IO\StreamResourceUtility.cs" />
     <Compile Include="IO\IStreamResource.cs" />
@@ -104,6 +107,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Logging\Severity.cs" />
     <Compile Include="SlaveException.cs" />
     <Compile Include="Unme.Common\DisposableUtility.cs" />
     <Compile Include="Unme.Common\EventUtility.cs" />
