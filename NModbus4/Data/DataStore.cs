@@ -59,22 +59,22 @@
         /// <summary>
         ///     Gets the discrete coils.
         /// </summary>
-        public ModbusDataCollection<bool> CoilDiscretes { get; }
+        public ModbusDataCollection<bool> CoilDiscretes { get; set; }
 
         /// <summary>
         ///     Gets the discrete inputs.
         /// </summary>
-        public ModbusDataCollection<bool> InputDiscretes { get; }
+        public ModbusDataCollection<bool> InputDiscretes { get; set; }
 
         /// <summary>
         ///     Gets the holding registers.
         /// </summary>
-        public ModbusDataCollection<ushort> HoldingRegisters { get; }
+        public ModbusDataCollection<ushort> HoldingRegisters { get; set; }
 
         /// <summary>
         ///     Gets the input registers.
         /// </summary>
-        public ModbusDataCollection<ushort> InputRegisters { get; }
+        public ModbusDataCollection<ushort> InputRegisters { get; set; }
 
         /// <summary>
         ///     An object that can be used to synchronize direct access to the DataStore collections.

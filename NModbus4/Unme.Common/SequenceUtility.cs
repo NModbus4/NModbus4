@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal static class SequenceUtility
+    public static class SequenceUtility
     {
         public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int startIndex, int size)
         {
