@@ -1,23 +1,12 @@
 language: csharp
-sudo: required
 os: linux
 dist: trusty
-addons:
-  apt:
-    packages:
-    - libunwind8
-    - gettext
-    - libssl-dev
-    - libcurl4-openssl-dev
-    - zlib1g
-    - libicu-dev
-install:
-- sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
-- sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-- sudo apt-get update
-- sudo apt-get --assume-yes install dotnet-dev-1.0.0-preview2-003121
-solution: NModbus4.sln
+sudo: required
+mono: none
+dotnet: 1.0.4
 script:
 - dotnet restore
+- dotnet build ./NModbus4/NModbus4.csproj --framework netstandard1.3 --configuration Release
+- dotnet build ./NModbus4.UnitTests/NModbus4.UnitTests.csproj --configuration Release
 - cd NModbus4.UnitTests
-- dotnet test
+- dotnet test --configuration Release
