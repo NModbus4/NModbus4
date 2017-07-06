@@ -9,4 +9,4 @@ script:
 - dotnet build ./NModbus4/NModbus4.csproj --framework netstandard1.3 --configuration Release
 - dotnet build ./NModbus4.UnitTests/NModbus4.UnitTests.csproj --configuration Release
 - cd NModbus4.UnitTests
-- dotnet test --framework netstandard1.3 --configuration Release
+- dotnet test --configuration Release
