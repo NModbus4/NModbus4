@@ -39,7 +39,7 @@
             _allowZeroElement = false;
         }
 
-        internal ModbusDataType ModbusDataType { get; set; }
+        public ModbusDataType ModbusDataType { get; set; }
 
         /// <summary>
         ///     Inserts an element into the <see cref="T:System.Collections.ObjectModel.Collection`1"></see> at the specified

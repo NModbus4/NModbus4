@@ -10,73 +10,79 @@ namespace Modbus.UnitTests.Data
         [Fact]
         public void ReadData()
         {
+            DataStore dataStore = new DataStore();
             ModbusDataCollection<ushort> slaveCol = new ModbusDataCollection<ushort>(0, 1, 2, 3, 4, 5, 6);
-            RegisterCollection result = DataStore.ReadData<RegisterCollection, ushort>(new DataStore(), slaveCol, 1, 3,
-                new object());
+            RegisterCollection result = dataStore.ReadData(slaveCol, 1, 3);
             Assert.Equal(new ushort[] { 1, 2, 3 }, result.ToArray());
         }
 
         [Fact]
         public void ReadDataStartAddressTooLarge()
         {
+            DataStore dataStore = new DataStore();
             Assert.Throws<InvalidModbusRequestException>(() =>
-                DataStore.ReadData<DiscreteCollection, bool>(new DataStore(), new ModbusDataCollection<bool>(), 3, 2,
-                    new object()));
+                dataStore.ReadData(new ModbusDataCollection<bool>(), 3, 2));
         }
 
         [Fact]
         public void ReadDataCountTooLarge()
         {
-            Assert.Throws<InvalidModbusRequestException>(() => DataStore.ReadData<DiscreteCollection, bool>(new DataStore(),
-                new ModbusDataCollection<bool>(true, false, true, true), 1, 5, new object()));
+            DataStore dataStore = new DataStore();
+            Assert.Throws<InvalidModbusRequestException>(() => dataStore.ReadData(
+                new ModbusDataCollection<bool>(true, false, true, true), 1, 5));
         }
 
         [Fact]
         public void ReadDataStartAddressZero()
         {
-            DataStore.ReadData<DiscreteCollection, bool>(new DataStore(),
-                new ModbusDataCollection<bool>(true, false, true, true, true, true), 0, 5, new object());
+            DataStore dataStore = new DataStore();
+            dataStore.ReadData(
+                new ModbusDataCollection<bool>(true, false, true, true, true, true), 0, 5);
         }
 
         [Fact]
         public void WriteDataSingle()
         {
+            DataStore dataStore = new DataStore();
             ModbusDataCollection<bool> destination = new ModbusDataCollection<bool>(true, true);
             DiscreteCollection newValues = new DiscreteCollection(false);
-            DataStore.WriteData(new DataStore(), newValues, destination, 0, new object());
+            dataStore.WriteData(newValues, destination, 0);
             Assert.Equal(false, destination[1]);
         }
 
         [Fact]
         public void WriteDataMultiple()
         {
+            DataStore dataStore = new DataStore();
             ModbusDataCollection<bool> destination = new ModbusDataCollection<bool>(false, false, false, false, false,
                 false, true);
             DiscreteCollection newValues = new DiscreteCollection(true, true, true, true);
-            DataStore.WriteData(new DataStore(), newValues, destination, 0, new object());
+            dataStore.WriteData(newValues, destination, 0);
             Assert.Equal(new bool[] { false, true, true, true, true, false, false, true }, destination.ToArray());
         }
 
         [Fact]
         public void WriteDataTooLarge()
         {
+            DataStore dataStore = new DataStore();
             ModbusDataCollection<bool> slaveCol = new ModbusDataCollection<bool>(true);
             DiscreteCollection newValues = new DiscreteCollection(false, false);
-            Assert.Throws<InvalidModbusRequestException>(() => DataStore.WriteData(new DataStore(), newValues, slaveCol, 1, new object()));
+            Assert.Throws<InvalidModbusRequestException>(() => dataStore.WriteData(newValues, slaveCol, 1));
         }
 
         [Fact]
         public void WriteDataStartAddressZero()
         {
-            DataStore.WriteData(new DataStore(), new DiscreteCollection(false),
-                new ModbusDataCollection<bool>(true, true), 0, new object());
+            DataStore dataStore = new DataStore();
+            dataStore.WriteData(new DiscreteCollection(false),
+                new ModbusDataCollection<bool>(true, true), 0);
         }
 
         [Fact]
         public void WriteDataStartAddressTooLarge()
         {
-            Assert.Throws<InvalidModbusRequestException>(() => DataStore.WriteData(new DataStore(), new DiscreteCollection(true), new ModbusDataCollection<bool>(true), 2,
-                new object()));
+            DataStore dataStore = new DataStore();
+            Assert.Throws<InvalidModbusRequestException>(() => dataStore.WriteData( new DiscreteCollection(true), new ModbusDataCollection<bool>(true), 2));
         }
 
         /// <summary>
@@ -93,9 +99,9 @@ namespace Modbus.UnitTests.Data
             dataStore.HoldingRegisters.Insert(2, 42);
 
             Assert.Equal(45,
-                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 0, 1, new object())[0]);
+                dataStore.ReadData(dataStore.HoldingRegisters, 0, 1)[0]);
             Assert.Equal(42,
-                DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 1, 1, new object())[0]);
+                dataStore.ReadData(dataStore.HoldingRegisters, 1, 1)[0]);
         }
 
         [Fact]
@@ -116,7 +122,7 @@ namespace Modbus.UnitTests.Data
 
             dataStore.DataStoreWrittenTo += (obj, e) => writtenToEventFired = true;
 
-            DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.HoldingRegisters, 3, 3, new object());
+            dataStore.ReadData(dataStore.HoldingRegisters, 3, 3);
             Assert.True(readFromEventFired);
             Assert.False(writtenToEventFired);
         }
@@ -139,7 +145,7 @@ namespace Modbus.UnitTests.Data
 
             dataStore.DataStoreWrittenTo += (obj, e) => writtenToEventFired = true;
 
-            DataStore.ReadData<RegisterCollection, ushort>(dataStore, dataStore.InputRegisters, 4, 0, new object());
+            dataStore.ReadData(dataStore.InputRegisters, 4, 0);
             Assert.True(readFromEventFired);
             Assert.False(writtenToEventFired);
         }
@@ -162,7 +168,7 @@ namespace Modbus.UnitTests.Data
 
             dataStore.DataStoreWrittenTo += (obj, e) => writtenToEventFired = true;
 
-            DataStore.ReadData<DiscreteCollection, bool>(dataStore, dataStore.InputDiscretes, 4, 1, new object());
+            dataStore.ReadData(dataStore.InputDiscretes, 4, 1);
             Assert.True(readFromEventFired);
             Assert.False(writtenToEventFired);
         }
@@ -186,8 +192,7 @@ namespace Modbus.UnitTests.Data
 
             dataStore.DataStoreReadFrom += (obj, e) => readFromEventFired = true;
 
-            DataStore.WriteData(dataStore, new DiscreteCollection(true, false, true), dataStore.CoilDiscretes, 4,
-                new object());
+            dataStore.WriteData(new DiscreteCollection(true, false, true), dataStore.CoilDiscretes, 4);
             Assert.False(readFromEventFired);
             Assert.True(writtenToEventFired);
         }
@@ -211,7 +216,7 @@ namespace Modbus.UnitTests.Data
 
             dataStore.DataStoreReadFrom += (obj, e) => readFromEventFired = true;
 
-            DataStore.WriteData(dataStore, new RegisterCollection(5, 6, 7), dataStore.HoldingRegisters, 0, new object());
+            dataStore.WriteData(new RegisterCollection(5, 6, 7), dataStore.HoldingRegisters, 0);
             Assert.False(readFromEventFired);
             Assert.True(writtenToEventFired);
         }
