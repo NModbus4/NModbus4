@@ -72,6 +72,12 @@
                 case Modbus.ReadInputRegisters:
                     numBytes = frameStart[2] + 1;
                     break;
+                case Modbus.ReadFileRecords:
+                    numBytes = frameStart[3] + 2;
+                    break;
+                case Modbus.WriteFileRecords:
+                    numBytes = frameStart[2];
+                    break;
                 case Modbus.WriteSingleCoil:
                 case Modbus.WriteSingleRegister:
                 case Modbus.WriteMultipleCoils:
