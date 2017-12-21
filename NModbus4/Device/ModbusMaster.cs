@@ -14,6 +14,12 @@
     /// </summary>
     public abstract class ModbusMaster : ModbusDevice, IModbusMaster
     {
+        /// <summary>
+        ///     Specifies the maximum number of holding registers you can read at a time to meet Modbus spec
+        /// </summary>
+        public const int MAX_HOLDING_REGISTERS_TO_READ = 125;
+
+
         internal ModbusMaster(ModbusTransport transport)
             : base(transport)
         {
@@ -108,7 +114,7 @@
         /// <returns>Holding registers status.</returns>
         public ushort[] ReadHoldingRegisters(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
         {
-            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, 125);
+            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, MAX_HOLDING_REGISTERS_TO_READ);
 
             var request = new ReadHoldingInputRegistersRequest(
                 Modbus.ReadHoldingRegisters,
@@ -128,7 +134,7 @@
         /// <returns>A task that represents the asynchronous read operation.</returns>
         public Task<ushort[]> ReadHoldingRegistersAsync(byte slaveAddress, ushort startAddress, ushort numberOfPoints)
         {
-            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, 125);
+            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, MAX_HOLDING_REGISTERS_TO_READ);
 
             var request = new ReadHoldingInputRegistersRequest(
                 Modbus.ReadHoldingRegisters,
@@ -137,6 +143,46 @@
                 numberOfPoints);
 
             return PerformReadRegistersAsync(request);
+        }
+
+        /// <summary>
+        ///    Reads a file reocrd
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="fileNumber">File to begin reading.</param>
+        /// <param name="numberOfPoints">Number of file records to read.</param>
+        /// <returns>TODO: Not sure yet.</returns>
+        public byte[] ReadFileRecord(byte slaveAddress, ushort fileNumber, ushort startRecord, ushort numberOfPoints)
+        {
+            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, MAX_HOLDING_REGISTERS_TO_READ);
+
+            var request = new ReadFileRecordRequest(
+                slaveAddress,
+                fileNumber,
+                startRecord,
+                numberOfPoints);
+
+            return PerformReadFile(request);
+        }
+
+        /// <summary>
+        ///    Asynchronously reads a file record
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="fileNumber">File to begin reading.</param>
+        /// <param name="numberOfPoints">Number of file records to read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task<byte[]> ReadFileRecordAsync(byte slaveAddress, ushort fileNumber, ushort startRecord, ushort numberOfPoints)
+        {
+            ValidateNumberOfPoints("numberOfPoints", numberOfPoints, MAX_HOLDING_REGISTERS_TO_READ);
+
+            var request = new ReadFileRecordRequest(
+                slaveAddress,
+                fileNumber,
+                startRecord,
+                numberOfPoints);
+
+            return PerformReadFileAsync(request);
         }
 
         /// <summary>
@@ -312,6 +358,46 @@
         }
 
         /// <summary>
+        ///    Writes a file record
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="fileNumber">File to begin reading.</param>
+        /// <param name="numberOfPoints">Number of file records to read.</param>
+        /// <returns>TODO: Not sure yet.</returns>
+        public void WriteFileRecord(byte slaveAddress, ushort fileNumber, ushort startRecord, ushort[] data)
+        {
+            ValidateData("data", data, MAX_HOLDING_REGISTERS_TO_READ);
+
+            var request = new WriteFileRecordRequest(
+                slaveAddress,
+                fileNumber,
+                startRecord,
+                new RegisterCollection(data));
+
+            Transport.UnicastMessage<WriteFileRecordResponse>(request);
+        }
+
+        /// <summary>
+        ///    Asynchronously writes a file record
+        /// </summary>
+        /// <param name="slaveAddress">Address of device to read values from.</param>
+        /// <param name="fileNumber">File to begin reading.</param>
+        /// <param name="numberOfPoints">Number of file records to read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        public Task WriteFileRecordAsync(byte slaveAddress, ushort fileNumber, ushort startRecord, ushort[] data)
+        {
+            ValidateData("data", data, MAX_HOLDING_REGISTERS_TO_READ);
+
+            var request = new WriteFileRecordRequest(
+                slaveAddress,
+                fileNumber,
+                startRecord,
+                new RegisterCollection(data));
+
+            return PerformWriteRequestAsync<WriteFileRecordResponse>(request);
+        }
+
+        /// <summary>
         ///    Performs a combination of one read operation and one write operation in a single Modbus transaction.
         ///    The write operation is performed before the read.
         /// </summary>
@@ -447,6 +533,19 @@
             where T : IModbusMessage, new()
         {
             return Task.Factory.StartNew(() => Transport.UnicastMessage<T>(request));
+        }
+
+        private Task<byte[]> PerformReadFileAsync(ReadFileRecordRequest request)
+        {
+            return Task.Factory.StartNew(() => PerformReadFile(request));
+        }
+
+        private byte[] PerformReadFile(ReadFileRecordRequest request)
+        {
+            ReadFileRecordResponse response =
+                Transport.UnicastMessage<ReadFileRecordResponse>(request);
+
+            return response.Data.NetworkBytes;
         }
     }
 }

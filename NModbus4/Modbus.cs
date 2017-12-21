@@ -16,6 +16,8 @@
         public const ushort DiagnosticsReturnQueryData = 0;
         public const byte WriteMultipleCoils = 15;
         public const byte WriteMultipleRegisters = 16;
+        public const byte ReadFileRecords = 20;
+        public const byte WriteFileRecords = 21;
         public const byte ReadWriteMultipleRegisters = 23;
 
         public const int MaximumDiscreteRequestResponseSize = 2040;
