@@ -29,7 +29,7 @@
         /// <param name="bytes">Array for register collection.</param>
         public StringData(byte[] bytes)
         {
-            mData = System.Text.Encoding.Default.GetString(bytes);
+            mData = System.Text.Encoding.ASCII.GetString(bytes);
         }
 
         ///// <summary>
@@ -54,7 +54,7 @@
         {
             get
             {
-                return System.Text.Encoding.Default.GetBytes(mData);
+                return System.Text.Encoding.ASCII.GetBytes(mData);
             }
         }
 
