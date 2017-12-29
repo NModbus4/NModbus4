@@ -252,17 +252,14 @@
         internal bool ShouldRetryResponse(IModbusMessage request, IModbusMessage response)
         {
             // These checks are enforced in ValidateRequest, we don't want to retry for these
-            if (request.FunctionCode != response.FunctionCode)
+            if (request.FunctionCode == response.FunctionCode && request.SlaveAddress == response.SlaveAddress)
             {
-                return false;
+                return OnShouldRetryResponse(request, response);
             }
-
-            if (request.SlaveAddress != response.SlaveAddress)
+            else
             {
-                return false;
+                return false; 
             }
-
-            return OnShouldRetryResponse(request, response);
         }
 
         /// <summary>
