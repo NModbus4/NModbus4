@@ -47,6 +47,15 @@ namespace Modbus.Message
             set { _messageImpl.SlaveAddress = value; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte RegisterSize
+        {
+            get { return _messageImpl.RegisterSize; }
+            set { _messageImpl.RegisterSize = value; }
+        }
+
         internal ModbusMessageImpl MessageImpl
         {
             get { return _messageImpl; }

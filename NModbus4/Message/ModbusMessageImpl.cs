@@ -16,12 +16,14 @@ namespace Modbus.Message
     {
         public ModbusMessageImpl()
         {
+	        RegisterSize = 2;
         }
 
-        public ModbusMessageImpl(byte slaveAddress, byte functionCode)
+		public ModbusMessageImpl(byte slaveAddress, byte functionCode)
         {
             SlaveAddress = slaveAddress;
             FunctionCode = functionCode;
+	        RegisterSize = 2;
         }
 
         public byte? ByteCount { get; set; }
@@ -35,6 +37,8 @@ namespace Modbus.Message
         public ushort? NumberOfPoints { get; set; }
 
         public byte SlaveAddress { get; set; }
+
+        public byte RegisterSize { get; set; }
 
         public ushort? StartAddress { get; set; }
 
