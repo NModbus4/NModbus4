@@ -18,7 +18,7 @@ namespace Modbus.Message
         {
         }
 
-        /// <summary>
+        /// <summary>L
         /// 
         /// </summary>
         /// <param name="functionCode"></param>
