@@ -111,7 +111,38 @@
         {
             return Encoding.UTF8.GetBytes(numbers.SelectMany(n => n.ToString("X4")).ToArray());
         }
+        /// <summary>
+        /// Convert Double to Byte
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static byte[] ConvertDoubleToByteArray(Double d)
+        {
+            return BitConverter.GetBytes(d);
+        }
+        /// <summary>
+        /// NetworkBytesToHostUInt32( Convert data long)
+        /// </summary>
+        /// <param name="networkBytes"></param>
+        /// <returns></returns>
+        public static ushort[] NetworkBytesToHostUInt32(byte[] networkBytes)
+        {
+            if (networkBytes == null)
+            {
+                throw new ArgumentNullException("networkBytes");
+            }
+            if (networkBytes.Length % 2 != 0)
+            {
+                throw new FormatException(Resources.NetworkBytesNotEven);
+            }
+            ushort[] result = new ushort[networkBytes.Length / 4];
 
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = BitConverter.ToUInt16(networkBytes, i * 2);
+            }
+            return result;
+        }
         /// <summary>
         ///     Converts a network order byte array to an array of UInt16 values in host order.
         /// </summary>
