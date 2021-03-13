@@ -38,7 +38,30 @@ namespace MySample
 
             Console.ReadKey();
         }
+        public static void ModbusSeriaRTUMasterReadRegister()
+        {
+            using (SerialPort port = new SerialPort("COM1"))
+            {
+                port.BaudRate = 9600;
+                port.DataBits = 8;
+                port.Parity = Parity.Even;
+                port.StopBits = StopBits.One;
+                port.Open();
 
+                var adapter = new SerialPortAdapter(port);
+
+                IModbusSerialMaster master = ModbusSerialMaster.CreateRtu(adapter);
+
+                byte slaveID = 1;
+                ushort startAdd = 0;
+                ushort numberOfAdd = 10;
+                ushort[] valuesRead = master.ReadHoldingRegisters(slaveID, startAdd, numberOfAdd);
+                foreach (ushort item in valuesRead)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+        }
         /// <summary>
         ///     Simple Modbus serial RTU master write holding registers example.
         /// </summary>
