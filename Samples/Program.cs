@@ -30,6 +30,7 @@ namespace MySample
                 //StartModbusTcpSlave();
                 //StartModbusUdpSlave();
                 //StartModbusAsciiSlave();
+                ModbusTcpMasterReadRegister();
             }
             catch (Exception e)
             {
@@ -38,6 +39,32 @@ namespace MySample
 
             Console.ReadKey();
         }
+        public static void ModbusTcpMasterReadRegister()
+        {
+            //using (TcpClient client = new TcpClient("192.168.1.50", 2000))
+            //{
+                TcpClient client = new TcpClient("192.168.1.50", 2000);
+                ModbusIpMaster master = ModbusIpMaster.CreateIp(client);
+                ModbusMaster mas = ModbusIpMaster.CreateIp(client);
+                ushort startAddress = 100;
+                ushort numInputs = 5;
+                ushort[]  outx = mas.ReadHoldingRegisters(1, 40001, 1);
+                ushort[] inputs = master.ReadHoldingRegisters(startAddress, numInputs);
+
+                //for (int i = 0; i < numInputs; i++)
+                //{
+                //    Console.WriteLine($"Input {(startAddress + i)}={(inputs[i] ? 1 : 0)}");
+                //}
+           // }
+
+            // output: 
+            // Input 100=0
+            // Input 101=0
+            // Input 102=0
+            // Input 103=0
+            // Input 104=0
+        }
+
         public static void ModbusSeriaRTUMasterReadRegister()
         {
             using (SerialPort port = new SerialPort("COM1"))
