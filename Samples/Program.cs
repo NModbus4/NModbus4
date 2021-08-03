@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
@@ -50,7 +50,9 @@ namespace MySample
                 ushort numInputs = 5;
                 ushort[]  outx = mas.ReadHoldingRegisters(1, 40001, 1);
                 ushort[] inputs = master.ReadHoldingRegisters(startAddress, numInputs);
-
+            //
+            //
+            //
                 //for (int i = 0; i < numInputs; i++)
                 //{
                 //    Console.WriteLine($"Input {(startAddress + i)}={(inputs[i] ? 1 : 0)}");
